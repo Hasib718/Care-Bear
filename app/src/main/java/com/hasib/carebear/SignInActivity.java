@@ -41,23 +41,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         //Setting button on click listener
         signUpButton.setOnClickListener(this);
         signInButton.setOnClickListener(this);
-        /**
-         *
-         *
-         *
-         *
-         *
-         *
-         * Fucking Bitch... you damn motherfucker...
-         * this a damn test nothing to do with
-         * feeling lifeless
-         * moira jamu baal
-         *
-         *
-         *
-         *
-         *
-         */
     }
 
     @Override
