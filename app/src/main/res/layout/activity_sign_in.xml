@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#69FD69"
     tools:context=".SignInActivity">
     
 
@@ -12,42 +13,49 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
-        android:layout_marginTop="220dp"
+        android:layout_marginTop="20dp"
         android:orientation="vertical">
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/usernameText"
             android:hint="Username or Email"
-            android:inputType="text"/>
+            android:inputType="textEmailAddress"/>
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/passwordText"
             android:hint="Password"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:layout_marginTop="5dp"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/signInButton"
+            android:background="@color/Blue"
+            android:text="Sign In"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center"
+            android:textAllCaps="false"
+            android:textStyle="bold"
+            android:textSize="16sp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/signUpTextView"
+            android:background="#69FD69"
+            android:text="Don't have an account? Sign Up"
+            android:textAllCaps="false"
+            android:textStyle="bold"
+            android:layout_marginTop="15dp"
+            android:layout_gravity="center"/>
     </LinearLayout>
 
-    <Button
+    <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/signInButton"
-        android:background="@color/Blue"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:text="Sign In"
-        android:textAllCaps="false"
-        android:textStyle="bold"
-        android:textSize="16sp"/>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/signUpButton"
-        android:background="@color/White"
-        android:layout_centerHorizontal="true"
-        android:text="Don't have an account? Sign Up"
-        android:textAllCaps="false"
-        android:textStyle="bold"
-        android:layout_marginTop="400dp"/>
+        android:id="@+id/progressBarIn"
+        android:visibility="invisible"
+        android:layout_gravity="center"/>
 
-</RelativeLayout>
+</LinearLayout>

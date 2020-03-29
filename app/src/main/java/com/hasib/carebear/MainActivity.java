@@ -12,8 +12,6 @@ import android.widget.Button;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "MainActivity";
 
-    DatabaseHelper appLocalDataBase;
-
     private Button signUpoRInButton;
     private Button emergencyButton;
 
@@ -25,9 +23,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         signUpoRInButton = (Button) findViewById(R.id.signInOrUpButton);
         emergencyButton = (Button) findViewById(R.id.emergencyButton);
 
-        //Local Database INITIALIZATION
-        appLocalDataBase = new DatabaseHelper(this);
-        SQLiteDatabase db = appLocalDataBase.getWritableDatabase();
 
         //Set in onClickListener
         signUpoRInButton.setOnClickListener(this);
