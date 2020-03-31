@@ -21,8 +21,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 
-public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
-    private static final String TAG = "SignUpActivity";
+public class SignUpActivityForDoctor extends AppCompatActivity implements View.OnClickListener {
+    private static final String TAG = "SignUpActivityForDoctor";
 
     private EditText emailET, passwordET;
     private Button newSignUpButton;
@@ -36,8 +36,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_up);
-        this.setTitle("Sign Up");
+        setContentView(R.layout.activity_sign_up_for_doctor);
+        this.setTitle("Sign Up For Doctor");
 
         //Enable back button on Menu Bar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -58,6 +58,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         //Setting Button on click Listener
         newSignUpButton.setOnClickListener(this);
+        signInTextView.setOnClickListener(this);
     }
 
     @Override
@@ -76,7 +77,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.signInTextView : {
                 Log.d(TAG, "onClick: intenting to sign in activity");
 
-                Intent intent = new Intent(SignUpActivity.this, SignInActivity.class);
+                Intent intent = new Intent(SignUpActivityForDoctor.this, SignInActivityForDoctor.class);
                 startActivity(intent);
             }
             break;
@@ -123,7 +124,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
                             finish();
                             //intenting Layout....................
-                            Intent intent = new Intent(SignUpActivity.this, ProfileSelectingActivity.class);
+                            Intent intent = new Intent(SignUpActivityForDoctor.this, ProfileSelectingActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
                         } else {
@@ -131,10 +132,10 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                             Log.d(TAG, "createUserWithEmail:failure", task.getException());
 
                             if (task.getException() instanceof FirebaseAuthUserCollisionException) {
-                                Toast.makeText(SignUpActivity.this, "User is already registered.",
+                                Toast.makeText(SignUpActivityForDoctor.this, "User is already registered.",
                                         Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(SignUpActivity.this, "Error: "+task.getException().getMessage(),
+                                Toast.makeText(SignUpActivityForDoctor.this, "Error: "+task.getException().getMessage(),
                                         Toast.LENGTH_SHORT).show();
                             }
                         }

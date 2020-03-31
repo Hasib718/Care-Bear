@@ -17,14 +17,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".DoctorProfileActivity"></activity>
+        <activity android:name=".SignUpActivityForPatient"></activity>
+        <activity android:name=".SignInActivityForPatient" />
+        <activity android:name=".DoctorProfileActivity" />
         <activity android:name=".ProfileSelectingActivity" />
-        <activity
-            android:name=".SignInActivity"
-            android:parentActivityName=".MainActivity" />
+        <activity android:name=".SignInActivityForDoctor" />
         <activity
             android:name=".SignUpActivity"
-            android:parentActivityName=".SignInActivity" />
+            android:parentActivityName=".SignInActivityForDoctor" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

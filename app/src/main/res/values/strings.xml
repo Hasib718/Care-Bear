@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Care Bear</string>
+    <string name="alertTitle">Care Bear - In a way of Healthiness</string>
+    <string name="alertMassage">Do you want to exit ?</string>
 </resources>

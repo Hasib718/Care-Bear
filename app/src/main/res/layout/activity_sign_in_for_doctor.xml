@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="10dp"
+    android:background="#69FD69"
+    tools:context=".SignInActivityForDoctor">
+    
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Sign In For Doctor"
+            android:textStyle="bold"
+            android:textColor="@color/Maroon"
+            android:layout_marginBottom="70dp"
+            android:textSize="25sp"
+            />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/usernameText"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:hint="Username or Email"
+            android:inputType="textEmailAddress"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/passwordText"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:layout_marginTop="5dp"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/signInButton"
+            android:background="@color/CadetBlue"
+            android:text="Sign In"
+            android:layout_marginTop="15dp"
+            android:layout_gravity="center"
+            android:textAllCaps="false"
+            android:textStyle="bold"
+            android:textSize="20sp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/signUpTextView"
+            android:background="#69FD69"
+            android:text="Don't have an account?"
+            android:textAllCaps="false"
+            android:textStyle="bold"
+            android:layout_marginTop="30dp"
+            android:layout_gravity="center"/>
+
+        <Button
+            android:id="@+id/signUpButtonForDoctorId"
+            android:layout_width="69dp"
+            android:layout_height="35dp"
+            android:text="Sign Up"
+            android:textSize="10sp"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBarIn"
+        android:visibility="invisible"
+        android:layout_gravity="center"/>
+
+</LinearLayout>

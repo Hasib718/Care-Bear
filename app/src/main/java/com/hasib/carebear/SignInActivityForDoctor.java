@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
@@ -14,17 +13,16 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
-    private static final String TAG = "SignInActivity";
+public class SignInActivityForDoctor extends AppCompatActivity implements View.OnClickListener {
+    private static final String TAG = "SignInActivityForDoctor";
     
-    private Button signInButton;
+    private Button signInButton, signUpButtonForDoctor;
     private TextView signUpTextView;
     private EditText emailText;
     private EditText passwordText;
@@ -35,9 +33,9 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_in);
-        this.setTitle("Sign In");
-        Log.d(TAG, "onCreate: Sign in Activity");
+        setContentView(R.layout.activity_sign_in_for_doctor);
+        this.setTitle("Sign In For Doctor");
+        Log.d(TAG, "onCreate: Sign in Activity For Doctor");
 
         //Enable back button on Menu Bar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -49,6 +47,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         emailText = (EditText) findViewById(R.id.usernameText);
         passwordText = (EditText) findViewById(R.id.passwordText);
         progressBar = (ProgressBar) findViewById(R.id.progressBarIn);
+        signUpButtonForDoctor = (Button) findViewById(R.id.signUpButtonForDoctorId);
 
          //Firebase
         mAuth = FirebaseAuth.getInstance();
@@ -57,7 +56,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         userDetails = new UserDetails();
 
         //Setting button on click listener
-        signUpTextView.setOnClickListener(this);
+        signUpButtonForDoctor.setOnClickListener(this);
         signInButton.setOnClickListener(this);
     }
 
@@ -74,11 +73,12 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             }
             break;
 
-            case R.id.signUpTextView : {
+            case R.id.signUpButtonForDoctorId: {
                 Log.d(TAG, "onClick: Sign Up Button clicked");
 
                 //Intenting to Sign Up Activity
-                Intent intent = new Intent(SignInActivity.this, SignUpActivity.class);
+                Intent intent = new Intent(SignInActivityForDoctor.this,
+                        SignUpActivityForDoctor.class);
                 startActivity(intent);
             }
             break;
@@ -123,13 +123,13 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
                             finish();
                             //Intenting layout...................
-                            Intent intent = new Intent(SignInActivity.this, ProfileSelectingActivity.class);
+                            Intent intent = new Intent(SignInActivityForDoctor.this, ProfileSelectingActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
                         } else {
                             Log.d(TAG, "onComplete: log in unsuccessful");
 
-                            Toast.makeText(SignInActivity.this, "Invaid Login",
+                            Toast.makeText(SignInActivityForDoctor.this, "Invaid Login",
                                     Toast.LENGTH_LONG).show();
                         }
                     }

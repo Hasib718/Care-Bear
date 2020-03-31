@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".SignUpActivityForDoctor">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/infoLayout"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/nameText"
+            android:hint="Your Full Name"
+            android:inputType="textPersonName" />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/mobileNoText"
+            android:hint="Mobile No.(Without +88)"
+            android:inputType="text|number" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/specialistText"
+            android:hint="If you are specialist then write topic\nOr WRITE.. NONE/none"
+            android:inputType="textPersonName" />
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Please Select Your Degree\nWhich You have Completed"
+            android:textSize="17sp"
+            android:textColor="#E91E63" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <CheckBox
+                android:id="@+id/checkMBBSId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="MBBS"/>
+            <CheckBox
+                android:id="@+id/checkFCPSId"
+                android:layout_width="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_height="wrap_content"
+                android:text="FCPS"/>
+            <CheckBox
+                android:id="@+id/checkMDId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="MD/MS"/>
+            <CheckBox
+                android:id="@+id/checkMPhilId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MPhil"/>
+        </LinearLayout>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/registrationNoText"
+            android:hint="Registration No of BMDC"
+            android:inputType="numberDecimal" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/presentAddressText"
+            android:hint="Present Address"
+            android:inputType="textLongMessage" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/parmanentAddressText"
+            android:hint="Parmanent Address (Optional)"
+            android:inputType="textLongMessage" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/commonChamberText"
+            android:hint="Common Chamber\nWhere You present Most (Mendatory)"
+            android:inputType="textLongMessage" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/emailEditText"
+            android:hint="Email"
+            android:inputType="textEmailAddress" />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/passwordEditText"
+            android:hint="Password"
+            android:inputType="textPassword" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/newSignUpButton"
+            android:background="@color/Crimson"
+            android:text="Sign Up"
+            android:textAllCaps="false"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/signInTextView"
+            android:text="Have an account? Sign In"
+            android:textAllCaps="false"
+            android:textStyle="bold"
+            android:layout_marginTop="15dp"
+            android:layout_gravity="center"/>
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBarUp"
+            android:visibility="invisible"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+
+</ScrollView>
