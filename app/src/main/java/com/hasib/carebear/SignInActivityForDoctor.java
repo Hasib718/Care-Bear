@@ -22,7 +22,7 @@ import com.google.firebase.auth.FirebaseAuth;
 public class SignInActivityForDoctor extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "SignInActivityForDoctor";
     
-    private Button signInButton, signUpButtonForDoctor;
+    private Button signInButtonForDoctor, signUpButtonForDoctor;
     private TextView signUpTextView;
     private EditText emailText;
     private EditText passwordText;
@@ -42,7 +42,7 @@ public class SignInActivityForDoctor extends AppCompatActivity implements View.O
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         //finding views
-        signInButton = (Button) findViewById(R.id.signInButton);
+        signInButtonForDoctor = (Button) findViewById(R.id.signInButtonForDoctorId);
         signUpTextView = (TextView) findViewById(R.id.signUpTextView);
         emailText = (EditText) findViewById(R.id.usernameText);
         passwordText = (EditText) findViewById(R.id.passwordText);
@@ -57,7 +57,7 @@ public class SignInActivityForDoctor extends AppCompatActivity implements View.O
 
         //Setting button on click listener
         signUpButtonForDoctor.setOnClickListener(this);
-        signInButton.setOnClickListener(this);
+        signInButtonForDoctor.setOnClickListener(this);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class SignInActivityForDoctor extends AppCompatActivity implements View.O
         userDetails.setPassword(passwordText.getText().toString());
 
         switch (v.getId()) {
-            case R.id.signInButton : {
+            case R.id.signInButtonForDoctorId : {
                 Log.d(TAG, "onClick: Sign In Button Clicked");
 
                 userLogin(userDetails);
@@ -77,8 +77,7 @@ public class SignInActivityForDoctor extends AppCompatActivity implements View.O
                 Log.d(TAG, "onClick: Sign Up Button clicked");
 
                 //Intenting to Sign Up Activity
-                Intent intent = new Intent(SignInActivityForDoctor.this,
-                        SignUpActivityForDoctor.class);
+                Intent intent = new Intent(SignInActivityForDoctor.this, SignUpActivityForDoctor.class);
                 startActivity(intent);
             }
             break;
@@ -123,7 +122,7 @@ public class SignInActivityForDoctor extends AppCompatActivity implements View.O
 
                             finish();
                             //Intenting layout...................
-                            Intent intent = new Intent(SignInActivityForDoctor.this, ProfileSelectingActivity.class);
+                            Intent intent = new Intent(SignInActivityForDoctor.this, DoctorProfileActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
                         } else {

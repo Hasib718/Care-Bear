@@ -1,36 +1,32 @@
 package com.hasib.carebear;
 
 public class UserDetails {
-    private String firstName;
-    private String lastName;
+    private String fullName;
     private String email;
-    private String username;
+    private String mobile;
     private String password;
+    private String specialist;
+    private String checkBoxInfo;
+    private String registrationInfo;
+    private String presentAddressInfo;
+    private String permanentAddressInfo;
+    private String commonChamberInfo;
 
     public UserDetails() { }
 
-    public UserDetails(String firstName, String lastName, String email, String username, String password) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public UserDetails(String fullName, String email, String mobile, String password) {
+        this.fullName = fullName;
         this.email = email;
-        this.username = username;
+        this.mobile = mobile;
         this.password = password;
     }
 
     public String getFirstName() {
-        return firstName;
+        return fullName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setFirstName(String fullName) {
+        this.fullName = fullName;
     }
 
     public String getEmail() {
@@ -42,11 +38,11 @@ public class UserDetails {
     }
 
     public String getUsername() {
-        return username;
+        return mobile;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUsername(String mobile) {
+        this.mobile = mobile;
     }
 
     public String getPassword() {
@@ -55,5 +51,61 @@ public class UserDetails {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getSpecialist() {
+        return specialist;
+    }
+
+    public void setSpecialist(String specialist) {
+        this.specialist = specialist;
+    }
+
+    public String getCheckboxinfo() {
+        return checkBoxInfo;
+    }
+
+    public void setCheckboxinfo(String checkBoxInfo) {
+        this.checkBoxInfo = checkBoxInfo;
+    }
+
+    public String getRegistrationInfo() {
+        return registrationInfo;
+    }
+
+    public void setRegistrationInfo(String registrationInfo) {
+        this.registrationInfo = registrationInfo;
+    }
+
+    public String getPresentAddressInfo() {
+        return presentAddressInfo;
+    }
+
+    public void setPresentAddressInfo(String presentAddressInfo) {
+        this.presentAddressInfo = presentAddressInfo;
+    }
+
+    public String getPermanentAddressInfo() {
+        return permanentAddressInfo;
+    }
+
+    public void setPermanentAddressInfo(String permanentAddressInfo) {
+        this.permanentAddressInfo = permanentAddressInfo;
+    }
+
+    public String getCommonChamberInfo() {
+        return commonChamberInfo;
+    }
+
+    public void setCommonChamberInfo(String commonChamberInfo) {
+        this.commonChamberInfo = commonChamberInfo;
     }
 }

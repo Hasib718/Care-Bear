@@ -38,10 +38,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(v.getId() == R.id.signInOrUpButtonForDoctorId) {
             Intent intent1 = new Intent(MainActivity.this, SignInActivityForDoctor.class);
             startActivity(intent1);
-        }
-        if(v.getId() == R.id.signInOrUpButtonForPatientId) {
+        } else if(v.getId() == R.id.signInOrUpButtonForPatientId) {
+            Log.d(TAG, "onClick: tapped");
             Intent intent2 = new Intent(MainActivity.this, SignInActivityForPatient.class);
-            startActivity((intent2));
+            startActivity(intent2);
         }
 
     }

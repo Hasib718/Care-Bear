@@ -1,5 +1,6 @@
 package com.hasib.carebear;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -20,10 +21,10 @@ public class SignInActivityForPatient extends AppCompatActivity implements View.
     private EditText passwordText;
     private UserDetails userDetails;
     private ProgressBar progressBar;
-    private FirebaseAuth mAuth;
+    //private FirebaseAuth mAuth;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in_for_patient);
         this.setTitle("Sign In For Patient");
@@ -33,12 +34,12 @@ public class SignInActivityForPatient extends AppCompatActivity implements View.
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         //finding views
-        signInButtonForPatient = (Button) findViewById(R.id.signInButton);
+        signInButtonForPatient = (Button) findViewById(R.id.signInButtonForPatientId);
         signUpTextView = (TextView) findViewById(R.id.signUpTextView);
         emailText = (EditText) findViewById(R.id.usernameText);
         passwordText = (EditText) findViewById(R.id.passwordText);
         progressBar = (ProgressBar) findViewById(R.id.progressBarIn);
-        signUpButtonForPatient = (Button) findViewById(R.id.signUpButtonForDoctorId);
+        signUpButtonForPatient = (Button) findViewById(R.id.signUpButtonForPatientId);
 
         //Setting button on click listener
         signInButtonForPatient.setOnClickListener(this);
@@ -47,9 +48,11 @@ public class SignInActivityForPatient extends AppCompatActivity implements View.
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.signUpButtonForDoctorId) {
-            Intent intent = new Intent(SignInActivityForPatient.this, SignInActivityForPatient.class);
+        if(v.getId() == R.id.signUpButtonForPatientId) {
+            Intent intent = new Intent(SignInActivityForPatient.this, SignUpActivityForPatient.class);
             startActivity(intent);
+        } else if (v.getId() == R.id.signInOrUpButtonForPatientId) {
+
         }
     }
 }
