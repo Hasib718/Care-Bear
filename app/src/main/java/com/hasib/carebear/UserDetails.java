@@ -6,13 +6,14 @@ public class UserDetails {
     private String mobile;
     private String password;
     private String specialist;
-    private String checkBoxInfo;
+    private String checkBoxInfo = "";
     private String registrationInfo;
     private String presentAddressInfo;
     private String permanentAddressInfo;
     private String commonChamberInfo;
 
-    public UserDetails() { }
+    public UserDetails() {
+    }
 
     public UserDetails(String fullName, String email, String mobile, String password) {
         this.fullName = fullName;
@@ -21,11 +22,11 @@ public class UserDetails {
         this.password = password;
     }
 
-    public String getFirstName() {
+    public String getFullName() {
         return fullName;
     }
 
-    public void setFirstName(String fullName) {
+    public void setFullName(String fullName) {
         this.fullName = fullName;
     }
 
@@ -35,14 +36,6 @@ public class UserDetails {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getUsername() {
-        return mobile;
-    }
-
-    public void setUsername(String mobile) {
-        this.mobile = mobile;
     }
 
     public String getPassword() {
@@ -69,12 +62,12 @@ public class UserDetails {
         this.specialist = specialist;
     }
 
-    public String getCheckboxinfo() {
+    public String getCheckBoxInfo() {
         return checkBoxInfo;
     }
 
-    public void setCheckboxinfo(String checkBoxInfo) {
-        this.checkBoxInfo = checkBoxInfo;
+    public void setCheckBoxInfo(String checkBoxInfo) {
+        this.checkBoxInfo += checkBoxInfo;
     }
 
     public String getRegistrationInfo() {

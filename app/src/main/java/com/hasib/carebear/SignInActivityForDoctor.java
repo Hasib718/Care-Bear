@@ -62,7 +62,7 @@ public class SignInActivityForDoctor extends AppCompatActivity implements View.O
 
     @Override
     public void onClick(View v) {
-        userDetails.setUsername(emailText.getText().toString());
+        userDetails.setEmail(emailText.getText().toString());
         userDetails.setPassword(passwordText.getText().toString());
 
         switch (v.getId()) {

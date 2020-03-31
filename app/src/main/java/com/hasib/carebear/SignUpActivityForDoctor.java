@@ -30,6 +30,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -103,8 +105,8 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
         mAuth = FirebaseAuth.getInstance();
 
         //Firebase profile images reference
-        imagesStorageReference = FirebaseStorage.getInstance()
-                .getReference("profileimages/"+System.currentTimeMillis()+".jpg");
+//        imagesStorageReference = FirebaseStorage.getInstance()
+//                .getReference("profileimages/"+System.currentTimeMillis()+".jpg");
 
         //Setting Button on click Listener
         signUpButton.setOnClickListener(this);
@@ -113,19 +115,23 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
 
     @Override
     public void onClick(View v) {
-
-        getInformationFromUser();
-
         switch (v.getId()) {
             case R.id.newSignUpButton : {
-
+                Log.d(TAG, "onClick: New Doctor Sign up button clicked");
+                progressBar.setVisibility(View.VISIBLE);
+                //Getting data from user
+                if (!getInformationFromUser()) {
+                    progressBar.setVisibility(View.INVISIBLE);
+                    return;
+                }
+                Log.d(TAG, "onClick: going to registration");
                 //adding username & password to firebase also authenticate
                 userRegister(userDetails);
             }
             break;
 
             case R.id.doctorImage : {
-                Log.d(TAG, "onClick: intenting to sign in activity");
+                Log.d(TAG, "onClick: selecting profile picture");
 
                 showImageChooser();
             }
@@ -133,18 +139,66 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
         }
     }
 
-    private void getInformationFromUser() {
+    private boolean getInformationFromUser() {
+        Log.d(TAG, "getInformationFromUser: getting user data");
+
+        userDetails.setFullName(nameText.getText().toString());
+        userDetails.setMobile(mobileNoText.getText().toString());
+        userDetails.setSpecialist(specialistText.getText().toString());
+        for(int i=0; i<checkBoxLayout.getChildCount(); i++) {
+            if (((CheckBox) checkBoxLayout.getChildAt(i)).isChecked()) {
+                userDetails.setCheckBoxInfo(((CheckBox) checkBoxLayout.getChildAt(i)).getText().toString());
+            }
+        }
+        Log.d(TAG, "getInformationFromUser: getting user data 2");
+        userDetails.setRegistrationInfo(registrationNoText.getText().toString());
+        userDetails.setPresentAddressInfo(presentAddressText.getText().toString());
+        userDetails.setPermanentAddressInfo(permanentAddressText.getText().toString());
+        userDetails.setCommonChamberInfo(commonChamberText.getText().toString());
         userDetails.setEmail(emailText.getText().toString());
         userDetails.setPassword(passwordText.getText().toString());
-    }
 
-    private void userRegister(UserDetails userDetails) {
-        //Checking email validity
+        if (userDetails.getFullName().isEmpty()) {
+            nameText.setError("Name required");
+            nameText.requestFocus();
+            return false;
+        }
         if(userDetails.getEmail().isEmpty()) {
             emailText.setError("Enter an Email Address");
             emailText.requestFocus();
-            return;
+            return false;
         }
+        if (userDetails.getPassword().isEmpty()) {
+            passwordText.setError("Enter a password");
+            passwordText.requestFocus();
+            return false;
+        }
+        if (userDetails.getMobile().isEmpty()) {
+            mobileNoText.setError("Mobile Number Required");
+            mobileNoText.requestFocus();
+            return false;
+        }
+        if (userDetails.getMobile().length() != 11) {
+            mobileNoText.setError("Number must be 11 digits");
+            mobileNoText.requestFocus();
+            return false;
+        }
+        if (userDetails.getRegistrationInfo().isEmpty()) {
+            registrationNoText.setError("Registration Number Required");
+            registrationNoText.requestFocus();
+            return false;
+        }
+        if (!((CheckBox) checkBoxLayout.getChildAt(0)).isChecked()) {
+            ((CheckBox) checkBoxLayout.getChildAt(0)).setError("Minimum MBBS Degree Required");
+            ((CheckBox) checkBoxLayout.getChildAt(0)).requestFocus();
+            return false;
+        }
+        return true;
+    }
+
+    //Email & Password Registration
+    private void userRegister(UserDetails userDetails) {
+        //Checking email validity
         if (!Patterns.EMAIL_ADDRESS.matcher(userDetails.getEmail()).matches()) {
             emailText.setError("Enter a valid email address");
             emailText.requestFocus();
@@ -152,35 +206,27 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
         }
 
         //checking the validity of password
-        if (userDetails.getPassword().isEmpty()) {
-            passwordText.setError("Enter a password");
-            passwordText.requestFocus();
-            return;
-        }
         if (userDetails.getPassword().length() < 8) {
             passwordText.setError("Minimum length of a password should be 8");
             passwordText.requestFocus();
             return;
         }
 
-        progressBar.setVisibility(View.VISIBLE);
-
+        Log.d(TAG, "userRegister: om firebase authenticator");
         //Firebase authenticate
         mAuth.createUserWithEmailAndPassword(userDetails.getEmail(), userDetails.getPassword())
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         //changed progress bar's visibility to GONE
-                        progressBar.setVisibility(View.GONE);
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "createUserWithEmail:success");
+                            Log.d(TAG, "createUserWithEmail: success");
 
-                            finish();
-                            //intenting Layout....................
+                            saveUserInformation();
                         } else {
                             // If sign in fails, display a message to the user.
-                            Log.d(TAG, "createUserWithEmail:failure", task.getException());
+                            Log.d(TAG, "createUserWithEmail: failure", task.getException());
 
                             if (task.getException() instanceof FirebaseAuthUserCollisionException) {
                                 Toast.makeText(SignUpActivityForDoctor.this, "User is already registered.",
@@ -210,6 +256,7 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
         if (requestCode == CHOOSE_IMAGE_REQUEST && resultCode == RESULT_OK
                 && data != null && data.getData() != null) {
             uriProfileImage = data.getData();
+            Log.d(TAG, "onActivityResult: "+uriProfileImage.toString());
 
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uriProfileImage);
@@ -224,7 +271,10 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
     //Method for uploading image to firebase storage
     public void uploadImageToFirebaseStorage() {
         if (uriProfileImage != null) {
+            imagesStorageReference = FirebaseStorage.getInstance()
+                    .getReference("profileimages/"+System.currentTimeMillis()+".jpg");
 
+            Log.d(TAG, "uploadImageToFirebaseStorage: method called");
             //Visible the progress ber while the image is uploading
             imageProgressBar.setVisibility(View.VISIBLE);
 
@@ -253,6 +303,34 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
     }
 
     public void saveUserInformation() {
+        uploadImageToFirebaseStorage();
 
+        FirebaseUser user = mAuth.getCurrentUser();
+
+        if (user != null && doctorImageUrl != null) {
+            UserProfileChangeRequest profile = new UserProfileChangeRequest.Builder()
+                    .setDisplayName(userDetails.getFullName())
+                    .setPhotoUri(Uri.parse(doctorImageUrl))
+                    .build();
+            Log.d(TAG, "saveUserInformation: profile built");
+
+            user.updateProfile(profile)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Log.d(TAG, "onComplete: Everythings OK");
+                                Toast.makeText(SignUpActivityForDoctor.this, "Profile Updated", Toast.LENGTH_SHORT).show();
+
+                                progressBar.setVisibility(View.GONE);
+
+                                finish();
+                                Intent intent = new Intent(SignUpActivityForDoctor.this, DoctorDashBoardActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                            }
+                        }
+                    });
+        }
     }
 }
