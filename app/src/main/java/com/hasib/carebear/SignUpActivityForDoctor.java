@@ -2,8 +2,6 @@ package com.hasib.carebear;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.media.Image;
-import android.media.MediaTimestamp;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -16,7 +14,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -37,6 +34,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
+import java.util.UUID;
 
 public class SignUpActivityForDoctor extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "SignUpActivityForDoctor";
@@ -65,9 +63,9 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
     private FirebaseAuth mAuth;
 
     //Firebase Images Storage Reference
-    StorageReference imagesStorageReference;
+    StorageReference storageReference;
     //Uploaded Image URL
-    String doctorImageUrl;
+    String doctorImageUri;
 
     //image uri
     private Uri uriProfileImage;
@@ -104,9 +102,8 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
         //Firebase authenticator
         mAuth = FirebaseAuth.getInstance();
 
-        //Firebase profile images reference
-//        imagesStorageReference = FirebaseStorage.getInstance()
-//                .getReference("profileimages/"+System.currentTimeMillis()+".jpg");
+        //Firebase Storage reference
+        storageReference = FirebaseStorage.getInstance().getReference();
 
         //Setting Button on click Listener
         signUpButton.setOnClickListener(this);
@@ -133,6 +130,7 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
             case R.id.doctorImage : {
                 Log.d(TAG, "onClick: selecting profile picture");
 
+                //Image chooser method
                 showImageChooser();
             }
             break;
@@ -240,6 +238,7 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
+                        Log.d(TAG, "onSuccess: "+authResult.getUser().toString());
                         saveUserInformation(authResult.getUser());
                     }
                 });
@@ -267,6 +266,7 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uriProfileImage);
 
                 doctorImage.setImageBitmap(bitmap);
+                uploadImageToFirebaseStorage();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -276,14 +276,14 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
     //Method for uploading image to firebase storage
     public void uploadImageToFirebaseStorage() {
         if (uriProfileImage != null) {
-            imagesStorageReference = FirebaseStorage.getInstance()
-                    .getReference("profileimages/"+System.currentTimeMillis()+".jpg");
+
+            StorageReference reference = storageReference.child("image/"+ UUID.randomUUID().toString());
 
             Log.d(TAG, "uploadImageToFirebaseStorage: method called");
             //Visible the progress ber while the image is uploading
             imageProgressBar.setVisibility(View.VISIBLE);
 
-            imagesStorageReference.putFile(uriProfileImage)
+            reference.putFile(uriProfileImage)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -292,7 +292,8 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
                             //The progress bar is set to GONE when the uploading task is done
                             imageProgressBar.setVisibility(View.GONE);
 
-                            doctorImageUrl = taskSnapshot.getStorage().getDownloadUrl().toString();
+                            doctorImageUri = taskSnapshot.getStorage().getDownloadUrl().toString();
+                            Log.d(TAG, "onSuccess: doctorImageUri "+doctorImageUri);
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -308,14 +309,18 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
     }
 
     public void saveUserInformation(FirebaseUser user) {
-        uploadImageToFirebaseStorage();
 
-//        FirebaseUser user = mAuth.getCurrentUser();
-
-        if (user != null && doctorImageUrl != null) {
+        Log.d(TAG, "saveUserInformation: entering to profile build");
+        if (user == null) {
+            Log.d(TAG, "saveUserInformation: profile null");
+        }
+        if (doctorImageUri == null) {
+            Log.d(TAG, "saveUserInformation: uri null");
+        }
+        if (user != null) {
             UserProfileChangeRequest profile = new UserProfileChangeRequest.Builder()
                     .setDisplayName(userDetails.getFullName())
-                    .setPhotoUri(Uri.parse(doctorImageUrl))
+                    .setPhotoUri(Uri.parse(doctorImageUri))
                     .build();
             Log.d(TAG, "saveUserInformation: profile built");
 
@@ -329,10 +334,11 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
 
                                 progressBar.setVisibility(View.GONE);
 
+//                                Intent intent = new Intent(SignUpActivityForDoctor.this, DoctorDashBoardActivity.class);
+//                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                                startActivity(intent);
+
                                 finish();
-                                Intent intent = new Intent(SignUpActivityForDoctor.this, DoctorDashBoardActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                startActivity(intent);
                             }
                         }
                     });

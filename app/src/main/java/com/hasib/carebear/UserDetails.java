@@ -67,7 +67,7 @@ public class UserDetails {
     }
 
     public void setCheckBoxInfo(String checkBoxInfo) {
-        this.checkBoxInfo += checkBoxInfo;
+        this.checkBoxInfo += checkBoxInfo+" ";
     }
 
     public String getRegistrationInfo() {
