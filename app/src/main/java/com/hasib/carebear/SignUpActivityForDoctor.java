@@ -223,7 +223,6 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail: success");
 
-                            saveUserInformation();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.d(TAG, "createUserWithEmail: failure", task.getException());
@@ -236,6 +235,12 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
                                         Toast.LENGTH_SHORT).show();
                             }
                         }
+                    }
+                })
+                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                    @Override
+                    public void onSuccess(AuthResult authResult) {
+                        saveUserInformation(authResult.getUser());
                     }
                 });
     }
@@ -302,10 +307,10 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
         }
     }
 
-    public void saveUserInformation() {
+    public void saveUserInformation(FirebaseUser user) {
         uploadImageToFirebaseStorage();
 
-        FirebaseUser user = mAuth.getCurrentUser();
+//        FirebaseUser user = mAuth.getCurrentUser();
 
         if (user != null && doctorImageUrl != null) {
             UserProfileChangeRequest profile = new UserProfileChangeRequest.Builder()
