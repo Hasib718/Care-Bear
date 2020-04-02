@@ -19,6 +19,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.io.InputStream;
+
 public class SignInActivityForDoctor extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "SignInActivityForDoctor";
     
@@ -61,6 +63,21 @@ public class SignInActivityForDoctor extends AppCompatActivity implements View.O
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (mAuth.getCurrentUser() != null) {
+            Log.d(TAG, "onStart: current user: "+mAuth.getCurrentUser().getEmail());
+
+            finish();
+
+            Intent intent = new Intent(SignInActivityForDoctor.this, DoctorDashBoardActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        }
+    }
+
+    @Override
     public void onClick(View v) {
         userDetails.setEmail(emailText.getText().toString());
         userDetails.setPassword(passwordText.getText().toString());
@@ -76,8 +93,11 @@ public class SignInActivityForDoctor extends AppCompatActivity implements View.O
             case R.id.signUpButtonForDoctorId: {
                 Log.d(TAG, "onClick: Sign Up Button clicked");
 
+                finish();
+
                 //Intenting to Sign Up Activity
                 Intent intent = new Intent(SignInActivityForDoctor.this, SignUpActivityForDoctor.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             }
             break;
@@ -120,9 +140,12 @@ public class SignInActivityForDoctor extends AppCompatActivity implements View.O
                         if (task.isSuccessful()) {
                             Log.d(TAG, "onComplete: Log in successful");
 
+                            progressBar.setVisibility(View.GONE);
+
                             finish();
+
                             //Intenting layout...................
-                            Intent intent = new Intent(SignInActivityForDoctor.this, DoctorProfileActivity.class);
+                            Intent intent = new Intent(SignInActivityForDoctor.this, DoctorDashBoardActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
                         } else {

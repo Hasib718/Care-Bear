@@ -1,5 +1,6 @@
 package com.hasib.carebear;
 
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -8,6 +9,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -29,6 +31,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -59,13 +63,16 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
     //Info container class
     private UserDetails userDetails;
 
-    //firebase
+    //Firebase Authenticator
     private FirebaseAuth mAuth;
 
-    //Firebase Images Storage Reference
-    StorageReference storageReference;
+    //Firebase Storage Reference
+    private StorageReference storageReference;
     //Uploaded Image URL
-    String doctorImageUri;
+    private String doctorImageUrl;
+
+    //Firebase Realtime Database Reference
+    private DatabaseReference databaseReference;
 
     //image uri
     private Uri uriProfileImage;
@@ -99,11 +106,14 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
         //info container class
         userDetails = new UserDetails();
 
-        //Firebase authenticator
+        //Firebase Authenticator
         mAuth = FirebaseAuth.getInstance();
 
         //Firebase Storage reference
-        storageReference = FirebaseStorage.getInstance().getReference();
+        storageReference = FirebaseStorage.getInstance().getReference("doctors_profile_images");
+
+        //Firebase Realtime Database reference
+        databaseReference = FirebaseDatabase.getInstance().getReference("doctors_profile_info");
 
         //Setting Button on click Listener
         signUpButton.setOnClickListener(this);
@@ -123,7 +133,7 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
                 }
                 Log.d(TAG, "onClick: going to registration");
                 //adding username & password to firebase also authenticate
-                userRegister(userDetails);
+                userRegister();
             }
             break;
 
@@ -195,7 +205,7 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
     }
 
     //Email & Password Registration
-    private void userRegister(UserDetails userDetails) {
+    private void userRegister() {
         //Checking email validity
         if (!Patterns.EMAIL_ADDRESS.matcher(userDetails.getEmail()).matches()) {
             emailText.setError("Enter a valid email address");
@@ -210,7 +220,7 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
             return;
         }
 
-        Log.d(TAG, "userRegister: om firebase authenticator");
+        Log.d(TAG, "userRegister: on firebase authenticator");
         //Firebase authenticate
         mAuth.createUserWithEmailAndPassword(userDetails.getEmail(), userDetails.getPassword())
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -221,6 +231,8 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail: success");
 
+                            //Image uploading method
+                            uploadImageToFirebaseStorage();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.d(TAG, "createUserWithEmail: failure", task.getException());
@@ -238,13 +250,20 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
-                        Log.d(TAG, "onSuccess: "+authResult.getUser().toString());
-                        saveUserInformation(authResult.getUser());
+                        Log.d(TAG, "onSuccess: current user "+authResult.getUser().toString());
+                        
                     }
                 });
     }
 
-    //Method for selecting and aadding image
+    private void saveDoctorInto() {
+        String key = databaseReference.push().getKey();
+        
+        databaseReference.child(userDetails.getMobile()).setValue(userDetails);
+        Log.d(TAG, "saveDoctorInto: data saved into database");
+    }
+
+    //Method for selecting and adding image
     public void showImageChooser() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -252,13 +271,19 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
         startActivityForResult(Intent.createChooser(intent, "Select Profile Image"), CHOOSE_IMAGE_REQUEST);
     }
 
+    //For getting Image extension
+    public String getExtension(Uri imageUri) {
+        ContentResolver contentResolver = getContentResolver();
+        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(imageUri));
+    }
+
     //Image selecting activity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == CHOOSE_IMAGE_REQUEST && resultCode == RESULT_OK
-                && data != null && data.getData() != null) {
+        if (requestCode == CHOOSE_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             uriProfileImage = data.getData();
             Log.d(TAG, "onActivityResult: "+uriProfileImage.toString());
 
@@ -266,7 +291,8 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uriProfileImage);
 
                 doctorImage.setImageBitmap(bitmap);
-                uploadImageToFirebaseStorage();
+
+                //uploadImageToFirebaseStorage();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -277,13 +303,21 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
     public void uploadImageToFirebaseStorage() {
         if (uriProfileImage != null) {
 
-            StorageReference reference = storageReference.child("image/"+ UUID.randomUUID().toString());
+            //Doctor's Profile Images directory
+            StorageReference reference = storageReference.child(System.currentTimeMillis()+"."+getExtension(uriProfileImage));
 
             Log.d(TAG, "uploadImageToFirebaseStorage: method called");
             //Visible the progress ber while the image is uploading
             imageProgressBar.setVisibility(View.VISIBLE);
 
+            //Task for uploading images to firebase directory
             reference.putFile(uriProfileImage)
+                    .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                            saveUserInformation();
+                        }
+                    })
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -292,8 +326,8 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
                             //The progress bar is set to GONE when the uploading task is done
                             imageProgressBar.setVisibility(View.GONE);
 
-                            doctorImageUri = taskSnapshot.getStorage().getDownloadUrl().toString();
-                            Log.d(TAG, "onSuccess: doctorImageUri "+doctorImageUri);
+                            userDetails.setDoctorImageUrl(taskSnapshot.getStorage().getDownloadUrl().toString());
+                            Log.d(TAG, "onSuccess: doctorImageUrl "+userDetails.getDoctorImageUrl());
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -308,19 +342,15 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
         }
     }
 
-    public void saveUserInformation(FirebaseUser user) {
+    public void saveUserInformation() {
+
+        FirebaseUser user = mAuth.getCurrentUser();
 
         Log.d(TAG, "saveUserInformation: entering to profile build");
-        if (user == null) {
-            Log.d(TAG, "saveUserInformation: profile null");
-        }
-        if (doctorImageUri == null) {
-            Log.d(TAG, "saveUserInformation: uri null");
-        }
         if (user != null) {
             UserProfileChangeRequest profile = new UserProfileChangeRequest.Builder()
                     .setDisplayName(userDetails.getFullName())
-                    .setPhotoUri(Uri.parse(doctorImageUri))
+                    .setPhotoUri(Uri.parse(userDetails.getDoctorImageUrl()))
                     .build();
             Log.d(TAG, "saveUserInformation: profile built");
 
@@ -334,12 +364,23 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
 
                                 progressBar.setVisibility(View.GONE);
 
-//                                Intent intent = new Intent(SignUpActivityForDoctor.this, DoctorDashBoardActivity.class);
-//                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                                startActivity(intent);
-
-                                finish();
+                                //Doctor Info saving method
+                                saveDoctorInto();
                             }
+                        }
+                    })
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+
+                            Log.d(TAG, "onSuccess: Going to Doctor's Dash Board");
+                            //Intenting to doctor's dash board
+
+                            finish();
+
+                            Intent intent = new Intent(SignUpActivityForDoctor.this, DoctorDashBoardActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
                         }
                     });
         }

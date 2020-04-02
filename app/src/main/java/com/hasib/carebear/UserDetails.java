@@ -11,15 +11,23 @@ public class UserDetails {
     private String presentAddressInfo;
     private String permanentAddressInfo;
     private String commonChamberInfo;
+    private String doctorImageUrl;
 
     public UserDetails() {
     }
 
-    public UserDetails(String fullName, String email, String mobile, String password) {
+    public UserDetails(String fullName, String email, String mobile, String password, String specialist, String checkBoxInfo, String registrationInfo, String presentAddressInfo, String permanentAddressInfo, String commonChamberInfo, String doctorImageUrl) {
         this.fullName = fullName;
         this.email = email;
         this.mobile = mobile;
         this.password = password;
+        this.specialist = specialist;
+        this.checkBoxInfo = checkBoxInfo;
+        this.registrationInfo = registrationInfo;
+        this.presentAddressInfo = presentAddressInfo;
+        this.permanentAddressInfo = permanentAddressInfo;
+        this.commonChamberInfo = commonChamberInfo;
+        this.doctorImageUrl = doctorImageUrl;
     }
 
     public String getFullName() {
@@ -100,5 +108,13 @@ public class UserDetails {
 
     public void setCommonChamberInfo(String commonChamberInfo) {
         this.commonChamberInfo = commonChamberInfo;
+    }
+
+    public String getDoctorImageUrl() {
+        return doctorImageUrl;
+    }
+
+    public void setDoctorImageUrl(String doctorImageUrl) {
+        this.doctorImageUrl = doctorImageUrl;
     }
 }
