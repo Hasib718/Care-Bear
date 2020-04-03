@@ -15,12 +15,31 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_centerHorizontal="true"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:id="@+id/doctorImage"
+                android:layout_gravity="center"
+                android:src="@drawable/bear"/>
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageProgressBar"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:visibility="invisible"/>
+        </RelativeLayout>
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/nameText"
             android:hint="Your Full Name"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:layout_marginTop="10dp"/>
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -44,7 +63,8 @@
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:id="@+id/checkBoxLayout">
             <CheckBox
                 android:id="@+id/checkMBBSId"
                 android:layout_width="wrap_content"
@@ -87,8 +107,8 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/parmanentAddressText"
-            android:hint="Parmanent Address (Optional)"
+            android:id="@+id/permanentAddressText"
+            android:hint="Permanent Address (Optional)"
             android:inputType="textLongMessage" />
 
         <EditText
@@ -101,13 +121,13 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/emailEditText"
+            android:id="@+id/emailText"
             android:hint="Email"
             android:inputType="textEmailAddress" />
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/passwordEditText"
+            android:id="@+id/passwordText"
             android:hint="Password"
             android:inputType="textPassword" />
         <Button

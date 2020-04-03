@@ -19,10 +19,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.io.InputStream;
+
 public class SignInActivityForDoctor extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "SignInActivityForDoctor";
     
-    private Button signInButton, signUpButtonForDoctor;
+    private Button signInButtonForDoctor, signUpButtonForDoctor;
     private TextView signUpTextView;
     private EditText emailText;
     private EditText passwordText;
@@ -42,7 +44,7 @@ public class SignInActivityForDoctor extends AppCompatActivity implements View.O
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         //finding views
-        signInButton = (Button) findViewById(R.id.signInButton);
+        signInButtonForDoctor = (Button) findViewById(R.id.signInButtonForDoctorId);
         signUpTextView = (TextView) findViewById(R.id.signUpTextView);
         emailText = (EditText) findViewById(R.id.usernameText);
         passwordText = (EditText) findViewById(R.id.passwordText);
@@ -57,16 +59,31 @@ public class SignInActivityForDoctor extends AppCompatActivity implements View.O
 
         //Setting button on click listener
         signUpButtonForDoctor.setOnClickListener(this);
-        signInButton.setOnClickListener(this);
+        signInButtonForDoctor.setOnClickListener(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (mAuth.getCurrentUser() != null) {
+            Log.d(TAG, "onStart: current user: "+mAuth.getCurrentUser().getEmail());
+
+            finish();
+
+            Intent intent = new Intent(SignInActivityForDoctor.this, DoctorDashBoardActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        }
     }
 
     @Override
     public void onClick(View v) {
-        userDetails.setUsername(emailText.getText().toString());
+        userDetails.setEmail(emailText.getText().toString());
         userDetails.setPassword(passwordText.getText().toString());
 
         switch (v.getId()) {
-            case R.id.signInButton : {
+            case R.id.signInButtonForDoctorId : {
                 Log.d(TAG, "onClick: Sign In Button Clicked");
 
                 userLogin(userDetails);
@@ -76,9 +93,11 @@ public class SignInActivityForDoctor extends AppCompatActivity implements View.O
             case R.id.signUpButtonForDoctorId: {
                 Log.d(TAG, "onClick: Sign Up Button clicked");
 
+                finish();
+
                 //Intenting to Sign Up Activity
-                Intent intent = new Intent(SignInActivityForDoctor.this,
-                        SignUpActivityForDoctor.class);
+                Intent intent = new Intent(SignInActivityForDoctor.this, SignUpActivityForDoctor.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             }
             break;
@@ -121,9 +140,12 @@ public class SignInActivityForDoctor extends AppCompatActivity implements View.O
                         if (task.isSuccessful()) {
                             Log.d(TAG, "onComplete: Log in successful");
 
+                            progressBar.setVisibility(View.GONE);
+
                             finish();
+
                             //Intenting layout...................
-                            Intent intent = new Intent(SignInActivityForDoctor.this, ProfileSelectingActivity.class);
+                            Intent intent = new Intent(SignInActivityForDoctor.this, DoctorDashBoardActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
                         } else {
