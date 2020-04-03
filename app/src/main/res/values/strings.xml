@@ -2,4 +2,6 @@
     <string name="app_name">Care Bear</string>
     <string name="alertTitle">Care Bear - In a way of Healthiness</string>
     <string name="alertMassage">Do you want to exit ?</string>
+    <string name="nav_open">Open</string>
+    <string name="nav_close">Close</string>
 </resources>
