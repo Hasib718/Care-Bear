@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,7 +47,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         Random random = new Random();
         int color = Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256));
 
-        holder.cCamberInfoLayout.getChildAt(0).setBackgroundColor(color);
+        holder.cCamberInfoLayout.getChildAt(1).setBackgroundColor(color);
         holder.cChamberName.setText(aChamberName.get(position));
         holder.cChamberAddress.setText(aChamberAddress.get(position));
 
@@ -69,7 +70,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public class ChamberViewHolder extends RecyclerView.ViewHolder {
         TextView cChamberName;
         TextView cChamberAddress;
-        ConstraintLayout cCamberInfoLayout;
+        LinearLayout cCamberInfoLayout;
 
         public ChamberViewHolder(@NonNull View itemView) {
             super(itemView);

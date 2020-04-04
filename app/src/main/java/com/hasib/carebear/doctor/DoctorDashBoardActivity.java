@@ -11,7 +11,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.hasib.carebear.R;
@@ -22,11 +24,15 @@ import java.util.List;
 public class DoctorDashBoardActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "DoctorDashBoardActivity";
 
+    private FloatingActionButton chamberAddingButton;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
+
     private List<String> mChamberName = new ArrayList<>();
     private List<String> mChamberAddress = new ArrayList<>();
+    private RecyclerView recyclerView;
+    private RecyclerViewAdapter adapter;
 
     private FirebaseAuth mAuth;
 
@@ -38,6 +44,7 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
         //Enable HamBurger Action Bar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        chamberAddingButton = findViewById(R.id.chamberAddingButtonId);
         navigationView = findViewById(R.id.navigationId);
         drawerLayout = findViewById(R.id.drawerId);
         toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close);
@@ -56,6 +63,18 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
         mChamberAddress.add("Sylhet");
         mChamberAddress.add("Jessore");
 
+        chamberAddingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: chamber adding button pressed");
+
+                mChamberName.add("Duck");
+                mChamberAddress.add("Dhaka");
+
+                adapter.notifyDataSetChanged();
+            }
+        });
+
         //Recycler view
         initChamberRecyclerView();
     }
@@ -63,8 +82,8 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
     private void initChamberRecyclerView() {
         Log.d(TAG, "initChamberRecyclerView: init recyclerView");
 
-        RecyclerView recyclerView = findViewById(R.id.doctorChamberRecyclerView);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, mChamberName, mChamberAddress);
+        recyclerView = findViewById(R.id.doctorChamberRecyclerView);
+        adapter = new RecyclerViewAdapter(this, mChamberName, mChamberAddress);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
