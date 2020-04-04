@@ -1,9 +1,11 @@
-package com.hasib.carebear;
+package com.hasib.carebear.doctor;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +13,11 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.hasib.carebear.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DoctorDashBoardActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "DoctorDashBoardActivity";
@@ -18,6 +25,10 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
+    private List<String> mChamberName = new ArrayList<>();
+    private List<String> mChamberAddress = new ArrayList<>();
+
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +46,27 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
         toggle.syncState();
 
         navigationView.setNavigationItemSelectedListener(this);
+
+        mAuth = FirebaseAuth.getInstance();
+
+        mChamberName.add("Fuck");
+        mChamberName.add("Suck");
+        mChamberName.add("Duck");
+        mChamberAddress.add("Dhaka");
+        mChamberAddress.add("Sylhet");
+        mChamberAddress.add("Jessore");
+
+        //Recycler view
+        initChamberRecyclerView();
+    }
+
+    private void initChamberRecyclerView() {
+        Log.d(TAG, "initChamberRecyclerView: init recyclerView");
+
+        RecyclerView recyclerView = findViewById(R.id.doctorChamberRecyclerView);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, mChamberName, mChamberAddress);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     @Override
@@ -65,8 +97,11 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
             break;
 
             case R.id.signOutMenuId : {
-                Log.d(TAG, "onNavigationItemSelected: user siging out");
+                Log.d(TAG, "onNavigationItemSelected: user signing out");
 
+                mAuth.signOut();
+                finish();
+                startActivity(new Intent(DoctorDashBoardActivity.this, SignInActivityForDoctor.class));
             }
             break;
         }

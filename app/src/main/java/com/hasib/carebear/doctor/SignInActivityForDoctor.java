@@ -1,4 +1,4 @@
-package com.hasib.carebear;
+package com.hasib.carebear.doctor;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,8 +18,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-
-import java.io.InputStream;
+import com.hasib.carebear.R;
+import com.hasib.carebear.UserDetails;
 
 public class SignInActivityForDoctor extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "SignInActivityForDoctor";
@@ -92,8 +92,6 @@ public class SignInActivityForDoctor extends AppCompatActivity implements View.O
 
             case R.id.signUpButtonForDoctorId: {
                 Log.d(TAG, "onClick: Sign Up Button clicked");
-
-                finish();
 
                 //Intenting to Sign Up Activity
                 Intent intent = new Intent(SignInActivityForDoctor.this, SignUpActivityForDoctor.class);

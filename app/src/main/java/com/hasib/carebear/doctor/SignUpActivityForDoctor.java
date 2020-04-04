@@ -1,4 +1,4 @@
-package com.hasib.carebear;
+package com.hasib.carebear.doctor;
 
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -36,9 +36,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.hasib.carebear.R;
+import com.hasib.carebear.UserDetails;
 
 import java.io.IOException;
-import java.util.UUID;
 
 public class SignUpActivityForDoctor extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "SignUpActivityForDoctor";

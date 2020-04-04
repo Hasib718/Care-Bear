@@ -8,7 +8,7 @@
     android:gravity="center"
     android:padding="10dp"
     android:background="#69FD69"
-    tools:context=".SignInActivityForPatient">
+    tools:context=".patient.SignInActivityForPatient">
 
 
     <LinearLayout
