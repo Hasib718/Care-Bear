@@ -12,7 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.hasib.carebear.R;
-import com.hasib.carebear.UserDetails;
+import com.hasib.carebear.doctor.UserDetails;
 
 public class SignInActivityForPatient extends AppCompatActivity implements View.OnClickListener {
 

@@ -37,7 +37,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.hasib.carebear.R;
-import com.hasib.carebear.UserDetails;
 
 import java.io.IOException;
 

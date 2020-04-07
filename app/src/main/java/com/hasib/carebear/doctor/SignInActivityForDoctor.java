@@ -19,7 +19,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.hasib.carebear.R;
-import com.hasib.carebear.UserDetails;
 
 public class SignInActivityForDoctor extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "SignInActivityForDoctor";

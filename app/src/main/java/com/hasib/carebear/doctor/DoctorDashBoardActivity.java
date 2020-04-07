@@ -3,25 +3,30 @@ package com.hasib.carebear.doctor;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.hasib.carebear.MainActivity;
 import com.hasib.carebear.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DoctorDashBoardActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class DoctorDashBoardActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ChamberAddingDialog.ChamberAddingDialogListener {
     private static final String TAG = "DoctorDashBoardActivity";
 
     private FloatingActionButton chamberAddingButton;
@@ -71,12 +76,19 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
                 mChamberName.add("Duck");
                 mChamberAddress.add("Dhaka");
 
+                openDialog();
+
                 adapter.notifyDataSetChanged();
             }
         });
 
         //Recycler view
         initChamberRecyclerView();
+    }
+
+    private void openDialog() {
+        ChamberAddingDialog chamberAddingDialog = new ChamberAddingDialog(this);
+        chamberAddingDialog.show(getSupportFragmentManager(), "Chamber Adding Dialog");
     }
 
     private void initChamberRecyclerView() {
@@ -127,4 +139,54 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
 
         return false;
     }
+
+    @Override
+    public void chamberNameTexts(String name) {
+
+    }
+
+//    private void getLocationPermisson() {
+//        Log.d(TAG, "getLocationPermisson: getting location permission");
+//        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.INTERNET};
+//
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+//                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
+//        } else {
+//            mLocationPermissionsGranted = true;
+//            initMap();
+//        }
+//    }
+//
+//    private void initMap() {
+//        Log.d(TAG, "initMap: initializing map");
+//        SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager()
+//                .findFragmentById(R.id.google_Map);
+//        supportMapFragment.getMapAsync(DoctorDashBoardActivity.this);
+//    }
+//
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        Log.d(TAG, "onRequestPermissionsResult: called");
+//        mLocationPermissionsGranted = false;
+//
+//        switch (requestCode) {
+//            case LOCATION_PERMISSION_REQUEST_CODE:{
+//                if (grantResults.length > 0){
+//                    for (int i=0; i<grantResults.length; i++){
+//                        if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+//                            mLocationPermissionsGranted = false;
+//                            Log.d(TAG, "onRequestPermissionsResult: permisson failed");
+//                            return;
+//                        }
+//                    }
+//
+//                    Log.d(TAG, "onRequestPermissionsResult: permisson granted");
+//                    mLocationPermissionsGranted = true;
+//                    initMap();
+//                }
+//            }
+//        }
+//    }
+
 }
