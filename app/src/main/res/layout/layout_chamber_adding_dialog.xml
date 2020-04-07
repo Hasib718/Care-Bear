@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/chamberNameId"
+            android:hint="Chamber Name"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/mapLayoutParentId">
+            <com.google.android.gms.maps.MapView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/google_Map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"/>
+            <SearchView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/locationSearchView"
+                android:queryHint="Search Here"
+                android:iconifiedByDefault="false"
+                android:layout_margin="10dp"
+                android:elevation="5dp"
+                android:background="@drawable/bg_round"
+                android:onClick="searchLocation"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+</RelativeLayout>

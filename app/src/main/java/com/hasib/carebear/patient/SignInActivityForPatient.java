@@ -1,4 +1,4 @@
-package com.hasib.carebear;
+package com.hasib.carebear.patient;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,7 +11,8 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
+import com.hasib.carebear.R;
+import com.hasib.carebear.doctor.UserDetails;
 
 public class SignInActivityForPatient extends AppCompatActivity implements View.OnClickListener {
 

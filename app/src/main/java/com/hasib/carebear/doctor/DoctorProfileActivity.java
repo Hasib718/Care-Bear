@@ -1,14 +1,16 @@
-package com.hasib.carebear;
+package com.hasib.carebear.doctor;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-public class SignUpActivityForPatient extends AppCompatActivity {
+import com.hasib.carebear.R;
+
+public class DoctorProfileActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_up_for_patient);
+        setContentView(R.layout.activity_doctor_profile);
     }
 }
