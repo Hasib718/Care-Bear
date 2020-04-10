@@ -2,33 +2,39 @@ package com.hasib.carebear.doctor;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.hasib.carebear.MainActivity;
 import com.hasib.carebear.R;
+import com.hasib.carebear.doctor.adapter.RecyclerViewAdapter;
+import com.hasib.carebear.doctor.container.Chamber;
+import com.hasib.carebear.doctor.fragment.ChamberAddingDialog;
+import com.hasib.carebear.doctor.fragment.ChamberEditingDialog;
+import com.hasib.carebear.doctor.fragment.DoctorProfileActivity;
+import com.hasib.carebear.doctor.listener.ChamberDialogListener;
+import com.hasib.carebear.doctor.listener.ChamberEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DoctorDashBoardActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ChamberAddingDialog.ChamberAddingDialogListener {
+public class DoctorDashBoardActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ChamberDialogListener, ChamberEventListener {
     private static final String TAG = "DoctorDashBoardActivity";
 
     //Floating Action "+" Bar
@@ -41,9 +47,8 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
     //Navigation Menu
     private NavigationView navigationView;
 
-    //Container for storing chamberName & address
-    private List<String> mChamberName = new ArrayList<>();
-    private List<String> mChamberAddress = new ArrayList<>();
+    //Chamber class
+    private List<Chamber> chamberList;
 
     //For showing chamber details to user
     private RecyclerView recyclerView;
@@ -54,6 +59,7 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
 
     //Firebase realtime database
     private DatabaseReference databaseReference;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +89,9 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
         //Firebase realtime database initialization
         databaseReference = FirebaseDatabase.getInstance().getReference("doctors_profile_info/chamber_info");
 
+        //Chamber class initialization;
+        chamberList = new ArrayList<>();
+
         //Floating button on click listener
         chamberAddingButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +105,9 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
 
         //Recycler view initialization method
         initChamberRecyclerView();
+
+        //Adapter Listener
+        this.adapter.setListener(this);
     }
 
     //Method for chamber adding dialog box
@@ -114,7 +126,7 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
         recyclerView = findViewById(R.id.doctorChamberRecyclerView);
 
         //Initializing recycler view adapter
-        adapter = new RecyclerViewAdapter(this, mChamberName, mChamberAddress);
+        adapter = new RecyclerViewAdapter(this, chamberList);
 
         //setting adapter to recycler view
         recyclerView.setAdapter(adapter);
@@ -129,6 +141,8 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
         if (toggle.onOptionsItemSelected(item)) {
             return true;
         }
+
+        // TODO: 10-Apr-20 Have to implement OnActionBar edit and delete option for chamber
 
         return super.onOptionsItemSelected(item);
     }
@@ -172,11 +186,55 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
 
     //Method for getting data from chamber adding dialog box
     @Override
-    public void chamberNameTexts(String name, String address) {
-        mChamberName.add(name);
-        mChamberAddress.add(address);
+    public void chamberAddingTexts(String name, String fess, String address, LatLng latLng) {
+        chamberList.add(new Chamber(name, fess, address, latLng));
+
+        // TODO: 10-Apr-20 have to add firebase database support
 
         //Notifying recycler view for adapter on data change
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void chamberEditingTexts(String name, String fees, String address, LatLng latLng, int position) {
+        chamberList.set(position, new Chamber(name, fees, address, latLng));
+
+        // TODO: 10-Apr-20 have to add firebase database support on chamber info change
+
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onChamberClick(final Chamber chamber, int position) {
+        Log.d(TAG, "onChamberClick: It's working");
+
+        ChamberEditingDialog chamberEditingDialog = new ChamberEditingDialog(this, chamber, position);
+        chamberEditingDialog.show(getSupportFragmentManager(), "Edit Chamber Info");
+    }
+
+    @Override
+    public void onChamberLongClick(Chamber chamber, final int position) {
+        Log.d(TAG, "onChamberLongClick: Long Click is working");
+
+        new AlertDialog.Builder(this)
+                .setTitle("Are you want to delete this chamber?")
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        chamberList.remove(position);
+
+                        // TODO: 10-Apr-20 have to add firebase database support on chamber delete 
+                        
+                        adapter.notifyDataSetChanged();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        
+                    }
+                })
+                .create()
+                .show();
     }
 }

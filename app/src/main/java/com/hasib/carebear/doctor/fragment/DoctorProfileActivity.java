@@ -1,4 +1,4 @@
-package com.hasib.carebear.doctor;
+package com.hasib.carebear.doctor.fragment;
 
 import androidx.appcompat.app.AppCompatActivity;
 

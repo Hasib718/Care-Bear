@@ -1,4 +1,4 @@
-package com.hasib.carebear.doctor;
+package com.hasib.carebear.doctor.fragment;
 
 import android.Manifest;
 import android.app.Activity;
@@ -37,10 +37,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.hasib.carebear.R;
+import com.hasib.carebear.doctor.listener.ChamberDialogListener;
 
 import java.io.IOException;
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -50,9 +49,10 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
     private static final LatLng SOUTH_POLE = new LatLng(-72.293924, 0.696189);
 
     private EditText chamberNameText;
+    private EditText chamberFeesText;
 
     //A Interface for getting data into the parent activity
-    private ChamberAddingDialogListener listener;
+    private ChamberDialogListener listener;
 
     //For storing parent activity context;
     private Context mContext;
@@ -68,6 +68,7 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
 
     //Long click location address
     String longClickAddress;
+    LatLng longClickLatlng;
 
     //Map
     private GoogleMap mapGoogle;
@@ -95,6 +96,7 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
         final View view = inflater.inflate(R.layout.layout_chamber_adding_dialog, null);
 
         chamberNameText = view.findViewById(R.id.chamberNameId);
+        chamberFeesText = view.findViewById(R.id.chamberFeesId);
         mapView = view.findViewById(R.id.google_Map);
 
         //SearchView
@@ -129,6 +131,8 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
                 LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
                 //Toast.makeText(MainActivity.this, latLng.toString(), Toast.LENGTH_LONG).show();
 
+                // TODO: 10-Apr-20 Have to fix getting exception when no search result found
+
                 mapGoogle.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(address.getLatitude(), address.getLongitude()), 15f));
                 if (markerSearchView != null) {
                     markerSearchView.remove();
@@ -159,7 +163,8 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
                 .setPositiveButton("Add", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        listener.chamberNameTexts(chamberNameText.getEditableText().toString(), longClickAddress);
+                        listener.chamberAddingTexts(chamberNameText.getEditableText().toString(),
+                                chamberFeesText.getText().toString(), longClickAddress, longClickLatlng);
                     }
                 });
 
@@ -179,7 +184,7 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
 
         //Initializing data sharing interface
         try {
-            listener = (ChamberAddingDialogListener) context;
+            listener = (ChamberDialogListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() +
                     "Must implement ChamberAddingDialogListener");
@@ -204,6 +209,7 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
                 if (markerOnMapLongClick != null) {
                     markerOnMapLongClick.remove();
 
+                    longClickLatlng = latLng;
                     longClickAddress = geoCoding(latLng);
 
                     mapGoogle.addMarker(new MarkerOptions()
@@ -288,7 +294,7 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
     }
 
     //Method for getting address from co-ordinates
-    private String geoCoding(LatLng latLng) {
+    public String geoCoding(LatLng latLng) {
         String addressLine = "";
 
         try {
@@ -303,10 +309,5 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
             e.printStackTrace();
         }
         return addressLine;
-    }
-
-    //Interface for sharing data to parent activity
-    public interface ChamberAddingDialogListener {
-        void chamberNameTexts(String name, String Address);
     }
 }
