@@ -1,4 +1,4 @@
-package com.hasib.carebear.doctor;
+package com.hasib.carebear.doctor.fragment;
 
 import android.Manifest;
 import android.app.Activity;
@@ -37,10 +37,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.hasib.carebear.R;
+import com.hasib.carebear.doctor.listener.ChamberDialogListener;
 
 import java.io.IOException;
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -50,9 +49,10 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
     private static final LatLng SOUTH_POLE = new LatLng(-72.293924, 0.696189);
 
     private EditText chamberNameText;
+    private EditText chamberFeesText;
 
     //A Interface for getting data into the parent activity
-    private ChamberAddingDialogListener listener;
+    private ChamberDialogListener listener;
 
     //For storing parent activity context;
     private Context mContext;
@@ -66,12 +66,20 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
     //Storing device current location
     private Location currentLocation;
 
+    //Long click location address
+    String longClickAddress;
+    LatLng longClickLatlng;
+
     //Map
     private GoogleMap mapGoogle;
     private MapView mapView;
 
     //Geocoder
     private Geocoder geocoder;
+
+    //Marker
+    Marker markerSearchView;
+    Marker markerOnMapLongClick;
 
     //Constructor of this class
     public ChamberAddingDialog(Context mContext) {
@@ -88,6 +96,7 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
         final View view = inflater.inflate(R.layout.layout_chamber_adding_dialog, null);
 
         chamberNameText = view.findViewById(R.id.chamberNameId);
+        chamberFeesText = view.findViewById(R.id.chamberFeesId);
         mapView = view.findViewById(R.id.google_Map);
 
         //SearchView
@@ -122,12 +131,12 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
                 LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
                 //Toast.makeText(MainActivity.this, latLng.toString(), Toast.LENGTH_LONG).show();
 
-                Marker temp = mapGoogle.addMarker(new MarkerOptions().position(SOUTH_POLE));
+                // TODO: 10-Apr-20 Have to fix getting exception when no search result found
 
                 mapGoogle.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(address.getLatitude(), address.getLongitude()), 15f));
-                if (temp != null) {
-                    temp.remove();
-                    temp = mapGoogle.addMarker(new MarkerOptions()
+                if (markerSearchView != null) {
+                    markerSearchView.remove();
+                    markerSearchView = mapGoogle.addMarker(new MarkerOptions()
                             .position(new LatLng(address.getLatitude(), address.getLongitude()))
                             .title(geoCoding(new LatLng(address.getLatitude(), address.getLongitude()))));
                 }
@@ -154,7 +163,8 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
                 .setPositiveButton("Add", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        listener.chamberNameTexts(chamberNameText.getEditableText().toString());
+                        listener.chamberAddingTexts(chamberNameText.getEditableText().toString(),
+                                chamberFeesText.getText().toString(), longClickAddress, longClickLatlng);
                     }
                 });
 
@@ -174,7 +184,7 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
 
         //Initializing data sharing interface
         try {
-            listener = (ChamberAddingDialogListener) context;
+            listener = (ChamberDialogListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() +
                     "Must implement ChamberAddingDialogListener");
@@ -187,34 +197,30 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
         MapsInitializer.initialize(mContext);
         mapGoogle = googleMap;
 
+        //Initializing default markers
+        markerSearchView = mapGoogle.addMarker(new MarkerOptions().position(SOUTH_POLE));
+        markerOnMapLongClick = mapGoogle.addMarker(new MarkerOptions().position(SOUTH_POLE));
 
         //Setting On Map Long Click Listener for getting chamber location
         mapGoogle.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
-                Marker temp = null;
 
-                if (temp == null) {
-                    mapGoogle.addMarker(new MarkerOptions()
-                            .position(latLng)
-                            .title(geoCoding(latLng))
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                if (markerOnMapLongClick != null) {
+                    markerOnMapLongClick.remove();
 
-                    Toast.makeText(mContext, "Location Saved", Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    temp.remove();
+                    longClickLatlng = latLng;
+                    longClickAddress = geoCoding(latLng);
 
                     mapGoogle.addMarker(new MarkerOptions()
                             .position(latLng)
-                            .title(geoCoding(latLng))
+                            .title(longClickAddress)
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
 
                     Toast.makeText(mContext, "Location Saved", Toast.LENGTH_SHORT).show();
                 }
             }
         });
-
     }
 
     //Method for asking location permission
@@ -288,7 +294,7 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
     }
 
     //Method for getting address from co-ordinates
-    private String geoCoding(LatLng latLng) {
+    public String geoCoding(LatLng latLng) {
         String addressLine = "";
 
         try {
@@ -303,10 +309,5 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
             e.printStackTrace();
         }
         return addressLine;
-    }
-
-    //Interface for sharing data to parent activity
-    public interface ChamberAddingDialogListener {
-        void chamberNameTexts(String name);
     }
 }

@@ -1,4 +1,4 @@
-package com.hasib.carebear.doctor;
+package com.hasib.carebear.doctor.container;
 
 public class UserDetails {
     private String fullName;

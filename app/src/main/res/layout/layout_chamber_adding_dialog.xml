@@ -13,7 +13,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/chamberNameId"
-            android:hint="Chamber Name"/>
+            android:hint="Chamber Name"
+            android:inputType="textPersonName"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/chamberFeesId"
+            android:hint="Chamber Fees"
+            android:inputType="number"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
