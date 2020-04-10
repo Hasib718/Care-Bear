@@ -16,12 +16,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -50,6 +53,7 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
 
     private EditText chamberNameText;
     private EditText chamberFeesText;
+    private TextView chamberTimeText;
 
     //A Interface for getting data into the parent activity
     private ChamberDialogListener listener;
@@ -93,10 +97,11 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
 
         //Adding layout for showing
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        final View view = inflater.inflate(R.layout.layout_chamber_adding_dialog, null);
+        final View view = inflater.inflate(R.layout.layout_chamber_dialog, null);
 
         chamberNameText = view.findViewById(R.id.chamberNameId);
         chamberFeesText = view.findViewById(R.id.chamberFeesId);
+        chamberTimeText = view.findViewById(R.id.chamberTimeId);
         mapView = view.findViewById(R.id.google_Map);
 
         //SearchView
@@ -150,6 +155,16 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
             }
         });
 
+        final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+
+        chamberTimeText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment timePickerFragment = new TimerPickerFragment();
+                timePickerFragment.setCancelable(false);
+                timePickerFragment.show(fragmentManager, "Time Picker");
+            }
+        });
 
         //Dialog builder
         builder.setView(view)
@@ -212,7 +227,7 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
                     longClickLatlng = latLng;
                     longClickAddress = geoCoding(latLng);
 
-                    mapGoogle.addMarker(new MarkerOptions()
+                    markerOnMapLongClick = mapGoogle.addMarker(new MarkerOptions()
                             .position(latLng)
                             .title(longClickAddress)
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));

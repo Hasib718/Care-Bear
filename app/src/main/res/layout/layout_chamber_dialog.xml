@@ -13,14 +13,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/chamberNameId"
-            android:hint="Chamber Name"
+            android:hint="Name"
             android:inputType="textPersonName"/>
-        <EditText
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/chamberFeesId"
-            android:hint="Chamber Fees"
-            android:inputType="number"/>
+            android:orientation="horizontal">
+            <EditText
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/chamberFeesId"
+                android:hint="Fees"
+                android:inputType="number"/>
+            <TextView
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/chamberTimeId"
+                android:hint="12:00 PM"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/Black"
+                android:textColorHint="@color/Black" />
+
+        </LinearLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"

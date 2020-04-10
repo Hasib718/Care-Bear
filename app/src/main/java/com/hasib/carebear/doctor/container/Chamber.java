@@ -11,14 +11,26 @@ public class Chamber {
     private String chamberFess;
     private String chamberAddress;
     private LatLng chamberLatLng;
+    private String chamberTime;
+    private String chamberOpenDays;
 
     public Chamber() {}
 
-    public Chamber(String chamberName, String chamberFess, String chamberAddress, LatLng chamberLatLng) {
+    public Chamber(String chamberName, String chamberFess, String chamberAddress, LatLng chamberLatLng, String chamberTime, String chamberOpenDays) {
         this.chamberName = chamberName;
         this.chamberFess = chamberFess;
         this.chamberAddress = chamberAddress;
         this.chamberLatLng = chamberLatLng;
+        this.chamberTime = chamberTime;
+        this.chamberOpenDays = chamberOpenDays;
+    }
+
+    public Chamber(String chamberName, String chamberFess, String chamberAddress, LatLng chamberLatLng, String chamberTime) {
+        this.chamberName = chamberName;
+        this.chamberFess = chamberFess;
+        this.chamberAddress = chamberAddress;
+        this.chamberLatLng = chamberLatLng;
+        this.chamberTime = chamberTime;
     }
 
     public String getChamberName() {
@@ -30,7 +42,7 @@ public class Chamber {
     }
 
     public String getChamberFess() {
-        return chamberFess;
+        return chamberFess + " Taka";
     }
 
     public void setChamberFess(String chamberFess) {
@@ -51,5 +63,21 @@ public class Chamber {
 
     public void setChamberLatLng(LatLng chamberLatLng) {
         this.chamberLatLng = chamberLatLng;
+    }
+
+    public String getChamberTime() {
+        return chamberTime;
+    }
+
+    public void setChamberTime(String chamberTime) {
+        this.chamberTime = chamberTime;
+    }
+
+    public String getChamberOpenDays() {
+        return chamberOpenDays;
+    }
+
+    public void setChamberOpenDays(String chamberOpenDays) {
+        this.chamberOpenDays = chamberOpenDays;
     }
 }

@@ -45,12 +45,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(@NonNull ChamberViewHolder holder, final int position) {
         Log.d(TAG, "onBindViewHolder: called");
 
-        Random random = new Random();
-        int color = Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256));
-
-        holder.cCamberInfoLayout.getChildAt(1).setBackgroundColor(color);
         holder.cChamberName.setText(aChamberList.get(position).getChamberName());
         holder.cChamberFees.setText(aChamberList.get(position).getChamberFess());
+        holder.cChamberTime.setText(aChamberList.get(position).getChamberTime());
         holder.cChamberAddress.setText(aChamberList.get(position).getChamberAddress());
 
         final Chamber chamber = aChamberList.get(position);
@@ -60,7 +57,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             public void onClick(View v) {
                 Log.d(TAG, "onClick: "+aChamberList.get(position).getChamberName());
 
-                Toast.makeText(aContext, aChamberList.get(position).getChamberName(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(aContext, aChamberList.get(position).getChamberName(), Toast.LENGTH_SHORT).show();
 
                 listener.onChamberClick(chamber, position);
             }
@@ -87,6 +84,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public class ChamberViewHolder extends RecyclerView.ViewHolder {
         TextView cChamberName;
         TextView cChamberFees;
+        TextView cChamberTime;
         TextView cChamberAddress;
         LinearLayout cCamberInfoLayout;
 
@@ -95,6 +93,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
             cChamberName = itemView.findViewById(R.id.chamber_name_id);
             cChamberFees = itemView.findViewById(R.id.chamber_fee_id);
+            cChamberTime = itemView.findViewById(R.id.chamber_time_id);
             cChamberAddress = itemView.findViewById(R.id.chamber_address_id);
             cCamberInfoLayout = itemView.findViewById(R.id.chamber_info_id);
         }

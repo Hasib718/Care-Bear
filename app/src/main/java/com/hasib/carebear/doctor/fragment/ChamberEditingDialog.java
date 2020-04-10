@@ -13,13 +13,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -43,6 +45,7 @@ public class ChamberEditingDialog extends AppCompatDialogFragment implements OnM
 
     private EditText chamberNameText;
     private EditText chamberFeesText;
+    private TextView chamberTimeText;
 
     //A Interface for getting data into the parent activity
     private ChamberDialogListener listener;
@@ -58,8 +61,8 @@ public class ChamberEditingDialog extends AppCompatDialogFragment implements OnM
     private Location currentLocation;
 
     //Long click location address
-    String longClickAddress;
-    LatLng longClickLatlng;
+    private String longClickAddress;
+    private LatLng longClickLatlng;
 
     //Map
     private GoogleMap mapGoogle;
@@ -69,8 +72,8 @@ public class ChamberEditingDialog extends AppCompatDialogFragment implements OnM
     private Geocoder geocoder;
 
     //Marker
-    Marker markerSearchView;
-    Marker markerOnMapLongClick;
+    private Marker markerSearchView;
+    private Marker markerOnMapLongClick;
 
     //Constructor of this class
     public ChamberEditingDialog(Context mContext, Chamber chamber, int position) {
@@ -86,7 +89,7 @@ public class ChamberEditingDialog extends AppCompatDialogFragment implements OnM
 
         //Adding layout for showing
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        final View view = inflater.inflate(R.layout.layout_chamber_adding_dialog, null);
+        final View view = inflater.inflate(R.layout.layout_chamber_dialog, null);
         dummyView = view;
 
         chamberNameText = view.findViewById(R.id.chamberNameId);
@@ -96,6 +99,7 @@ public class ChamberEditingDialog extends AppCompatDialogFragment implements OnM
         //Setting last saved chamber info
         chamberNameText.setText(chamber.getChamberName());
         chamberFeesText.setText(chamber.getChamberFess());
+        chamberTimeText.setText(chamber.getChamberTime());
 
         //SearchView
         final SearchView searchView = view.findViewById(R.id.locationSearchView);
@@ -145,6 +149,17 @@ public class ChamberEditingDialog extends AppCompatDialogFragment implements OnM
             }
         });
 
+        final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+
+        chamberTimeText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment timePickerFragment = new TimerPickerFragment();
+                timePickerFragment.setCancelable(false);
+                timePickerFragment.show(fragmentManager, "Time Picker");
+            }
+        });
+
 
         //Dialog builder
         builder.setView(view)
@@ -158,8 +173,16 @@ public class ChamberEditingDialog extends AppCompatDialogFragment implements OnM
                 .setPositiveButton("Edit", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        if (longClickAddress.isEmpty()) {
+                            longClickAddress = chamber.getChamberAddress();
+                        }
+                        if (longClickLatlng == null) {
+                            longClickLatlng = chamber.getChamberLatLng();
+                        }
+
                         listener.chamberEditingTexts(chamberNameText.getEditableText().toString(),
-                                chamberFeesText.getText().toString(), longClickAddress, longClickLatlng, position);
+                                chamberFeesText.getText().toString(), longClickAddress, longClickLatlng,
+                                chamberTimeText.getText().toString(), position);
                     }
                 });
 
@@ -206,7 +229,7 @@ public class ChamberEditingDialog extends AppCompatDialogFragment implements OnM
                     longClickLatlng = latLng;
                     longClickAddress = geoCoding(latLng);
 
-                    mapGoogle.addMarker(new MarkerOptions()
+                    markerOnMapLongClick = mapGoogle.addMarker(new MarkerOptions()
                             .position(latLng)
                             .title(longClickAddress)
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
