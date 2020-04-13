@@ -35,7 +35,7 @@
 
     <Button
         android:id="@+id/signInOrUpButtonForPatientId"
-        android:layout_width="250dp"
+        android:layout_width="230dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:padding="5dp"
@@ -48,7 +48,7 @@
 
     <Button
         android:id="@+id/signInOrUpButtonForDoctorId"
-        android:layout_width="250dp"
+        android:layout_width="230dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:padding="5dp"
@@ -69,6 +69,6 @@
         android:text="Emergency (Ambulance)"
         android:textAllCaps="false"
         android:textColor="#F1EFF4"
-        android:textSize="20sp" />
+        android:textSize="16sp" />
 
 </LinearLayout>

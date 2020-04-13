@@ -18,6 +18,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <ImageView
                 android:layout_centerHorizontal="true"
                 android:layout_width="150dp"
@@ -33,19 +34,39 @@
                 android:layout_centerVertical="true"
                 android:visibility="invisible"/>
         </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Touch The bear for Adding your Photo"
+            android:layout_gravity="center"/>
+
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/nameText"
-            android:hint="Your Full Name"
+            android:hint="Name"
             android:inputType="textPersonName"
             android:layout_marginTop="10dp"/>
-        <EditText
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/mobileNoText"
-            android:hint="Mobile No.(Without +88)"
-            android:inputType="text|number" />
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+88"
+                android:textSize="18sp"
+                />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/mobileNoText"
+                android:hint="Mobile No."
+                android:inputType="text|number" />
+
+        </LinearLayout>
 
         <EditText
             android:layout_width="match_parent"
