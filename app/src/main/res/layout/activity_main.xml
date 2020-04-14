@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#69FD69"
+    android:background="@drawable/login_gradient"
     android:gravity="center"
     android:orientation="vertical"
     tools:context=".MainActivity">
@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Care Bear"
-        android:textColor="#253FD3"
+        android:textColor="#97103D"
         android:textSize="25sp"
         android:textStyle="bold"
         />
@@ -27,7 +27,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="In a way of Healthiness"
-        android:textColor="#253FD3"
+        android:textColor="#272830"
         android:textSize="15sp"
         android:textStyle="italic"
         android:layout_marginBottom="50dp"/>
@@ -35,7 +35,7 @@
 
     <Button
         android:id="@+id/signInOrUpButtonForPatientId"
-        android:layout_width="230dp"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:padding="5dp"
@@ -48,7 +48,7 @@
 
     <Button
         android:id="@+id/signInOrUpButtonForDoctorId"
-        android:layout_width="230dp"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:padding="5dp"
@@ -61,8 +61,8 @@
 
     <Button
         android:id="@+id/emergencyButtonId"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="120dp"
+        android:layout_height="60dp"
         android:background="@drawable/button_reshape"
         android:backgroundTint="@color/Brown"
         android:padding="10sp"
