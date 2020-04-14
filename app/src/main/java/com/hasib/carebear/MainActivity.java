@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 
 import com.hasib.carebear.doctor.SignInActivityForDoctor;
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         signUpoRInButtonForPatient = (Button) findViewById(R.id.signInOrUpButtonForPatientId);
         emergencyButton = (Button) findViewById(R.id.emergencyButtonId);
 
+        getSupportActionBar().hide();
 
         //Set in onClickListener
         signUpoRInButtonForPatient.setOnClickListener(this);
