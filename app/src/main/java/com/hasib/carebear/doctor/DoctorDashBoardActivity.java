@@ -41,6 +41,7 @@ import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class DoctorDashBoardActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         ChamberDialogListener, ChamberEventListener, TimePickerListener {
@@ -260,8 +261,8 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
 
     //Method for getting data from chamber adding dialog box
     @Override
-    public void chamberAddingTexts(String name, String fess, String address, LatLng latLng) {
-        chamberList.add(new Chamber(name, fess, address, latLng, chamberTime));
+    public void chamberAddingTexts(String name, String fess, Map<String, Boolean> activeDays, String address, LatLng latLng) {
+        chamberList.add(new Chamber(name, fess, address, latLng, chamberTime, activeDays));
 
         // TODO: 10-Apr-20 have to add firebase database support
 

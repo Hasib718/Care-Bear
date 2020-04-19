@@ -4,6 +4,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Chamber {
     //Container for storing chamberName & address
@@ -12,11 +13,11 @@ public class Chamber {
     private String chamberAddress;
     private LatLng chamberLatLng;
     private String chamberTime;
-    private String chamberOpenDays;
+    private Map<String, Boolean> chamberOpenDays;
 
     public Chamber() {}
 
-    public Chamber(String chamberName, String chamberFess, String chamberAddress, LatLng chamberLatLng, String chamberTime, String chamberOpenDays) {
+    public Chamber(String chamberName, String chamberFess, String chamberAddress, LatLng chamberLatLng, String chamberTime, Map<String, Boolean> chamberOpenDays) {
         this.chamberName = chamberName;
         this.chamberFess = chamberFess;
         this.chamberAddress = chamberAddress;
@@ -73,11 +74,11 @@ public class Chamber {
         this.chamberTime = chamberTime;
     }
 
-    public String getChamberOpenDays() {
+    public Map<String, Boolean> getChamberOpenDays() {
         return chamberOpenDays;
     }
 
-    public void setChamberOpenDays(String chamberOpenDays) {
+    public void setChamberOpenDays(Map<String, Boolean> chamberOpenDays) {
         this.chamberOpenDays = chamberOpenDays;
     }
 }

@@ -15,9 +15,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -45,8 +47,10 @@ import com.hasib.carebear.doctor.listener.ChamberDialogListener;
 import com.hasib.carebear.doctor.listener.ChamberAddingDialogTimeSetListener;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMapReadyCallback {
     private static final String TAG = "ChamberAddingDialog";
@@ -56,6 +60,16 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
     private EditText chamberNameText;
     private EditText chamberFeesText;
     private TextView chamberTimeText;
+
+    //Day picker buttons
+    private LinearLayout parentDayPicker;
+    private ToggleButton toggleSunday;
+    private ToggleButton toggleMonday;
+    private ToggleButton toggleTuesday;
+    private ToggleButton toggleWednesday;
+    private ToggleButton toggleThursday;
+    private ToggleButton toggleFriday;
+    private ToggleButton toggleSaturday;
 
     //A Interface for getting data into the parent activity
     private ChamberDialogListener listener;
@@ -90,6 +104,8 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
     //Chamber Time
     private String chamberTime;
 
+    //Chamber active day
+    private Map<String, Boolean> markedDays = new LinkedHashMap<>(7);
 
     //Constructor of this class
     public ChamberAddingDialog(Context mContext) {
@@ -109,6 +125,23 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
         chamberNameText = view.findViewById(R.id.chamberNameId);
         chamberFeesText = view.findViewById(R.id.chamberFeesId);
         chamberTimeText = view.findViewById(R.id.chamberTimeId);
+        parentDayPicker = view.findViewById(R.id.parentDayPicker);
+        toggleSunday = view.findViewById(R.id.toggle_Sunday);
+        toggleMonday = view.findViewById(R.id.toggle_Monday);
+        toggleTuesday = view.findViewById(R.id.toggle_Tuesday);
+        toggleWednesday = view.findViewById(R.id.toggle_Wednesday);
+        toggleThursday = view.findViewById(R.id.toggle_Thursday);
+        toggleFriday = view.findViewById(R.id.toggle_Friday);
+        toggleSaturday = view.findViewById(R.id.toggle_Saturday);
+
+        markedDays.put("S", false);
+        markedDays.put("M", false);
+        markedDays.put("T", false);
+        markedDays.put("W", false);
+        markedDays.put("Th", false);
+        markedDays.put("F", false);
+        markedDays.put("Sa", false);
+
         mapView = view.findViewById(R.id.google_Map);
 
         //SearchView
@@ -201,8 +234,18 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
                 .setPositiveButton("Add", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        //Check individual Day items.
+                        Log.d(TAG, "onClick: parent day picker child count "+parentDayPicker.getChildCount());
+//                        for (int i=0; i<parentDayPicker.getChildCount(); i++) {
+//                            if (((ToggleButton) parentDayPicker.getChildAt(i)).isChecked()) {
+//                                markedDays.put(((ToggleButton) parentDayPicker.getChildAt(i)).getText().toString(), true);
+//                            }
+//                        }
+//
+//                        Log.d(TAG, "onClick: active days "+markedDays.toString());
+
                         listener.chamberAddingTexts(chamberNameText.getEditableText().toString(),
-                                chamberFeesText.getText().toString(), longClickAddress, longClickLatlng);
+                                chamberFeesText.getText().toString(), markedDays, longClickAddress, longClickLatlng);
                     }
                 });
 

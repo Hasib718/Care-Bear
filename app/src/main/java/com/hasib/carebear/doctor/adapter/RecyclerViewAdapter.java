@@ -49,6 +49,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.cChamberFees.setText(aChamberList.get(position).getChamberFess());
         holder.cChamberTime.setText(aChamberList.get(position).getChamberTime());
         holder.cChamberAddress.setText(aChamberList.get(position).getChamberAddress());
+//        holder.cChamberActiveDays.setText(aChamberList.get(position).getChamberOpenDays());
 
         final Chamber chamber = aChamberList.get(position);
 
@@ -86,6 +87,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         TextView cChamberFees;
         TextView cChamberTime;
         TextView cChamberAddress;
+        TextView cChamberActiveDays;
         LinearLayout cCamberInfoLayout;
 
         public ChamberViewHolder(@NonNull View itemView) {
@@ -95,6 +97,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             cChamberFees = itemView.findViewById(R.id.chamber_fee_id);
             cChamberTime = itemView.findViewById(R.id.chamber_time_id);
             cChamberAddress = itemView.findViewById(R.id.chamber_address_id);
+            //cChamberActiveDays = itemView.findViewById(R.id.chamber_open_days_id);
             cCamberInfoLayout = itemView.findViewById(R.id.chamber_info_id);
         }
     }
