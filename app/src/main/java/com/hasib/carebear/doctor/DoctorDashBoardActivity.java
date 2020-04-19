@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,7 +13,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -35,6 +33,7 @@ import com.hasib.carebear.doctor.fragment.ChamberEditingDialog;
 import com.hasib.carebear.doctor.fragment.DoctorProfileActivity;
 import com.hasib.carebear.doctor.listener.ChamberDialogListener;
 import com.hasib.carebear.doctor.listener.ChamberEventListener;
+import com.hasib.carebear.doctor.listener.ChamberAddingDialogTimeSetListener;
 import com.hasib.carebear.doctor.listener.TimePickerListener;
 
 import java.sql.Time;
@@ -78,6 +77,11 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
     private MenuItem editButton;
     private MenuItem deleteButton;
 
+    /**
+     * Interface for setting time on ChamberAddingDialog after choosing time
+     */
+    private ChamberAddingDialogTimeSetListener testing;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,6 +113,7 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
 
         //Chamber class initialization;
         chamberList = new ArrayList<>();
+
 
         //Floating button on click listener
         chamberAddingButton.setOnClickListener(new View.OnClickListener() {
@@ -288,10 +293,23 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
         this.position = position;
     }
 
+    /**
+     * Interface listener method for getting time from TimePickerDialog
+     */
     @Override
     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
+        Log.d(TAG, "onTimeSet: on doctor dash time class");
         Time tme = new Time(hour, minute, 0);
         Format formatter = new SimpleDateFormat("h:mm a");
         chamberTime = formatter.format(tme);
+
+        testing.setTime(chamberTime);
+    }
+
+    /**
+     * Interface method for
+     */
+    public void setChamberAddingDialogTimeSetListener(ChamberAddingDialogTimeSetListener chamberAddingDialogTimeSetListener) {
+        this.testing = chamberAddingDialogTimeSetListener;
     }
 }

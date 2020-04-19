@@ -13,6 +13,9 @@ import androidx.fragment.app.DialogFragment;
 
 import com.hasib.carebear.doctor.listener.TimePickerListener;
 
+import java.sql.Time;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class TimerPickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
@@ -44,6 +47,7 @@ public class TimerPickerFragment extends DialogFragment implements TimePickerDia
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        listener.onTimeSet(view, hourOfDay, minute);
+       listener.onTimeSet(view, hourOfDay, minute);
     }
+
 }

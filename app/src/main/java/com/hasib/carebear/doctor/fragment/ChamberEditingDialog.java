@@ -181,8 +181,7 @@ public class ChamberEditingDialog extends AppCompatDialogFragment implements OnM
                         }
 
                         listener.chamberEditingTexts(chamberNameText.getEditableText().toString(),
-                                chamberFeesText.getText().toString(), longClickAddress, longClickLatlng,
-                                chamberTimeText.getText().toString(), position);
+                                chamberFeesText.getText().toString(), longClickAddress, longClickLatlng, position);
                     }
                 });
 

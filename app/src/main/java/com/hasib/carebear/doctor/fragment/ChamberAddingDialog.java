@@ -40,7 +40,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.hasib.carebear.R;
+import com.hasib.carebear.doctor.DoctorDashBoardActivity;
 import com.hasib.carebear.doctor.listener.ChamberDialogListener;
+import com.hasib.carebear.doctor.listener.ChamberAddingDialogTimeSetListener;
 
 import java.io.IOException;
 import java.util.List;
@@ -85,6 +87,10 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
     Marker markerSearchView;
     Marker markerOnMapLongClick;
 
+    //Chamber Time
+    private String chamberTime;
+
+
     //Constructor of this class
     public ChamberAddingDialog(Context mContext) {
         this.mContext = mContext;
@@ -98,6 +104,7 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
         //Adding layout for showing
         LayoutInflater inflater = getActivity().getLayoutInflater();
         final View view = inflater.inflate(R.layout.layout_chamber_dialog, null);
+
 
         chamberNameText = view.findViewById(R.id.chamberNameId);
         chamberFeesText = view.findViewById(R.id.chamberFeesId);
@@ -155,14 +162,30 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
             }
         });
 
+        /**
+         * Fragment support manager for TimePickerDialog
+         */
         final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
 
+        /**
+         * TimePickerDialog for choosing chamber time
+         */
         chamberTimeText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DialogFragment timePickerFragment = new TimerPickerFragment();
                 timePickerFragment.setCancelable(false);
                 timePickerFragment.show(fragmentManager, "Time Picker");
+            }
+        });
+
+        /**
+         * Setting time on ChamberTimeText (EditText)
+         */
+        ((DoctorDashBoardActivity) getActivity()).setChamberAddingDialogTimeSetListener(new ChamberAddingDialogTimeSetListener() {
+            @Override
+            public void setTime(String time) {
+                chamberTimeText.setText(time);
             }
         });
 
