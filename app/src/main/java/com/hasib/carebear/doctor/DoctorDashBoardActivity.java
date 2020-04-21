@@ -189,6 +189,8 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
 
         switch (item.getItemId()) {
             case R.id.editChamberId: {
+                Log.d(TAG, "onOptionsItemSelected: Chamber "+chamberList.get(position).toString());
+
                 ChamberEditingDialog chamberEditingDialog = new ChamberEditingDialog(this, chamberList.get(position), position);
                 chamberEditingDialog.show(getSupportFragmentManager(), "Edit Chamber Info");
             }
@@ -263,6 +265,7 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
     @Override
     public void chamberAddingTexts(String name, String fess, Map<String, Boolean> activeDays, String address, LatLng latLng) {
         chamberList.add(new Chamber(name, fess, address, latLng, chamberTime, activeDays));
+        Log.d(TAG, "chamberAddingTexts: "+ activeDays.toString());
 
         // TODO: 10-Apr-20 have to add firebase database support
 
@@ -271,8 +274,10 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
     }
 
     @Override
-    public void chamberEditingTexts(String name, String fees, String address, LatLng latLng, int position) {
-        chamberList.set(position, new Chamber(name, fees, address, latLng, chamberTime));
+    public void chamberEditingTexts(String name, String fees, Map<String, Boolean> activeDays, String address, LatLng latLng, int position) {
+        chamberList.set(position, new Chamber(name, fees, address, latLng, chamberTime, activeDays));
+        editButton.setVisible(false);
+        deleteButton.setVisible(false);
 
         // TODO: 10-Apr-20 have to add firebase database support on chamber info change
 

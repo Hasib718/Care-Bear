@@ -15,11 +15,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -45,12 +43,11 @@ import com.hasib.carebear.R;
 import com.hasib.carebear.doctor.DoctorDashBoardActivity;
 import com.hasib.carebear.doctor.listener.ChamberDialogListener;
 import com.hasib.carebear.doctor.listener.ChamberAddingDialogTimeSetListener;
+import com.hasib.carebear.support.DayPicker;
 
 import java.io.IOException;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMapReadyCallback {
     private static final String TAG = "ChamberAddingDialog";
@@ -60,16 +57,7 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
     private EditText chamberNameText;
     private EditText chamberFeesText;
     private TextView chamberTimeText;
-
-    //Day picker buttons
-    private LinearLayout parentDayPicker;
-    private ToggleButton toggleSunday;
-    private ToggleButton toggleMonday;
-    private ToggleButton toggleTuesday;
-    private ToggleButton toggleWednesday;
-    private ToggleButton toggleThursday;
-    private ToggleButton toggleFriday;
-    private ToggleButton toggleSaturday;
+    private DayPicker dayPicker;
 
     //A Interface for getting data into the parent activity
     private ChamberDialogListener listener;
@@ -104,8 +92,6 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
     //Chamber Time
     private String chamberTime;
 
-    //Chamber active day
-    private Map<String, Boolean> markedDays = new LinkedHashMap<>(7);
 
     //Constructor of this class
     public ChamberAddingDialog(Context mContext) {
@@ -125,22 +111,7 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
         chamberNameText = view.findViewById(R.id.chamberNameId);
         chamberFeesText = view.findViewById(R.id.chamberFeesId);
         chamberTimeText = view.findViewById(R.id.chamberTimeId);
-        parentDayPicker = view.findViewById(R.id.parentDayPicker);
-        toggleSunday = view.findViewById(R.id.toggle_Sunday);
-        toggleMonday = view.findViewById(R.id.toggle_Monday);
-        toggleTuesday = view.findViewById(R.id.toggle_Tuesday);
-        toggleWednesday = view.findViewById(R.id.toggle_Wednesday);
-        toggleThursday = view.findViewById(R.id.toggle_Thursday);
-        toggleFriday = view.findViewById(R.id.toggle_Friday);
-        toggleSaturday = view.findViewById(R.id.toggle_Saturday);
-
-        markedDays.put("S", false);
-        markedDays.put("M", false);
-        markedDays.put("T", false);
-        markedDays.put("W", false);
-        markedDays.put("Th", false);
-        markedDays.put("F", false);
-        markedDays.put("Sa", false);
+        dayPicker = new DayPicker(view.findViewById(R.id.daypicker));
 
         mapView = view.findViewById(R.id.google_Map);
 
@@ -155,7 +126,7 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
         }
 
         //calling method of getting device current location
-        fetchDeviceLocation(view);
+        fetchDeviceLocation();
 
         //For searching location
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -170,7 +141,7 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
                     Log.d(TAG, "onQueryTextSubmit: found submitted location");
                 } catch (IOException e) {
                     e.printStackTrace();
-                    Log.d(TAG, "onQueryTextSubmit: "+e.getMessage());
+                    Log.d(TAG, "onQueryTextSubmit: " + e.getMessage());
                 }
                 Address address = addressList.get(0);
                 LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
@@ -235,17 +206,10 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //Check individual Day items.
-                        Log.d(TAG, "onClick: parent day picker child count "+parentDayPicker.getChildCount());
-//                        for (int i=0; i<parentDayPicker.getChildCount(); i++) {
-//                            if (((ToggleButton) parentDayPicker.getChildAt(i)).isChecked()) {
-//                                markedDays.put(((ToggleButton) parentDayPicker.getChildAt(i)).getText().toString(), true);
-//                            }
-//                        }
-//
-//                        Log.d(TAG, "onClick: active days "+markedDays.toString());
+                        Log.d(TAG, "onClick: parent day picker child " + dayPicker.getMarkedDays().toString());
 
                         listener.chamberAddingTexts(chamberNameText.getEditableText().toString(),
-                                chamberFeesText.getText().toString(), markedDays, longClickAddress, longClickLatlng);
+                                chamberFeesText.getText().toString(), dayPicker.getMarkedDays(), longClickAddress, longClickLatlng);
                     }
                 });
 
@@ -324,9 +288,9 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
         mLocationPermissionsGranted = false;
 
         switch (requestCode) {
-            case LOCATION_PERMISSION_REQUEST_CODE:{
-                if (grantResults.length > 0){
-                    for (int i=0; i<grantResults.length; i++){
+            case LOCATION_PERMISSION_REQUEST_CODE: {
+                if (grantResults.length > 0) {
+                    for (int i = 0; i < grantResults.length; i++) {
                         if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                             mLocationPermissionsGranted = false;
                             Log.d(TAG, "onRequestPermissionsResult: permisson failed");
@@ -342,7 +306,7 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
     }
 
     //Method for getting device current location
-    public void fetchDeviceLocation(View view){
+    public void fetchDeviceLocation() {
         Log.d(TAG, "fetchDeviceLocation: getting the device current location");
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(mContext);
@@ -370,7 +334,7 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
             }
         } catch (SecurityException e) {
             e.printStackTrace();
-            Log.d(TAG, "fetchDeviceLocation: "+e.getMessage());
+            Log.d(TAG, "fetchDeviceLocation: " + e.getMessage());
         }
     }
 
@@ -382,7 +346,7 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
             List<Address> addressList = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
 
             if (addressList != null && addressList.size() > 0) {
-                Log.d(TAG, "geoCoding: "+addressList.get(0).toString());
+                Log.d(TAG, "geoCoding: " + addressList.get(0).toString());
 
                 addressLine = addressList.get(0).getAddressLine(0);
             }

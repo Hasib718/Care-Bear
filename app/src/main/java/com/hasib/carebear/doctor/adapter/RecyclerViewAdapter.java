@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.hasib.carebear.R;
 import com.hasib.carebear.doctor.container.Chamber;
 import com.hasib.carebear.doctor.listener.ChamberEventListener;
+import com.hasib.carebear.support.DayPicker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,10 +47,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         Log.d(TAG, "onBindViewHolder: called");
 
         holder.cChamberName.setText(aChamberList.get(position).getChamberName());
-        holder.cChamberFees.setText(aChamberList.get(position).getChamberFess());
-        holder.cChamberTime.setText(aChamberList.get(position).getChamberTime());
+        holder.cChamberFees.setText(aChamberList.get(position).getChamberFees() + " Taka");
+        holder.cChamberTime.setText("Time " + aChamberList.get(position).getChamberTime());
         holder.cChamberAddress.setText(aChamberList.get(position).getChamberAddress());
-//        holder.cChamberActiveDays.setText(aChamberList.get(position).getChamberOpenDays());
+
+        Log.d(TAG, "onBindViewHolder: "+aChamberList.get(position).getChamberOpenDays().toString());
+
+        DayPicker dayPicker = new DayPicker(holder.cChamberActiveDays, aChamberList.get(position).getChamberOpenDays());
+        dayPicker.setMarkedDays();
 
         final Chamber chamber = aChamberList.get(position);
 
@@ -87,7 +92,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         TextView cChamberFees;
         TextView cChamberTime;
         TextView cChamberAddress;
-        TextView cChamberActiveDays;
+        View cChamberActiveDays;
         LinearLayout cCamberInfoLayout;
 
         public ChamberViewHolder(@NonNull View itemView) {
@@ -97,7 +102,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             cChamberFees = itemView.findViewById(R.id.chamber_fee_id);
             cChamberTime = itemView.findViewById(R.id.chamber_time_id);
             cChamberAddress = itemView.findViewById(R.id.chamber_address_id);
-            //cChamberActiveDays = itemView.findViewById(R.id.chamber_open_days_id);
+            cChamberActiveDays = itemView.findViewById(R.id.daypicker);
             cCamberInfoLayout = itemView.findViewById(R.id.chamber_info_id);
         }
     }

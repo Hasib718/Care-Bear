@@ -1,15 +1,15 @@
 package com.hasib.carebear.doctor.container;
 
+import androidx.annotation.NonNull;
+
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class Chamber {
     //Container for storing chamberName & address
     private String chamberName;
-    private String chamberFess;
+    private String chamberFees;
     private String chamberAddress;
     private LatLng chamberLatLng;
     private String chamberTime;
@@ -17,18 +17,18 @@ public class Chamber {
 
     public Chamber() {}
 
-    public Chamber(String chamberName, String chamberFess, String chamberAddress, LatLng chamberLatLng, String chamberTime, Map<String, Boolean> chamberOpenDays) {
+    public Chamber(String chamberName, String chamberFees, String chamberAddress, LatLng chamberLatLng, String chamberTime, Map<String, Boolean> chamberOpenDays) {
         this.chamberName = chamberName;
-        this.chamberFess = chamberFess;
+        this.chamberFees = chamberFees;
         this.chamberAddress = chamberAddress;
         this.chamberLatLng = chamberLatLng;
         this.chamberTime = chamberTime;
         this.chamberOpenDays = chamberOpenDays;
     }
 
-    public Chamber(String chamberName, String chamberFess, String chamberAddress, LatLng chamberLatLng, String chamberTime) {
+    public Chamber(String chamberName, String chamberFees, String chamberAddress, LatLng chamberLatLng, String chamberTime) {
         this.chamberName = chamberName;
-        this.chamberFess = chamberFess;
+        this.chamberFees = chamberFees;
         this.chamberAddress = chamberAddress;
         this.chamberLatLng = chamberLatLng;
         this.chamberTime = chamberTime;
@@ -42,12 +42,12 @@ public class Chamber {
         this.chamberName = chamberName;
     }
 
-    public String getChamberFess() {
-        return chamberFess + " Taka";
+    public String getChamberFees() {
+        return chamberFees;
     }
 
-    public void setChamberFess(String chamberFess) {
-        this.chamberFess = chamberFess;
+    public void setChamberFees(String chamberFees) {
+        this.chamberFees = chamberFees;
     }
 
     public String getChamberAddress() {
@@ -80,5 +80,16 @@ public class Chamber {
 
     public void setChamberOpenDays(Map<String, Boolean> chamberOpenDays) {
         this.chamberOpenDays = chamberOpenDays;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return ("Name "+getChamberName()+"\n"+
+                "Fees "+getChamberFees()+"\n"+
+                "Address "+getChamberAddress()+"\n"+
+                "Latlng "+getChamberLatLng()+"\n"+
+                "Time "+getChamberTime()+"\n"+
+                "Active days "+getChamberOpenDays().toString());
     }
 }
