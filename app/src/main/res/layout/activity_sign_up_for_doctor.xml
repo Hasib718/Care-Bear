@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/login_gradient"
     tools:context=".doctor.authentication.SignUpActivityForDoctor">
 
     <LinearLayout
@@ -18,6 +19,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <ImageView
                 android:layout_centerHorizontal="true"
                 android:layout_width="150dp"
@@ -33,19 +35,39 @@
                 android:layout_centerVertical="true"
                 android:visibility="invisible"/>
         </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Touch The bear for Uploading your Photo"
+            android:layout_gravity="center"/>
+
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/nameText"
-            android:hint="Your Full Name"
+            android:hint="Name"
             android:inputType="textPersonName"
             android:layout_marginTop="10dp"/>
-        <EditText
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/mobileNoText"
-            android:hint="Mobile No.(Without +88)"
-            android:inputType="text|number" />
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+88"
+                android:textSize="18sp"
+                />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/mobileNoText"
+                android:hint="Mobile No."
+                android:inputType="text|number" />
+
+        </LinearLayout>
 
         <EditText
             android:layout_width="match_parent"
@@ -57,9 +79,10 @@
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Please Select Your Degree\nWhich You have Completed"
+            android:text="Please Select Your Completed Degree"
             android:textSize="17sp"
-            android:textColor="#E91E63" />
+            android:textColor="#227825"
+            android:layout_marginLeft="4dp"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -94,7 +117,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/registrationNoText"
-            android:hint="Registration No of BMDC"
+            android:hint="Reg. No of BMDC"
             android:inputType="numberDecimal" />
 
         <EditText

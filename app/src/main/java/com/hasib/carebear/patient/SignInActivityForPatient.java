@@ -1,10 +1,12 @@
 package com.hasib.carebear.patient;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -45,6 +47,16 @@ public class SignInActivityForPatient extends AppCompatActivity implements View.
         //Setting button on click listener
         signInButtonForPatient.setOnClickListener(this);
         signUpButtonForPatient.setOnClickListener(this);
+    }
+
+    //This Function is needed for back button.. Without this function
+    //back button wouldn't work properly..
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

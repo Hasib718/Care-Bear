@@ -256,6 +256,22 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
                 startActivity(new Intent(DoctorDashBoardActivity.this, SignInActivityForDoctor.class));
             }
             break;
+
+            case R.id.shareMenuId : {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+
+                String subject = "Care Bear- In a way of Healthiness";
+                String body = "This is a medical type app. It helps you to find catagorized doctor\n" +
+                        "easily. It's both for a doctor and a patient.\n" +
+                        "Download Link.......";
+
+                intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+                intent.putExtra(Intent.EXTRA_TEXT, body);
+
+                startActivity(Intent.createChooser(intent, "Share with"));
+            }
+            break;
         }
 
         return false;
@@ -266,6 +282,7 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
     public void chamberAddingTexts(String name, String fess, Map<String, Boolean> activeDays, String address, LatLng latLng) {
         chamberList.add(new Chamber(name, fess, address, latLng, chamberTime, activeDays));
         Log.d(TAG, "chamberAddingTexts: "+ activeDays.toString());
+
 
         // TODO: 10-Apr-20 have to add firebase database support
 
