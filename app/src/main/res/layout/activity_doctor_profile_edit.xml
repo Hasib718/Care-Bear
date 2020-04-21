@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".doctor.fragment.DoctorProfileEditActivity" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/doctorImageViewId"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:src="@drawable/bear" />
+
+            <ProgressBar
+                android:id="@+id/imageProgressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:visibility="invisible" />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="If you want to change your picture\nClick on the picture "
+            android:textSize="12sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:text="Name:"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:textSize="19sp" />
+
+            <EditText
+                android:id="@+id/doctorNameEditTextId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:selectAllOnFocus="false"
+                android:singleLine="false"
+                android:text="Abdul Wadud Shakib" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:text="Specialist:"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:textSize="19sp" />
+
+            <EditText
+                android:id="@+id/specialistEditTextId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:selectAllOnFocus="false"
+                android:singleLine="false"
+                android:text="Cardiologist" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Please Select Your Completed Degree"
+            android:textSize="17sp"
+            android:textColor="#227825"
+            android:layout_marginLeft="10dp"/>
+
+        <LinearLayout
+            android:id="@+id/checkBoxLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp">
+
+            <CheckBox
+                android:id="@+id/checkMBBSId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="MBBS" />
+
+            <CheckBox
+                android:id="@+id/checkFCPSId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="FCPS" />
+
+            <CheckBox
+                android:id="@+id/checkMDId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="MD/MS" />
+
+            <CheckBox
+                android:id="@+id/checkMPhilId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MPhil" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:text="BMDC Reg No:"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:textSize="19sp" />
+
+            <EditText
+                android:id="@+id/regNoOfBMDCEditTextId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:selectAllOnFocus="false"
+                android:singleLine="false"
+                android:text="98300" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:text="Present Address:"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:textSize="19sp" />
+
+            <EditText
+                android:id="@+id/presentAddressEditTextId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textLongMessage"
+                android:selectAllOnFocus="false"
+                android:singleLine="false"
+                android:text="Pabna" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:text="Common Chamber"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:textSize="19sp" />
+
+            <EditText
+                android:id="@+id/commonChamberEditTextId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textLongMessage"
+                android:selectAllOnFocus="false"
+                android:singleLine="false"
+                android:text="Sylhet" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:text="Email:"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:textSize="19sp" />
+
+            <EditText
+                android:id="@+id/emailEditTextId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:selectAllOnFocus="false"
+                android:singleLine="false"
+                android:text="wadud6065@gmail.com" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:text="Password"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:textSize="19sp" />
+
+            <EditText
+                android:id="@+id/passwordEditTextId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:selectAllOnFocus="false"
+                android:singleLine="false"
+                android:text="qwertpoiuy" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:text="Mobile No:"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:textSize="19sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+88"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/mobileNoEditTextId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autofillHints=""
+                android:inputType="phone"
+                android:selectAllOnFocus="false"
+                android:singleLine="false"
+                android:text="01721140302" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/updateButtonnId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:text="Update"
+            android:textAllCaps="false" />
+
+    </LinearLayout>
+</ScrollView>
