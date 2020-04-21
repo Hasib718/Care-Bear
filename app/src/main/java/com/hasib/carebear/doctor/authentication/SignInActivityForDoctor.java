@@ -1,4 +1,4 @@
-package com.hasib.carebear.doctor;
+package com.hasib.carebear.doctor.authentication;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +20,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.hasib.carebear.R;
+import com.hasib.carebear.doctor.DoctorDashBoardActivity;
 import com.hasib.carebear.doctor.container.UserDetails;
 
 public class SignInActivityForDoctor extends AppCompatActivity implements View.OnClickListener {

@@ -39,9 +39,9 @@
         <activity android:name=".patient.SignUpActivityForPatient" />
         <activity android:name=".patient.SignInActivityForPatient" />
         <activity
-            android:name=".doctor.SignUpActivityForDoctor"
-            android:parentActivityName=".doctor.SignInActivityForDoctor" />
-        <activity android:name=".doctor.SignInActivityForDoctor" />
+            android:name=".doctor.authentication.SignUpActivityForDoctor"
+            android:parentActivityName=".doctor.authentication.SignInActivityForDoctor" />
+        <activity android:name=".doctor.authentication.SignInActivityForDoctor" />
         <activity android:name=".MainActivity"></activity>
     </application>
 

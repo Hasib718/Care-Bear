@@ -16,12 +16,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -37,7 +40,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.hasib.carebear.R;
+import com.hasib.carebear.doctor.DoctorDashBoardActivity;
 import com.hasib.carebear.doctor.listener.ChamberDialogListener;
+import com.hasib.carebear.doctor.listener.ChamberAddingDialogTimeSetListener;
+import com.hasib.carebear.support.DayPicker;
 
 import java.io.IOException;
 import java.util.List;
@@ -50,6 +56,8 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
 
     private EditText chamberNameText;
     private EditText chamberFeesText;
+    private TextView chamberTimeText;
+    private DayPicker dayPicker;
 
     //A Interface for getting data into the parent activity
     private ChamberDialogListener listener;
@@ -81,6 +89,10 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
     Marker markerSearchView;
     Marker markerOnMapLongClick;
 
+    //Chamber Time
+    private String chamberTime;
+
+
     //Constructor of this class
     public ChamberAddingDialog(Context mContext) {
         this.mContext = mContext;
@@ -93,10 +105,14 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
 
         //Adding layout for showing
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        final View view = inflater.inflate(R.layout.layout_chamber_adding_dialog, null);
+        final View view = inflater.inflate(R.layout.layout_chamber_dialog, null);
+
 
         chamberNameText = view.findViewById(R.id.chamberNameId);
         chamberFeesText = view.findViewById(R.id.chamberFeesId);
+        chamberTimeText = view.findViewById(R.id.chamberTimeId);
+        dayPicker = new DayPicker(view.findViewById(R.id.daypicker));
+
         mapView = view.findViewById(R.id.google_Map);
 
         //SearchView
@@ -110,7 +126,7 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
         }
 
         //calling method of getting device current location
-        fetchDeviceLocation(view);
+        fetchDeviceLocation();
 
         //For searching location
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -125,7 +141,7 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
                     Log.d(TAG, "onQueryTextSubmit: found submitted location");
                 } catch (IOException e) {
                     e.printStackTrace();
-                    Log.d(TAG, "onQueryTextSubmit: "+e.getMessage());
+                    Log.d(TAG, "onQueryTextSubmit: " + e.getMessage());
                 }
                 Address address = addressList.get(0);
                 LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
@@ -150,6 +166,32 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
             }
         });
 
+        /**
+         * Fragment support manager for TimePickerDialog
+         */
+        final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+
+        /**
+         * TimePickerDialog for choosing chamber time
+         */
+        chamberTimeText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment timePickerFragment = new TimerPickerFragment();
+                timePickerFragment.setCancelable(false);
+                timePickerFragment.show(fragmentManager, "Time Picker");
+            }
+        });
+
+        /**
+         * Setting time on ChamberTimeText (EditText)
+         */
+        ((DoctorDashBoardActivity) getActivity()).setChamberAddingDialogTimeSetListener(new ChamberAddingDialogTimeSetListener() {
+            @Override
+            public void setTime(String time) {
+                chamberTimeText.setText(time);
+            }
+        });
 
         //Dialog builder
         builder.setView(view)
@@ -163,8 +205,11 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
                 .setPositiveButton("Add", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        //Check individual Day items.
+                        Log.d(TAG, "onClick: parent day picker child " + dayPicker.getMarkedDays().toString());
+
                         listener.chamberAddingTexts(chamberNameText.getEditableText().toString(),
-                                chamberFeesText.getText().toString(), longClickAddress, longClickLatlng);
+                                chamberFeesText.getText().toString(), dayPicker.getMarkedDays(), longClickAddress, longClickLatlng);
                     }
                 });
 
@@ -212,7 +257,7 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
                     longClickLatlng = latLng;
                     longClickAddress = geoCoding(latLng);
 
-                    mapGoogle.addMarker(new MarkerOptions()
+                    markerOnMapLongClick = mapGoogle.addMarker(new MarkerOptions()
                             .position(latLng)
                             .title(longClickAddress)
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
@@ -243,9 +288,9 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
         mLocationPermissionsGranted = false;
 
         switch (requestCode) {
-            case LOCATION_PERMISSION_REQUEST_CODE:{
-                if (grantResults.length > 0){
-                    for (int i=0; i<grantResults.length; i++){
+            case LOCATION_PERMISSION_REQUEST_CODE: {
+                if (grantResults.length > 0) {
+                    for (int i = 0; i < grantResults.length; i++) {
                         if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                             mLocationPermissionsGranted = false;
                             Log.d(TAG, "onRequestPermissionsResult: permisson failed");
@@ -261,7 +306,7 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
     }
 
     //Method for getting device current location
-    public void fetchDeviceLocation(View view){
+    public void fetchDeviceLocation() {
         Log.d(TAG, "fetchDeviceLocation: getting the device current location");
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(mContext);
@@ -289,7 +334,7 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
             }
         } catch (SecurityException e) {
             e.printStackTrace();
-            Log.d(TAG, "fetchDeviceLocation: "+e.getMessage());
+            Log.d(TAG, "fetchDeviceLocation: " + e.getMessage());
         }
     }
 
@@ -301,7 +346,7 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
             List<Address> addressList = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
 
             if (addressList != null && addressList.size() > 0) {
-                Log.d(TAG, "geoCoding: "+addressList.get(0).toString());
+                Log.d(TAG, "geoCoding: " + addressList.get(0).toString());
 
                 addressLine = addressList.get(0).getAddressLine(0);
             }
