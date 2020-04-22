@@ -288,7 +288,7 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
     }
 
     private void saveDoctorInto() {
-        String key = databaseReference.push().getKey();
+        String key = mAuth.getCurrentUser().getUid();
         userDetails.setId(key);
 
         databaseReference.child(key).setValue(userDetails);

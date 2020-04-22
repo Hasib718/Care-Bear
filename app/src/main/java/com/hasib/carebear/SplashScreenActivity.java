@@ -4,12 +4,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class SplashScreenActivity extends AppCompatActivity {
+
+    private static final String TAG = "SplashScreenActivity";
 
     private ProgressBar progressBar;
     private int progress;
@@ -43,6 +48,8 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
 
     public void doWork() {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        Log.d(TAG, "doWork: "+mAuth.getCurrentUser().getEmail());
 
         for(progress = 1; progress <=100; progress += 1) {
             try {

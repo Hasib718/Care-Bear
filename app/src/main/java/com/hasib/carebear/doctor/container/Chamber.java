@@ -11,27 +11,37 @@ public class Chamber {
     private String chamberName;
     private String chamberFees;
     private String chamberAddress;
-    private LatLng chamberLatLng;
+    private String[] chamberLatLng = new String[2];
     private String chamberTime;
     private Map<String, Boolean> chamberOpenDays;
+    private String doctorUserProfileId;
+    private String chamberDatabaseId;
 
     public Chamber() {}
 
-    public Chamber(String chamberName, String chamberFees, String chamberAddress, LatLng chamberLatLng, String chamberTime, Map<String, Boolean> chamberOpenDays) {
+    public Chamber(String chamberName, String chamberFees, String chamberAddress,
+                   LatLng chamberLatLng, String chamberTime, Map<String, Boolean> chamberOpenDays) {
         this.chamberName = chamberName;
         this.chamberFees = chamberFees;
         this.chamberAddress = chamberAddress;
-        this.chamberLatLng = chamberLatLng;
+        this.chamberLatLng [0] = String.valueOf(chamberLatLng.latitude);
+        this.chamberLatLng [1] = String.valueOf(chamberLatLng.longitude);
         this.chamberTime = chamberTime;
         this.chamberOpenDays = chamberOpenDays;
     }
 
-    public Chamber(String chamberName, String chamberFees, String chamberAddress, LatLng chamberLatLng, String chamberTime) {
+    public Chamber(String chamberName, String chamberFees, String chamberAddress,
+                   LatLng chamberLatLng, String chamberTime, Map<String, Boolean> chamberOpenDays,
+                   String doctorUserProfileId, String chamberDatabaseId) {
         this.chamberName = chamberName;
         this.chamberFees = chamberFees;
         this.chamberAddress = chamberAddress;
-        this.chamberLatLng = chamberLatLng;
+        this.chamberLatLng [0] = String.valueOf(chamberLatLng.latitude);
+        this.chamberLatLng [1] = String.valueOf(chamberLatLng.longitude);
         this.chamberTime = chamberTime;
+        this.chamberOpenDays = chamberOpenDays;
+        this.doctorUserProfileId = doctorUserProfileId;
+        this.chamberDatabaseId = chamberDatabaseId;
     }
 
     public String getChamberName() {
@@ -59,11 +69,12 @@ public class Chamber {
     }
 
     public LatLng getChamberLatLng() {
-        return chamberLatLng;
+        return new LatLng(Double.parseDouble(chamberLatLng[0]), Double.parseDouble(chamberLatLng[1]));
     }
 
     public void setChamberLatLng(LatLng chamberLatLng) {
-        this.chamberLatLng = chamberLatLng;
+        this.chamberLatLng [0] = String.valueOf(chamberLatLng.latitude);
+        this.chamberLatLng [1] = String.valueOf(chamberLatLng.longitude);
     }
 
     public String getChamberTime() {
@@ -82,6 +93,22 @@ public class Chamber {
         this.chamberOpenDays = chamberOpenDays;
     }
 
+    public String getDoctorUserProfileId() {
+        return doctorUserProfileId;
+    }
+
+    public void setDoctorUserProfileId(String doctorUserProfileId) {
+        this.doctorUserProfileId = doctorUserProfileId;
+    }
+
+    public String getChamberDatabaseId() {
+        return chamberDatabaseId;
+    }
+
+    public void setChamberDatabaseId(String chamberDatabaseId) {
+        this.chamberDatabaseId = chamberDatabaseId;
+    }
+
     @NonNull
     @Override
     public String toString() {
@@ -90,6 +117,8 @@ public class Chamber {
                 "Address "+getChamberAddress()+"\n"+
                 "Latlng "+getChamberLatLng()+"\n"+
                 "Time "+getChamberTime()+"\n"+
-                "Active days "+getChamberOpenDays().toString());
+                "Active days "+getChamberOpenDays().toString()+
+                "Id "+getDoctorUserProfileId()+"\n"+
+                "Id "+getChamberDatabaseId());
     }
 }

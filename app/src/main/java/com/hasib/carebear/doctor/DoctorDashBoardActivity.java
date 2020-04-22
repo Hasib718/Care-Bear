@@ -141,7 +141,7 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
         mAuth = FirebaseAuth.getInstance();
 
         //Firebase realtime database initialization
-        databaseReference = databaseReference = FirebaseDatabase.getInstance().getReference("doctors_profile_info");
+        databaseReference = FirebaseDatabase.getInstance().getReference("doctors_chamber_info");
 
         //Chamber class initialization;
         chamberList = new ArrayList<>();
@@ -340,24 +340,27 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
     //Method for getting data from chamber adding dialog box
     @Override
     public void chamberAddingTexts(String name, String fess, Map<String, Boolean> activeDays, String address, LatLng latLng) {
-        chamberList.add(new Chamber(name, fess, address, latLng, chamberTime, activeDays));
-        Log.d(TAG, "chamberAddingTexts: "+ activeDays.toString());
+        String key = databaseReference.push().getKey();
 
+        Chamber chamber = new Chamber(name, fess, address, latLng, chamberTime, activeDays, mAuth.getCurrentUser().getUid(), key);
+        Log.d(TAG, "chamberAddingTexts: "+ chamber.toString());
 
-        // TODO: 10-Apr-20 have to add firebase database support
+        databaseReference.child(key).setValue(chamber);
 
         //Notifying recycler view for adapter on data change
+        chamberList.add(chamber);
         adapter.notifyDataSetChanged();
     }
 
     @Override
     public void chamberEditingTexts(String name, String fees, Map<String, Boolean> activeDays, String address, LatLng latLng, int position) {
-        chamberList.set(position, new Chamber(name, fees, address, latLng, chamberTime, activeDays));
+        Chamber chamber = new Chamber(name, fees, address, latLng, chamberTime, activeDays);
+
         editButton.setVisible(false);
         deleteButton.setVisible(false);
 
-        // TODO: 10-Apr-20 have to add firebase database support on chamber info change
 
+        chamberList.set(position, chamber);
         adapter.notifyDataSetChanged();
     }
 
