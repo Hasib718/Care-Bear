@@ -182,7 +182,7 @@ public class ChamberEditingDialog extends AppCompatDialogFragment implements OnM
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+                        listener.chamberEditingCancel();
                     }
                 })
                 .setPositiveButton("Edit", new DialogInterface.OnClickListener() {

@@ -13,4 +13,8 @@ public interface ChamberDialogListener {
     * This interface passed editing data to where it's implemented
     * */
     void chamberEditingTexts(String name, String fees, Map<String, Boolean> activeDays, String address, LatLng latLng, int position);
+    /*
+    * This interface is for invoking edit & delete option on edit cancellation
+    * */
+    void chamberEditingCancel();
 }
