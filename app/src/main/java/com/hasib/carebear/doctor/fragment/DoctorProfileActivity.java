@@ -52,6 +52,21 @@ public class DoctorProfileActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference("doctors_profile_info");
 
+
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DoctorProfileActivity.this, DoctorProfileEditActivity.class);
+                intent.putExtra("user", userDetailsForPassing);
+                startActivity(intent);
+            }
+        });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
         builder = new AlertDialog.Builder(this)
                 .setTitle("Please Wait")
                 .setCancelable(false)
@@ -68,14 +83,6 @@ public class DoctorProfileActivity extends AppCompatActivity {
         });
         thread.start();
 
-        editButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(DoctorProfileActivity.this, DoctorProfileEditActivity.class);
-                intent.putExtra("user", userDetailsForPassing);
-                startActivity(intent);
-            }
-        });
     }
 
     private void initViews() {

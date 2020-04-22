@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
@@ -43,6 +44,7 @@ import com.hasib.carebear.R;
 import com.hasib.carebear.doctor.container.UserDetails;
 
 import java.io.IOException;
+import java.util.zip.Inflater;
 
 public class DoctorProfileEditActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -58,11 +60,7 @@ public class DoctorProfileEditActivity extends AppCompatActivity implements View
     private Button updateButton;
 
     private UserDetails currentUserDetails;
-    private Uri uriProfileImage;
-    private String newUploadedImageUri = "";
 
-    private DatabaseReference databaseReference;
-    private StorageReference storageReference;
     private FirebaseAuth mAuth;
 
     private AlertDialog builder;
@@ -82,9 +80,6 @@ public class DoctorProfileEditActivity extends AppCompatActivity implements View
         //Firebase Authenticator
         mAuth = FirebaseAuth.getInstance();
 
-        //Firebase Storage reference
-        storageReference = FirebaseStorage.getInstance().getReference("doctors_profile_images");
-
         //Firebase Realtime Database reference
 
         Intent intent = getIntent();
@@ -92,16 +87,44 @@ public class DoctorProfileEditActivity extends AppCompatActivity implements View
 
         settingValuesIntoViews();
 
-        MaterialTextView textView = findViewById(R.id.loadingText);
-        textView.setText("Updating your data......");
+        doctorImageView.setOnClickListener(this);
+        updateButton.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.doctorImageViewId :
+                showImageChooser();
+                break;
+            case R.id.updateButtonId :
+                updateData();
+                break;
+        }
+    }
+
+    //This Function is needed for back button.. Without this function
+    //back button wouldn't work properly..
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void initLoadingDialog(String message) {
+        LayoutInflater inflater = getLayoutInflater();
+        final View view = inflater.inflate(R.layout.dialog_progress, null);
+
+        MaterialTextView textView = view.findViewById(R.id.loadingText);
+        textView.setText(message);
         builder = new AlertDialog.Builder(DoctorProfileEditActivity.this)
                 .setTitle("Please Wait")
                 .setCancelable(false)
-                .setView(R.layout.dialog_progress)
+                .setView(view)
                 .create();
-
-        doctorImageView.setOnClickListener(this);
-        updateButton.setOnClickListener(this);
+        builder.show();
     }
 
     private void initViews() {
@@ -171,14 +194,13 @@ public class DoctorProfileEditActivity extends AppCompatActivity implements View
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == CHOOSE_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            uriProfileImage = data.getData();
-            Log.d(TAG, "onActivityResult: "+uriProfileImage.toString());
+            Log.d(TAG, "onActivityResult: "+data.getData().toString());
 
             try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uriProfileImage);
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
 
                 doctorImageView.setImageBitmap(bitmap);
-                uploadImageToFirebaseStorage();
+                uploadImageToFirebaseStorage(data.getData());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -193,11 +215,15 @@ public class DoctorProfileEditActivity extends AppCompatActivity implements View
     }
 
     //Method for uploading image to firebase storage
-    public void uploadImageToFirebaseStorage() {
+    public void uploadImageToFirebaseStorage(Uri uriProfileImage) {
         if (uriProfileImage != null) {
+            initLoadingDialog("Uploading you image.....");
 
             //Doctor's Profile Images directory
-            StorageReference reference = storageReference.child(System.currentTimeMillis()+"."+getExtension(uriProfileImage));
+            StorageReference reference = FirebaseStorage
+                    .getInstance()
+                    .getReference("doctors_profile_images")
+                    .child(System.currentTimeMillis()+"."+getExtension(uriProfileImage));
 
             Log.d(TAG, "uploadImageToFirebaseStorage: method called");
             //Visible the progress ber while the image is uploading
@@ -221,9 +247,9 @@ public class DoctorProfileEditActivity extends AppCompatActivity implements View
                             Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
                             while (!uriTask.isSuccessful());
 
-                            newUploadedImageUri = uriTask.getResult().toString();
+                            deletePreviousImage(uriTask.getResult().toString());
 
-                            Log.d(TAG, "onSuccess: doctorImageUrl "+newUploadedImageUri);
+                            Log.d(TAG, "onSuccess: doctorImageUrl "+uriTask.getResult().toString());
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -238,36 +264,39 @@ public class DoctorProfileEditActivity extends AppCompatActivity implements View
         }
     }
 
+    private void deletePreviousImage(final String newUploadedImageUri) {
+        StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(currentUserDetails.getDoctorImageUrl());
+        Log.d(TAG, "deletePreviousImage: prev uri "+currentUserDetails.getDoctorImageUrl());
 
-    //This Function is needed for back button.. Without this function
-    //back button wouldn't work properly..
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
-    }
+        storageReference.delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "onSuccess: previous image deleted successfully");
+                        Log.d(TAG, "onSuccess: new uri "+newUploadedImageUri);
+                        currentUserDetails.setDoctorImageUrl(newUploadedImageUri);
+                        builder.dismiss();
+                        Toast.makeText(DoctorProfileEditActivity.this, "Image uploaded successfully", Toast.LENGTH_LONG).show();
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.doctorImageViewId :
-                showImageChooser();
-                break;
-            case R.id.updateButtonId :
-                updateData();
-
-        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "onFailure: Previous image deletion failed");
+                        builder.dismiss();
+                        Toast.makeText(DoctorProfileEditActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 
     private void updateData() {
+        initLoadingDialog("Updating your data......");
         FirebaseUser user = mAuth.getCurrentUser();
 
-        collectEditedData();
-
-        if (!newUploadedImageUri.isEmpty()) {
-            deletePreviousImage();
+        if(!collectEditedData()) {
+            builder.dismiss();
+            return;
         }
 
         Log.d(TAG, "updateData: entering to profile builder");
@@ -293,31 +322,13 @@ public class DoctorProfileEditActivity extends AppCompatActivity implements View
                         @Override
                         public void onSuccess(Void aVoid) {
 
-                            finish();
                             builder.dismiss();
+
+                            finish();
                             startActivity(new Intent(DoctorProfileEditActivity.this, DoctorProfileActivity.class));
                         }
                     });
         }
-    }
-
-    private void deletePreviousImage() {
-        StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(currentUserDetails.getDoctorImageUrl());
-
-        storageReference.delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "onSuccess: previous image deleted successfully");
-                        currentUserDetails.setDoctorImageUrl(newUploadedImageUri);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "onFailure: Previous image deletion failed");
-                    }
-                });
     }
 
     private void updateUserDataBaseInfo(){
