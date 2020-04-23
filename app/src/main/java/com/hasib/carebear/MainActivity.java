@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 
-import com.hasib.carebear.doctor.SignInActivityForDoctor;
+import com.hasib.carebear.doctor.authentication.SignInActivityForDoctor;
 import com.hasib.carebear.patient.SignInActivityForPatient;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -39,15 +39,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.signInOrUpButtonForDoctorId) {
-            Intent intent1 = new Intent(MainActivity.this, SignInActivityForDoctor.class);
-            startActivity(intent1);
-        } else if(v.getId() == R.id.signInOrUpButtonForPatientId) {
-            Log.d(TAG, "onClick: tapped");
-            Intent intent2 = new Intent(MainActivity.this, SignInActivityForPatient.class);
-            startActivity(intent2);
-        }
+        switch (v.getId()) {
+            case R.id.signInOrUpButtonForDoctorId: {
+                Intent intent1 = new Intent(MainActivity.this, SignInActivityForDoctor.class);
+                startActivity(intent1);
+            }
+            break;
 
+            case R.id.signInOrUpButtonForPatientId: {
+                Log.d(TAG, "onClick: tapped");
+                Intent intent2 = new Intent(MainActivity.this, SignInActivityForPatient.class);
+                startActivity(intent2);
+            }
+            break;
+
+            case R.id.emergencyButtonId : {
+                // TODO: 10-Apr-20 have to implement emergency ambulance service.
+            }
+            break;
+        }
     }
 
     @Override

@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.hasib.carebear.R;
 import com.hasib.carebear.doctor.container.Chamber;
 import com.hasib.carebear.doctor.listener.ChamberEventListener;
+import com.hasib.carebear.support.DayPicker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,13 +46,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(@NonNull ChamberViewHolder holder, final int position) {
         Log.d(TAG, "onBindViewHolder: called");
 
-        Random random = new Random();
-        int color = Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256));
-
-        holder.cCamberInfoLayout.getChildAt(1).setBackgroundColor(color);
         holder.cChamberName.setText(aChamberList.get(position).getChamberName());
-        holder.cChamberFees.setText(aChamberList.get(position).getChamberFess());
+        holder.cChamberFees.setText(aChamberList.get(position).getChamberFees() + " Taka");
+        holder.cChamberTime.setText("Time " + aChamberList.get(position).getChamberTime());
         holder.cChamberAddress.setText(aChamberList.get(position).getChamberAddress());
+
+        Log.d(TAG, "onBindViewHolder: "+aChamberList.get(position).getChamberOpenDays().toString());
+
+        DayPicker dayPicker = new DayPicker(holder.cChamberActiveDays, aChamberList.get(position).getChamberOpenDays());
+        dayPicker.setMarkedDays();
 
         final Chamber chamber = aChamberList.get(position);
 
@@ -60,7 +63,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             public void onClick(View v) {
                 Log.d(TAG, "onClick: "+aChamberList.get(position).getChamberName());
 
-                Toast.makeText(aContext, aChamberList.get(position).getChamberName(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(aContext, aChamberList.get(position).getChamberName(), Toast.LENGTH_SHORT).show();
 
                 listener.onChamberClick(chamber, position);
             }
@@ -87,7 +90,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public class ChamberViewHolder extends RecyclerView.ViewHolder {
         TextView cChamberName;
         TextView cChamberFees;
+        TextView cChamberTime;
         TextView cChamberAddress;
+        View cChamberActiveDays;
         LinearLayout cCamberInfoLayout;
 
         public ChamberViewHolder(@NonNull View itemView) {
@@ -95,7 +100,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
             cChamberName = itemView.findViewById(R.id.chamber_name_id);
             cChamberFees = itemView.findViewById(R.id.chamber_fee_id);
+            cChamberTime = itemView.findViewById(R.id.chamber_time_id);
             cChamberAddress = itemView.findViewById(R.id.chamber_address_id);
+            cChamberActiveDays = itemView.findViewById(R.id.daypicker);
             cCamberInfoLayout = itemView.findViewById(R.id.chamber_info_id);
         }
     }

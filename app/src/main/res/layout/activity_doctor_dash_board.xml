@@ -6,6 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/doctorDashBoardId"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     tools:context=".doctor.DoctorDashBoardActivity">
 
 
@@ -23,6 +26,9 @@
         android:id="@+id/drawerId"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         tools:openDrawer="start">
 
         <androidx.recyclerview.widget.RecyclerView

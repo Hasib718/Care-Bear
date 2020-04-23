@@ -13,19 +13,50 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/chamberNameId"
-            android:hint="Chamber Name"
+            android:hint="Name"
             android:inputType="textPersonName"/>
-        <EditText
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/chamberFeesId"
-            android:hint="Chamber Fees"
-            android:inputType="number"/>
+            android:orientation="horizontal"
+            android:id="@+id/feeTimeLayout">
+            <EditText
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/chamberFeesId"
+                android:hint="Fees"
+                android:inputType="number"/>
+            <TextView
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/chamberTimeId"
+                android:hint="12:00 PM"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/Black"
+                android:textColorHint="@color/Black" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/daypicker_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/daypicker"
+                layout="@layout/day_picker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/mapLayoutParentId">
+            android:id="@+id/mapLayoutParentId"
+            android:layout_marginTop="10dp">
             <com.google.android.gms.maps.MapView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
