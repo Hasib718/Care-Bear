@@ -143,7 +143,7 @@ public class ChamberEditingDialog extends AppCompatDialogFragment implements OnM
                     markerSearchView.remove();
                     markerSearchView = mapGoogle.addMarker(new MarkerOptions()
                             .position(new LatLng(address.getLatitude(), address.getLongitude()))
-                            .title(geoCoding(new LatLng(address.getLatitude(), address.getLongitude()))));
+                            .title(LatLong.geoCoding(mContext, new LatLng(address.getLatitude(), address.getLongitude()))));
                 }
 
                 return false;
@@ -243,7 +243,7 @@ public class ChamberEditingDialog extends AppCompatDialogFragment implements OnM
                     markerOnMapLongClick.remove();
 
                     longClickLatlng = latLng;
-                    longClickAddress = geoCoding(latLng);
+                    longClickAddress = LatLong.geoCoding(mContext, latLng);
 
                     markerOnMapLongClick = mapGoogle.addMarker(new MarkerOptions()
                             .position(latLng)
@@ -266,26 +266,7 @@ public class ChamberEditingDialog extends AppCompatDialogFragment implements OnM
 
             mapGoogle.addMarker(new MarkerOptions()
                     .position(new LatLng(chamber.getChamberLatLng().getLatitude(), chamber.getChamberLatLng().getLongitude()))
-                    .title(geoCoding(new LatLng(chamber.getChamberLatLng().getLatitude(), chamber.getChamberLatLng().getLongitude()))));
+                    .title(LatLong.geoCoding(mContext, new LatLng(chamber.getChamberLatLng().getLatitude(), chamber.getChamberLatLng().getLongitude()))));
         }
-    }
-
-    //Method for getting address from co-ordinates
-    public String geoCoding(LatLng latLng) {
-        String addressLine = "";
-
-        try {
-            List<Address> addressList = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
-
-            if (addressList != null && addressList.size() > 0) {
-                Log.d(TAG, "geoCoding: " + addressList.get(0).toString());
-
-                addressLine = addressList.get(0).getAddressLine(0);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return addressLine;
     }
 }

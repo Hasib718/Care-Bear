@@ -75,13 +75,12 @@ public class DoctorProfileActivity extends AppCompatActivity {
 
         builder.show();
 
-        Thread thread = new Thread(new Runnable() {
+        new Thread(new Runnable() {
             @Override
             public void run() {
                 initInfo();
             }
-        });
-        thread.start();
+        }).start();
 
     }
 
@@ -104,7 +103,7 @@ public class DoctorProfileActivity extends AppCompatActivity {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     UserDetails userDetails = snapshot.getValue(UserDetails.class);
 
-                    if(mAuth.getCurrentUser().getEmail().equals(userDetails.getEmail())) {
+                    if (mAuth.getCurrentUser().getEmail().equals(userDetails.getEmail())) {
                         userDetailsForPassing = userDetails;
 
                         Glide.with(DoctorProfileActivity.this)
@@ -137,7 +136,7 @@ public class DoctorProfileActivity extends AppCompatActivity {
     //back button wouldn't work properly..
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId() == android.R.id.home) {
+        if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);

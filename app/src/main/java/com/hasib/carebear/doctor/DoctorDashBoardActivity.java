@@ -18,10 +18,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.ImageView;
 import android.widget.TimePicker;
 
@@ -46,6 +48,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.hasib.carebear.R;
+import com.hasib.carebear.SplashScreenActivity;
 import com.hasib.carebear.doctor.adapter.RecyclerViewAdapter;
 import com.hasib.carebear.doctor.authentication.SignInActivityForDoctor;
 import com.hasib.carebear.doctor.container.Chamber;
@@ -53,6 +56,7 @@ import com.hasib.carebear.doctor.container.UserDetails;
 import com.hasib.carebear.doctor.fragment.ChamberAddingDialog;
 import com.hasib.carebear.doctor.fragment.ChamberEditingDialog;
 import com.hasib.carebear.doctor.fragment.DoctorProfileActivity;
+import com.hasib.carebear.doctor.fragment.DoctorProfileEditActivity;
 import com.hasib.carebear.doctor.listener.ChamberDialogListener;
 import com.hasib.carebear.doctor.listener.ChamberEventListener;
 import com.hasib.carebear.doctor.listener.ChamberAddingDialogTimeSetListener;
@@ -71,6 +75,7 @@ import java.sql.Time;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -108,6 +113,8 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
     //Menu Item
     private MenuItem editButton;
     private MenuItem deleteButton;
+
+    private AlertDialog builder;
 
     /**
      * Interface for setting time on ChamberAddingDialog after choosing time
@@ -160,6 +167,8 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
         //Recycler view initialization method
         initChamberRecyclerView();
 
+        fetchingChamberDatabasekeys();
+
         //Adapter Listener
         this.adapter.setListener(this);
 
@@ -172,6 +181,85 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
                 return false;
             }
         });
+    }
+
+    private void fetchingChamberDatabasekeys() {
+        initLoadingDialog("Loading your data.....");
+
+        final DatabaseReference databaseReference = FirebaseDatabase
+                .getInstance()
+                .getReference("doctors_profile_info")
+                .child(mAuth.getCurrentUser().getUid())
+                .child("chamber");
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ArrayList chamberKeys = (ArrayList) dataSnapshot.getValue();
+
+                Log.d(TAG, "onDataChange: "+chamberKeys.toString());
+                for (int i=0; i<chamberKeys.size(); i++) {
+                    fetchingChamberData((String) chamberKeys.get(i));
+                }
+                databaseReference.removeEventListener(this);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d(TAG, "onCancelled: "+databaseError.getMessage());
+            }
+        });
+    }
+
+    private void fetchingChamberData(String s) {
+        final DatabaseReference databaseReference = FirebaseDatabase
+                .getInstance()
+                .getReference("doctors_chamber_info")
+                .child(s);
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                HashMap hashMap = (HashMap) dataSnapshot.getValue();
+
+                HashMap latlng = (HashMap) hashMap.get("chamberLatLng");
+
+                LatLong latLong = new LatLong((Double) latlng.get("latitude"), (Double) latlng.get("longitude"));
+                Chamber chamber = new Chamber((String)hashMap.get("chamberName"), (String)hashMap.get("chamberFees"),
+                        (String)hashMap.get("chamberAddress"), latLong,
+                        (String)hashMap.get("chamberTime"), (HashMap)hashMap.get("chamberOpenDays"),
+                        (String)hashMap.get("chamberUserProfileId"), (String)hashMap.get("chamberDatabaseId"));
+
+                chamberList.add(chamber);
+                adapter.notifyDataSetChanged();
+
+                Log.d(TAG, "onDataChange: "+hashMap.toString());
+                Log.d(TAG, "onDataChange: chamber "+chamber.toString());
+
+                databaseReference.removeEventListener(this);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        builder.dismiss();
+    }
+
+    private void initLoadingDialog(String message) {
+        LayoutInflater inflater = getLayoutInflater();
+        final View view = inflater.inflate(R.layout.dialog_progress, null);
+
+        MaterialTextView textView = view.findViewById(R.id.loadingText);
+        textView.setText(message);
+        builder = new AlertDialog.Builder(DoctorDashBoardActivity.this)
+                .setTitle("Please Wait")
+                .setCancelable(false)
+                .setView(view)
+                .create();
+        builder.show();
     }
 
     @Override

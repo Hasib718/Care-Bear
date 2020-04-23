@@ -1,11 +1,24 @@
 package com.hasib.carebear.support;
 
+import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.maps.model.LatLng;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
 public class LatLong implements Parcelable {
+
+    private static final String TAG = "LatLong";
+
     private Double latitude;
     private Double longitude;
 
@@ -36,6 +49,53 @@ public class LatLong implements Parcelable {
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
+
+    public static LatLong castLatLngToCustomLatLongClass(LatLng latLng) {
+        return new LatLong(latLng.latitude, latLng.longitude);
+    }
+
+    public static LatLng castCustomLatLongClassToLatLng(LatLong latLong) {
+        return new LatLng(latLong.latitude, latLong.longitude);
+    }
+
+    public static String geoCoding(Context context, LatLng latLng) {
+        Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+
+        String addressLine = "";
+
+        try {
+            List<Address> addressList = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
+
+            if (addressList != null && addressList.size() > 0) {
+                Log.d(TAG, "geoCoding: " + addressList.get(0).toString());
+
+                addressLine = addressList.get(0).getAddressLine(0);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return addressLine;
+    }
+
+    public static String geoCoding(Context context, LatLong latLng) {
+        Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+
+        String addressLine = "";
+
+        try {
+            List<Address> addressList = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
+
+            if (addressList != null && addressList.size() > 0) {
+                Log.d(TAG, "geoCoding: " + addressList.get(0).toString());
+
+                addressLine = addressList.get(0).getAddressLine(0);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return addressLine;
+    }
+
 
     @NonNull
     @Override

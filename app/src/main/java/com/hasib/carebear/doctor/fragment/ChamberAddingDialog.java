@@ -155,7 +155,7 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
                     markerSearchView.remove();
                     markerSearchView = mapGoogle.addMarker(new MarkerOptions()
                             .position(new LatLng(address.getLatitude(), address.getLongitude()))
-                            .title(geoCoding(new LatLng(address.getLatitude(), address.getLongitude()))));
+                            .title(LatLong.geoCoding(mContext, new LatLng(address.getLatitude(), address.getLongitude()))));
                 }
 
                 return false;
@@ -211,7 +211,7 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
 
                         listener.chamberAddingTexts(chamberNameText.getEditableText().toString(),
                                 chamberFeesText.getText().toString(), dayPicker.getMarkedDays(), longClickAddress,
-                                new LatLong(longClickLatlng.latitude, longClickLatlng.longitude));
+                                LatLong.castLatLngToCustomLatLongClass(longClickLatlng));
                     }
                 });
 
@@ -257,7 +257,7 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
                     markerOnMapLongClick.remove();
 
                     longClickLatlng = latLng;
-                    longClickAddress = geoCoding(latLng);
+                    longClickAddress = LatLong.geoCoding(mContext, latLng);
 
                     markerOnMapLongClick = mapGoogle.addMarker(new MarkerOptions()
                             .position(latLng)
@@ -329,7 +329,7 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
                             mapGoogle.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15f));
                             mapGoogle.addMarker(new MarkerOptions()
                                     .position(new LatLng(location.getLatitude(), location.getLongitude()))
-                                    .title(geoCoding(new LatLng(location.getLatitude(), location.getLongitude()))));
+                                    .title(LatLong.geoCoding(mContext, new LatLng(location.getLatitude(), location.getLongitude()))));
                         }
                     }
                 });
@@ -338,23 +338,5 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
             e.printStackTrace();
             Log.d(TAG, "fetchDeviceLocation: " + e.getMessage());
         }
-    }
-
-    //Method for getting address from co-ordinates
-    public String geoCoding(LatLng latLng) {
-        String addressLine = "";
-
-        try {
-            List<Address> addressList = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
-
-            if (addressList != null && addressList.size() > 0) {
-                Log.d(TAG, "geoCoding: " + addressList.get(0).toString());
-
-                addressLine = addressList.get(0).getAddressLine(0);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return addressLine;
     }
 }
