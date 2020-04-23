@@ -22,7 +22,6 @@ public class SignInActivityForPatient extends AppCompatActivity implements View.
     private TextView signUpTextView;
     private EditText emailText;
     private EditText passwordText;
-    private UserDetails userDetails;
     private ProgressBar progressBar;
     //private FirebaseAuth mAuth;
 
@@ -64,7 +63,7 @@ public class SignInActivityForPatient extends AppCompatActivity implements View.
         if(v.getId() == R.id.signUpButtonForPatientId) {
             Intent intent = new Intent(SignInActivityForPatient.this, SignUpActivityForPatient.class);
             startActivity(intent);
-        } else if (v.getId() == R.id.signInOrUpButtonForPatientId) {
+        } else if (v.getId() == R.id.signInButtonForPatientId) {
 
         }
     }
