@@ -44,6 +44,7 @@ import com.hasib.carebear.doctor.DoctorDashBoardActivity;
 import com.hasib.carebear.doctor.listener.ChamberDialogListener;
 import com.hasib.carebear.doctor.listener.ChamberAddingDialogTimeSetListener;
 import com.hasib.carebear.support.DayPicker;
+import com.hasib.carebear.support.LatLong;
 
 import java.io.IOException;
 import java.util.List;
@@ -209,7 +210,8 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
                         Log.d(TAG, "onClick: parent day picker child " + dayPicker.getMarkedDays().toString());
 
                         listener.chamberAddingTexts(chamberNameText.getEditableText().toString(),
-                                chamberFeesText.getText().toString(), dayPicker.getMarkedDays(), longClickAddress, longClickLatlng);
+                                chamberFeesText.getText().toString(), dayPicker.getMarkedDays(), longClickAddress,
+                                new LatLong(longClickLatlng.latitude, longClickLatlng.longitude));
                     }
                 });
 

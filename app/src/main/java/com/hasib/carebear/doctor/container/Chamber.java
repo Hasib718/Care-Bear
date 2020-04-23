@@ -1,47 +1,63 @@
 package com.hasib.carebear.doctor.container;
 
+import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.hasib.carebear.support.LatLong;
 
+import java.util.HashMap;
 import java.util.Map;
 
-public class Chamber {
+public class Chamber implements Parcelable {
     //Container for storing chamberName & address
     private String chamberName;
     private String chamberFees;
     private String chamberAddress;
-    private String[] chamberLatLng = new String[2];
+    private LatLong chamberLatLng;
     private String chamberTime;
-    private Map<String, Boolean> chamberOpenDays;
+    private HashMap chamberOpenDays;
     private String doctorUserProfileId;
     private String chamberDatabaseId;
 
     public Chamber() {}
 
     public Chamber(String chamberName, String chamberFees, String chamberAddress,
-                   LatLng chamberLatLng, String chamberTime, Map<String, Boolean> chamberOpenDays) {
+                   LatLong chamberLatLng, String chamberTime, Map<String, Boolean> chamberOpenDays) {
         this.chamberName = chamberName;
         this.chamberFees = chamberFees;
         this.chamberAddress = chamberAddress;
-        this.chamberLatLng [0] = String.valueOf(chamberLatLng.latitude);
-        this.chamberLatLng [1] = String.valueOf(chamberLatLng.longitude);
+        this.chamberLatLng = chamberLatLng;
         this.chamberTime = chamberTime;
-        this.chamberOpenDays = chamberOpenDays;
+        this.chamberOpenDays = (HashMap) chamberOpenDays;
     }
 
     public Chamber(String chamberName, String chamberFees, String chamberAddress,
-                   LatLng chamberLatLng, String chamberTime, Map<String, Boolean> chamberOpenDays,
+                   LatLong chamberLatLng, String chamberTime, Map<String, Boolean> chamberOpenDays,
                    String doctorUserProfileId, String chamberDatabaseId) {
         this.chamberName = chamberName;
         this.chamberFees = chamberFees;
         this.chamberAddress = chamberAddress;
-        this.chamberLatLng [0] = String.valueOf(chamberLatLng.latitude);
-        this.chamberLatLng [1] = String.valueOf(chamberLatLng.longitude);
+        this.chamberLatLng = chamberLatLng;
         this.chamberTime = chamberTime;
-        this.chamberOpenDays = chamberOpenDays;
+        this.chamberOpenDays = (HashMap) chamberOpenDays;
         this.doctorUserProfileId = doctorUserProfileId;
         this.chamberDatabaseId = chamberDatabaseId;
+    }
+
+    public Chamber(Parcel parcel) {
+        this.chamberName = parcel.readString();
+        this.chamberFees = parcel.readString();
+        this.chamberAddress = parcel.readString();
+        Bundle bundle = parcel.readBundle();
+        this.chamberLatLng = bundle.getParcelable("latlng");
+        this.chamberTime = parcel.readString();
+        this.chamberOpenDays = parcel.readHashMap(HashMap.class.getClassLoader());
+        this.doctorUserProfileId = parcel.readString();
+        this.chamberDatabaseId = parcel.readString();
     }
 
     public String getChamberName() {
@@ -68,13 +84,12 @@ public class Chamber {
         this.chamberAddress = chamberAddress;
     }
 
-    public LatLng getChamberLatLng() {
-        return new LatLng(Double.parseDouble(chamberLatLng[0]), Double.parseDouble(chamberLatLng[1]));
+    public LatLong getChamberLatLng() {
+        return chamberLatLng;
     }
 
-    public void setChamberLatLng(LatLng chamberLatLng) {
-        this.chamberLatLng [0] = String.valueOf(chamberLatLng.latitude);
-        this.chamberLatLng [1] = String.valueOf(chamberLatLng.longitude);
+    public void setChamberLatLng(LatLong chamberLatLng) {
+        this.chamberLatLng = chamberLatLng;
     }
 
     public String getChamberTime() {
@@ -90,7 +105,7 @@ public class Chamber {
     }
 
     public void setChamberOpenDays(Map<String, Boolean> chamberOpenDays) {
-        this.chamberOpenDays = chamberOpenDays;
+        this.chamberOpenDays = (HashMap) chamberOpenDays;
     }
 
     public String getDoctorUserProfileId() {
@@ -115,10 +130,41 @@ public class Chamber {
         return ("Name "+getChamberName()+"\n"+
                 "Fees "+getChamberFees()+"\n"+
                 "Address "+getChamberAddress()+"\n"+
-                "Latlng "+getChamberLatLng()+"\n"+
+                "Latlng "+getChamberLatLng().toString()+"\n"+
                 "Time "+getChamberTime()+"\n"+
-                "Active days "+getChamberOpenDays().toString()+
+                "Active days "+getChamberOpenDays().toString()+"\n"+
                 "Id "+getDoctorUserProfileId()+"\n"+
                 "Id "+getChamberDatabaseId());
     }
+
+    @Override
+    public int describeContents() {
+        return hashCode();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(chamberName);
+        dest.writeString(chamberFees);
+        dest.writeString(chamberAddress);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("latlng", chamberLatLng);
+        dest.writeBundle(bundle);
+        dest.writeString(chamberTime);
+        dest.writeMap(chamberOpenDays);
+        dest.writeString(doctorUserProfileId);
+        dest.writeString(chamberDatabaseId);
+    }
+
+    public static final Parcelable.Creator<Chamber> CREATOR = new Creator<Chamber>() {
+        @Override
+        public Chamber createFromParcel(Parcel source) {
+            return new Chamber(source);
+        }
+
+        @Override
+        public Chamber[] newArray(int size) {
+            return new Chamber[size];
+        }
+    };
 }

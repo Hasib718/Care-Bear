@@ -37,6 +37,7 @@ import com.hasib.carebear.doctor.container.Chamber;
 import com.hasib.carebear.doctor.listener.ChamberAddingDialogTimeSetListener;
 import com.hasib.carebear.doctor.listener.ChamberDialogListener;
 import com.hasib.carebear.support.DayPicker;
+import com.hasib.carebear.support.LatLong;
 
 import java.io.IOException;
 import java.util.List;
@@ -192,11 +193,12 @@ public class ChamberEditingDialog extends AppCompatDialogFragment implements OnM
                             longClickAddress = chamber.getChamberAddress();
                         }
                         if (longClickLatlng == null) {
-                            longClickLatlng = chamber.getChamberLatLng();
+                            longClickLatlng = new LatLng(chamber.getChamberLatLng().getLatitude(), chamber.getChamberLatLng().getLongitude());
                         }
                         Log.d(TAG, "onClick: chamber active "+dayPicker.getMarkedDays().toString());
                         listener.chamberEditingTexts(chamberNameText.getEditableText().toString(),
-                                chamberFeesText.getText().toString(), dayPicker.getMarkedDays(), longClickAddress, longClickLatlng, position);
+                                chamberFeesText.getText().toString(), dayPicker.getMarkedDays(), longClickAddress,
+                                new LatLong(longClickLatlng.latitude, longClickLatlng.longitude), position);
                     }
                 });
 
@@ -259,10 +261,12 @@ public class ChamberEditingDialog extends AppCompatDialogFragment implements OnM
         Log.d(TAG, "lastSavedLocation: getting the device current location");
 
         if (chamber.getChamberLatLng() != null) {
-            mapGoogle.animateCamera(CameraUpdateFactory.newLatLngZoom(chamber.getChamberLatLng(), 15f));
+            mapGoogle.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(chamber.getChamberLatLng().getLatitude(),
+                    chamber.getChamberLatLng().getLongitude()), 15f));
+
             mapGoogle.addMarker(new MarkerOptions()
-                    .position(chamber.getChamberLatLng())
-                    .title(geoCoding(chamber.getChamberLatLng())));
+                    .position(new LatLng(chamber.getChamberLatLng().getLatitude(), chamber.getChamberLatLng().getLongitude()))
+                    .title(geoCoding(new LatLng(chamber.getChamberLatLng().getLatitude(), chamber.getChamberLatLng().getLongitude()))));
         }
     }
 

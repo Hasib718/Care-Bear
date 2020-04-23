@@ -291,8 +291,21 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
         String key = mAuth.getCurrentUser().getUid();
         userDetails.setId(key);
 
-        databaseReference.child(key).setValue(userDetails);
-        Log.d(TAG, "saveDoctorInto: data saved into database");
+        databaseReference
+                .child(key)
+                .setValue(userDetails)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "saveDoctorInto: data saved into database");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "saveDoctorInto: data saved into database failed");
+                    }
+                });
     }
 
     //Method for selecting and adding image

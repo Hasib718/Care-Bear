@@ -332,8 +332,25 @@ public class DoctorProfileEditActivity extends AppCompatActivity implements View
     }
 
     private void updateUserDataBaseInfo(){
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("doctors_profile_info").child(currentUserDetails.getId());
-        databaseReference.setValue(currentUserDetails);
+        DatabaseReference databaseReference = FirebaseDatabase
+                .getInstance()
+                .getReference("doctors_profile_info")
+                .child(currentUserDetails.getId());
+
+        databaseReference
+                .setValue(currentUserDetails)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "onSuccess: Doctor's profile updated successfully");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "onFailure: Doctor's profile updated failed");
+                    }
+                });
     }
 
     private boolean collectEditedData() {

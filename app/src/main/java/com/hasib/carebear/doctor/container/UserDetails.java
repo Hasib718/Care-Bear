@@ -177,7 +177,7 @@ public class UserDetails implements Parcelable {
 
         @Override
         public UserDetails[] newArray(int size) {
-            return new UserDetails[0];
+            return new UserDetails[size];
         }
     };
 
