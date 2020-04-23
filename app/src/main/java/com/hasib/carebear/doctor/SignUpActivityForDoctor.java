@@ -55,6 +55,7 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
     private EditText specialistText;
     private LinearLayout checkBoxLayout;
     private EditText registrationNoText;
+
     private EditText presentAddressText;
     private EditText permanentAddressText;
     private EditText commonChamberText;
