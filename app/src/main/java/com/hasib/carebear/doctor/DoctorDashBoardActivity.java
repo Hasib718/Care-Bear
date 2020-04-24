@@ -73,7 +73,6 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
 
     //Chamber class
     private List<Chamber> chamberList;
-    private List<String> chambersDatabaseKeysList;
 
     //Tapped chamber position
     private int position;
@@ -127,8 +126,6 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
 
         //Chamber class initialization;
         chamberList = new ArrayList<>();
-        chambersDatabaseKeysList = new ArrayList<>();
-
 
         //Floating button on click listener
         chamberAddingButton.setOnClickListener(new View.OnClickListener() {
@@ -172,9 +169,9 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
                         HashMap<String, String> hashMap = (HashMap<String, String>) dataSnapshot.getValue();
 
                         try {
-                            Log.d(TAG, "onDataChange: "+hashMap.values().toString());
+                            Log.d(TAG, "onDataChange: " + hashMap.values().toString());
 
-                            for (Map.Entry<String, String> data :  hashMap.entrySet()) {
+                            for (Map.Entry<String, String> data : hashMap.entrySet()) {
                                 fetchingChamberData(data.getValue());
                             }
                         } catch (Exception e) {
@@ -200,6 +197,8 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         HashMap hashMap = (HashMap) dataSnapshot.getValue();
 
+                        Log.d(TAG, "onDataChange: " + hashMap.toString());
+
                         HashMap latlng = (HashMap) hashMap.get("chamberLatLng");
 
                         LatLong latLong = new LatLong((Double) latlng.get("latitude"), (Double) latlng.get("longitude"));
@@ -212,7 +211,6 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
                         chamberList.add(chamber);
                         adapter.notifyDataSetChanged();
 
-                        Log.d(TAG, "onDataChange: " + hashMap.toString());
                         Log.d(TAG, "onDataChange: chamber " + chamber.toString());
                     }
 
@@ -333,6 +331,8 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
 
                                 deleteChamberDataFromDatabase();
 
+                                editButton.setVisible(false);
+                                deleteButton.setVisible(false);
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -354,20 +354,43 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
     private void deleteChamberDataFromDatabase() {
         FirebaseDatabase
                 .getInstance()
+                .getReference("doctors_profile_info")
+                .child(mAuth.getCurrentUser().getUid())
+                .child("chamber")
+                .child(invokedChamber.getChamberDatabaseIdKeyInDoctorProfile())
+                .removeValue()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "onSuccess: "+invokedChamber.getChamberName()+" chamber Id on doctor profile deleted");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "onSuccess: "+invokedChamber.getChamberName()+" chamber Id on doctor profile deletion failed!");
+                    }
+                });
+
+        FirebaseDatabase
+                .getInstance()
                 .getReference("doctors_chamber_info")
                 .child(invokedChamber.getChamberDatabaseId())
-                .removeValue(new DatabaseReference.CompletionListener() {
+                .removeValue()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-                        if (databaseError == null) {
-                            Log.d(TAG, "onComplete: "+invokedChamber.getChamberName()+"Deleted successfully");
+                    public void onSuccess(Void aVoid) {
+                        onStart();
 
-                            Toast.makeText(DoctorDashBoardActivity.this, invokedChamber.getChamberName()+"Deleted successfully", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Log.d(TAG, "onComplete: "+invokedChamber.getChamberName()+"Deletion failed");
-
-                            Toast.makeText(DoctorDashBoardActivity.this, invokedChamber.getChamberName()+"Deletion failed", Toast.LENGTH_SHORT).show();
-                        }
+                        Log.d(TAG, "onSuccess: "+invokedChamber.getChamberName()+" deleted successfully");
+                        Toast.makeText(DoctorDashBoardActivity.this, invokedChamber.getChamberName()+" deleted successfully", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "onSuccess: "+invokedChamber.getChamberName()+" deletion failed!");
+                        Toast.makeText(DoctorDashBoardActivity.this, invokedChamber.getChamberName()+" deletion failed!", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -443,7 +466,6 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
         String key = chamberReference.push().getKey();
         String chamberDatabaseIdKeyInDoctorProfile = doctorReference.push().getKey();
 
-        chambersDatabaseKeysList.add(key);
         final Chamber chamber = new Chamber(name, fess, address, latLng, chamberTime, activeDays,
                 mAuth.getCurrentUser().getUid(), key, chamberDatabaseIdKeyInDoctorProfile);
         Log.d(TAG, "chamberAddingTexts: " + chamber.toString());
@@ -464,12 +486,10 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
                     }
                 });
 
-        Map<String, Object> n = new HashMap<>();
-        n.put(chamberDatabaseIdKeyInDoctorProfile, chamber.getChamberDatabaseId());
-
         doctorReference
                 .child("chamber")
-                .updateChildren(n)
+                .child(chamberDatabaseIdKeyInDoctorProfile)
+                .setValue(key)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {

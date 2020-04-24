@@ -145,8 +145,8 @@ public class Chamber implements Parcelable {
                 "Time "+getChamberTime()+"\n"+
                 "Active days "+getChamberOpenDays().toString()+"\n"+
                 "doctorUserProfileId "+getDoctorUserProfileId()+"\n"+
-                "chamberDatabaseId "+getChamberDatabaseId()+"\n+" +
-                "chamberDatabaseIdKeyInDoctorProfile"+getChamberDatabaseIdKeyInDoctorProfile());
+                "chamberDatabaseId "+getChamberDatabaseId()+"\n"+
+                "chamberDatabaseIdKeyInDoctorProfile "+ getChamberDatabaseIdKeyInDoctorProfile());
     }
 
     @Override
