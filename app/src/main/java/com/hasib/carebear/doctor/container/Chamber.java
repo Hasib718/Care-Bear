@@ -22,6 +22,7 @@ public class Chamber implements Parcelable {
     private HashMap chamberOpenDays;
     private String doctorUserProfileId;
     private String chamberDatabaseId;
+    private String chamberDatabaseIdKeyInDoctorProfile;
 
     public Chamber() {}
 
@@ -37,7 +38,7 @@ public class Chamber implements Parcelable {
 
     public Chamber(String chamberName, String chamberFees, String chamberAddress,
                    LatLong chamberLatLng, String chamberTime, Map<String, Boolean> chamberOpenDays,
-                   String doctorUserProfileId, String chamberDatabaseId) {
+                   String doctorUserProfileId, String chamberDatabaseId, String chamberDatabaseIdKeyInDoctorProfile) {
         this.chamberName = chamberName;
         this.chamberFees = chamberFees;
         this.chamberAddress = chamberAddress;
@@ -46,6 +47,7 @@ public class Chamber implements Parcelable {
         this.chamberOpenDays = (HashMap) chamberOpenDays;
         this.doctorUserProfileId = doctorUserProfileId;
         this.chamberDatabaseId = chamberDatabaseId;
+        this.chamberDatabaseIdKeyInDoctorProfile = chamberDatabaseIdKeyInDoctorProfile;
     }
 
     public Chamber(Parcel parcel) {
@@ -58,6 +60,7 @@ public class Chamber implements Parcelable {
         this.chamberOpenDays = parcel.readHashMap(HashMap.class.getClassLoader());
         this.doctorUserProfileId = parcel.readString();
         this.chamberDatabaseId = parcel.readString();
+        this.chamberDatabaseIdKeyInDoctorProfile = parcel.readString();
     }
 
     public String getChamberName() {
@@ -124,6 +127,14 @@ public class Chamber implements Parcelable {
         this.chamberDatabaseId = chamberDatabaseId;
     }
 
+    public String getChamberDatabaseIdKeyInDoctorProfile() {
+        return chamberDatabaseIdKeyInDoctorProfile;
+    }
+
+    public void setChamberDatabaseIdKeyInDoctorProfile(String chamberDatabaseIdKeyInDoctorProfile) {
+        this.chamberDatabaseIdKeyInDoctorProfile = chamberDatabaseIdKeyInDoctorProfile;
+    }
+
     @NonNull
     @Override
     public String toString() {
@@ -133,8 +144,9 @@ public class Chamber implements Parcelable {
                 "Latlng "+getChamberLatLng().toString()+"\n"+
                 "Time "+getChamberTime()+"\n"+
                 "Active days "+getChamberOpenDays().toString()+"\n"+
-                "Id "+getDoctorUserProfileId()+"\n"+
-                "Id "+getChamberDatabaseId());
+                "doctorUserProfileId "+getDoctorUserProfileId()+"\n"+
+                "chamberDatabaseId "+getChamberDatabaseId()+"\n+" +
+                "chamberDatabaseIdKeyInDoctorProfile"+getChamberDatabaseIdKeyInDoctorProfile());
     }
 
     @Override
@@ -154,6 +166,7 @@ public class Chamber implements Parcelable {
         dest.writeMap(chamberOpenDays);
         dest.writeString(doctorUserProfileId);
         dest.writeString(chamberDatabaseId);
+        dest.writeString(chamberDatabaseIdKeyInDoctorProfile);
     }
 
     public static final Parcelable.Creator<Chamber> CREATOR = new Creator<Chamber>() {

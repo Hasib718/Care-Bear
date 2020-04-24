@@ -1,28 +1,23 @@
 package com.hasib.carebear.doctor.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hasib.carebear.R;
-import com.hasib.carebear.doctor.DoctorDashBoardActivity;
 import com.hasib.carebear.doctor.container.Chamber;
 import com.hasib.carebear.doctor.listener.ChamberEventListener;
-import com.hasib.carebear.doctor.listener.RecyclerViewDataChangeListener;
 import com.hasib.carebear.support.DayPicker;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ChamberViewHolder> {
     private static final String TAG = "RecyclerViewAdapter";
