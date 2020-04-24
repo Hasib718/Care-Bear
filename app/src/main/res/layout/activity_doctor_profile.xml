@@ -1,127 +1,199 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DoctorProfileActivity">
+    android:background="@drawable/doctor_profile_background"
+    android:orientation="vertical">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/infoLayout"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
             <ImageView
-                android:layout_centerHorizontal="true"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:id="@+id/doctorImage"
+                android:id="@+id/imageViewId"
+                android:layout_width="wrap_content"
+                android:layout_height="250dp"
                 android:layout_gravity="center"
-                android:src="@drawable/bear"/>
-            <ProgressBar
+                android:layout_marginTop="10dp"
+                android:contentDescription="TODO"
+                app:srcCompat="@drawable/bear" />
+
+            <TextView
+                android:id="@+id/nameTextViewId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/imageProgressBar"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:visibility="invisible"/>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/nameText"
-            android:hint="Your Full Name"
-            android:inputType="textPersonName"
-            android:layout_marginTop="10dp"/>
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/mobileNoText"
-            android:hint="Mobile No.(Without +88)"
-            android:inputType="text|number" />
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:text="Abdul Wadud Shakib"
+                android:textColor="@android:color/primary_text_light"
+                android:textSize="25sp"
+                android:textStyle="bold" />
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/specialistText"
-            android:hint="If you are specialist then write topic\nOr WRITE.. NONE/none"
-            android:inputType="textPersonName" />
-        <TextView
-            android:layout_marginTop="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Please Select Your Degree\nWhich You have Completed"
-            android:textSize="17sp"
-            android:textColor="#E91E63" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/registrationNoText"
-            android:hint="Registration No of BMDC"
-            android:inputType="numberDecimal" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="8dp"
+                    android:text="Degrees:"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    android:textSize="16sp" />
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/presentAddressText"
-            android:hint="Present Address"
-            android:inputType="textLongMessage" />
+                <TextView
+                    android:id="@+id/degreeId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="MBBS, FCPS, MD"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    android:textSize="16sp" />
+            </LinearLayout>
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/permanentAddressText"
-            android:hint="Permanent Address (Optional)"
-            android:inputType="textLongMessage" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="3dp"
+                android:orientation="horizontal">
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/commonChamberText"
-            android:hint="Common Chamber\nWhere You present Most (Mendatory)"
-            android:inputType="textLongMessage" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="8dp"
+                    android:text="Specialist:"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    android:textSize="16sp" />
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/emailText"
-            android:hint="Email"
-            android:inputType="textEmailAddress" />
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/passwordText"
-            android:hint="Password"
-            android:inputType="textPassword" />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/newSignUpButton"
-            android:background="@color/Crimson"
-            android:text="Sign Up"
-            android:textAllCaps="false"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/signInTextView"
-            android:text="Have an account? Sign In"
-            android:textAllCaps="false"
-            android:textStyle="bold"
-            android:layout_marginTop="15dp"
-            android:layout_gravity="center"/>
+                <TextView
+                    android:id="@+id/specialistId"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Cardiologist"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    android:textSize="16sp" />
+            </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:text="BMDC Reg No:"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 
-</androidx.core.widget.NestedScrollView>
+                <TextView
+                    android:id="@+id/bmdcRegNoId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="93400"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="8dp"
+                    android:text="Mobile No:"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+
+                <TextView
+                    android:id="@+id/edittext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="01721140302"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:text="Email:"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+
+                <TextView
+                    android:id="@+id/emailId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="wadud6065@gmail.com"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:text="Present Address:"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+
+                <TextView
+                    android:id="@+id/presentAddressId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sylhet"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="40dp"
+                android:gravity="center"
+                android:text="If you want to edit your profile\nClick the edit Button"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/editButtonId"
+                android:layout_width="59dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:padding="2dp"
+                android:text="Edit"
+                android:textAllCaps="false" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

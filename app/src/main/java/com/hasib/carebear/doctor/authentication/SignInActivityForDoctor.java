@@ -1,4 +1,4 @@
-package com.hasib.carebear;
+package com.hasib.carebear.doctor.authentication;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,8 +19,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-
-import java.io.InputStream;
+import com.hasib.carebear.R;
+import com.hasib.carebear.doctor.DoctorDashBoardActivity;
+import com.hasib.carebear.doctor.container.UserDetails;
 
 public class SignInActivityForDoctor extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "SignInActivityForDoctor";
@@ -62,6 +64,16 @@ public class SignInActivityForDoctor extends AppCompatActivity implements View.O
         signInButtonForDoctor.setOnClickListener(this);
     }
 
+    //This Function is needed for back button.. Without this function
+    //back button wouldn't work properly..
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -92,8 +104,6 @@ public class SignInActivityForDoctor extends AppCompatActivity implements View.O
 
             case R.id.signUpButtonForDoctorId: {
                 Log.d(TAG, "onClick: Sign Up Button clicked");
-
-                finish();
 
                 //Intenting to Sign Up Activity
                 Intent intent = new Intent(SignInActivityForDoctor.this, SignUpActivityForDoctor.class);

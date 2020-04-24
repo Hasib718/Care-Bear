@@ -19,20 +19,30 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".DoctorProfileActivity"
-            android:parentActivityName=".DoctorDashBoardActivity"></activity>
-        <activity android:name=".DoctorDashBoardActivity" />
-        <activity android:name=".SignUpActivityForPatient" />
-        <activity android:name=".SignInActivityForPatient" />
-        <activity android:name=".SignUpActivityForDoctor" />
-        <activity android:name=".SignInActivityForDoctor" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".doctor.fragment.DoctorProfileEditActivity"></activity>
+        <activity android:name=".SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/Map_API_Key" />
+
+        <activity
+            android:name=".doctor.fragment.DoctorProfileActivity"
+            android:parentActivityName=".doctor.DoctorDashBoardActivity" />
+        <activity android:name=".doctor.DoctorDashBoardActivity" />
+        <activity android:name=".patient.SignUpActivityForPatient" />
+        <activity android:name=".patient.SignInActivityForPatient" />
+        <activity
+            android:name=".doctor.authentication.SignUpActivityForDoctor"
+            android:parentActivityName=".doctor.authentication.SignInActivityForDoctor" />
+        <activity android:name=".doctor.authentication.SignInActivityForDoctor" />
+        <activity android:name=".MainActivity"></activity>
     </application>
 
 </manifest>

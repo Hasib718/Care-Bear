@@ -1,17 +1,20 @@
-package com.hasib.carebear;
+package com.hasib.carebear.patient;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
+import com.hasib.carebear.R;
+import com.hasib.carebear.doctor.container.UserDetails;
 
 public class SignInActivityForPatient extends AppCompatActivity implements View.OnClickListener {
 
@@ -19,7 +22,6 @@ public class SignInActivityForPatient extends AppCompatActivity implements View.
     private TextView signUpTextView;
     private EditText emailText;
     private EditText passwordText;
-    private UserDetails userDetails;
     private ProgressBar progressBar;
     //private FirebaseAuth mAuth;
 
@@ -46,12 +48,22 @@ public class SignInActivityForPatient extends AppCompatActivity implements View.
         signUpButtonForPatient.setOnClickListener(this);
     }
 
+    //This Function is needed for back button.. Without this function
+    //back button wouldn't work properly..
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     @Override
     public void onClick(View v) {
         if(v.getId() == R.id.signUpButtonForPatientId) {
             Intent intent = new Intent(SignInActivityForPatient.this, SignUpActivityForPatient.class);
             startActivity(intent);
-        } else if (v.getId() == R.id.signInOrUpButtonForPatientId) {
+        } else if (v.getId() == R.id.signInButtonForPatientId) {
 
         }
     }

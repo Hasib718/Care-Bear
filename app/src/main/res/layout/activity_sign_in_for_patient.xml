@@ -7,8 +7,8 @@
     android:orientation="vertical"
     android:gravity="center"
     android:padding="10dp"
-    android:background="#69FD69"
-    tools:context=".SignInActivityForPatient">
+    android:background="@drawable/login_gradient"
+    tools:context=".patient.SignInActivityForPatient">
 
 
     <LinearLayout
@@ -24,8 +24,8 @@
             android:layout_gravity="center"
             android:text="Sign In For Patient"
             android:textStyle="bold"
-            android:textColor="@color/Maroon"
-            android:layout_marginBottom="70dp"
+            android:textColor="@color/colorAccent"
+            android:layout_marginBottom="100dp"
             android:textSize="25sp" />
 
         <EditText
@@ -33,6 +33,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/usernameTextPatientId"
             android:backgroundTint="@color/colorPrimaryDark"
+            android:drawableLeft="@drawable/ic_action_name"
             android:hint="Username or Email"
             android:inputType="textEmailAddress"/>
         <EditText
@@ -42,14 +43,15 @@
             android:backgroundTint="@color/colorPrimaryDark"
             android:hint="Password"
             android:inputType="textPassword"
+            android:drawableLeft="@drawable/ic_action_password"
             android:layout_marginTop="5dp"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/signInButtonForPatientId"
-            android:background="@color/CadetBlue"
+            android:background="@color/Bisque"
             android:text="Sign In"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="30dp"
             android:layout_gravity="center"
             android:textAllCaps="false"
             android:textStyle="bold"
@@ -58,7 +60,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/signUpTextView"
-            android:background="#69FD69"
             android:text="Don't have an account?"
             android:textAllCaps="false"
             android:textStyle="bold"
@@ -67,11 +68,12 @@
 
         <Button
             android:id="@+id/signUpButtonForPatientId"
-            android:layout_width="69dp"
+            android:layout_width="60dp"
             android:layout_height="35dp"
             android:text="Sign Up"
             android:textSize="10sp"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:textAllCaps="false"/>
 
     </LinearLayout>
 

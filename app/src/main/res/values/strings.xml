@@ -4,4 +4,7 @@
     <string name="alertMassage">Do you want to exit ?</string>
     <string name="nav_open">Open</string>
     <string name="nav_close">Close</string>
+
+    <!-- API keys String -->
+    <string name="Map_API_Key" translatable="false">AIzaSyACtbzzIIIS1M9o_HYVsgGnK5Pd9tzrzqo</string>
 </resources>

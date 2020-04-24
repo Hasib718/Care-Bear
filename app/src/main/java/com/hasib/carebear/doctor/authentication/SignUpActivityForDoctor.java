@@ -1,4 +1,4 @@
-package com.hasib.carebear;
+package com.hasib.carebear.doctor.authentication;
 
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -36,9 +37,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.hasib.carebear.MainActivity;
+import com.hasib.carebear.R;
+import com.hasib.carebear.doctor.DoctorDashBoardActivity;
+import com.hasib.carebear.doctor.container.UserDetails;
 
 import java.io.IOException;
-import java.util.UUID;
 
 public class SignUpActivityForDoctor extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "SignUpActivityForDoctor";
@@ -52,6 +56,7 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
     private EditText specialistText;
     private LinearLayout checkBoxLayout;
     private EditText registrationNoText;
+
     private EditText presentAddressText;
     private EditText permanentAddressText;
     private EditText commonChamberText;
@@ -118,6 +123,16 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
         //Setting Button on click Listener
         signUpButton.setOnClickListener(this);
         doctorImage.setOnClickListener(this);
+    }
+
+    //This Function is needed for back button.. Without this function
+    //back button wouldn't work properly..
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -381,6 +396,9 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
                             Intent intent = new Intent(SignUpActivityForDoctor.this, DoctorDashBoardActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
+
+                            // TODO: 10-Apr-20 have to implement email verification methods
+                            // TODO: 10-Apr-20 have add other authentication services like Google & Facebook
                         }
                     });
         }
