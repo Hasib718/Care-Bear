@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
@@ -21,12 +22,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
@@ -37,10 +40,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.hasib.carebear.MainActivity;
 import com.hasib.carebear.R;
 import com.hasib.carebear.doctor.DoctorDashBoardActivity;
 import com.hasib.carebear.doctor.container.UserDetails;
+import com.hasib.carebear.support.ImageSupport;
 
 import java.io.IOException;
 
@@ -51,19 +54,10 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
     //views
     private ImageView doctorImage;
     private ProgressBar imageProgressBar;
-    private EditText nameText;
-    private EditText mobileNoText;
-    private EditText specialistText;
+    private EditText nameText, mobileNoText, specialistText, registrationNoText, presentAddressText, commonChamberText, emailText, passwordText;
     private LinearLayout checkBoxLayout;
-    private EditText registrationNoText;
-
-    private EditText presentAddressText;
-    private EditText permanentAddressText;
-    private EditText commonChamberText;
-    private EditText emailText;
-    private EditText passwordText;
+  
     private Button signUpButton;
-    private ProgressBar progressBar;
 
     //Info container class
     private UserDetails userDetails;
@@ -82,6 +76,8 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
     //image uri
     private Uri uriProfileImage;
 
+    private AlertDialog loadingDialog;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -93,20 +89,7 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        doctorImage = (ImageView) findViewById(R.id.doctorImage);
-        imageProgressBar = (ProgressBar) findViewById(R.id.imageProgressBar);
-        nameText = (EditText) findViewById(R.id.nameText);
-        mobileNoText = (EditText) findViewById(R.id.mobileNoText);
-        specialistText = (EditText) findViewById(R.id.specialistText);
-        checkBoxLayout = (LinearLayout) findViewById(R.id.checkBoxLayout);
-        registrationNoText = (EditText) findViewById(R.id.registrationNoText);
-        presentAddressText = (EditText) findViewById(R.id.presentAddressText);
-        permanentAddressText = (EditText) findViewById(R.id.permanentAddressText);
-        commonChamberText = (EditText) findViewById(R.id.commonChamberText);
-        emailText = (EditText) findViewById(R.id.emailText);
-        passwordText = (EditText) findViewById(R.id.passwordText);
-        signUpButton = (Button) findViewById(R.id.newSignUpButton);
-        progressBar = (ProgressBar) findViewById(R.id.progressBarUp);
+        initViews();
 
         //info container class
         userDetails = new UserDetails();
@@ -123,6 +106,36 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
         //Setting Button on click Listener
         signUpButton.setOnClickListener(this);
         doctorImage.setOnClickListener(this);
+
+    }
+
+    private void initLoadingDialog() {
+        LayoutInflater inflater = getLayoutInflater();
+        final View view = inflater.inflate(R.layout.dialog_progress, null);
+
+        MaterialTextView textView = view.findViewById(R.id.loadingText);
+        textView.setText("Signing Up......");
+        loadingDialog = new AlertDialog.Builder(SignUpActivityForDoctor.this)
+                .setTitle("Please wait")
+                .setCancelable(false)
+                .setView(view)
+                .create();
+        loadingDialog.show();
+    }
+
+    private void initViews() {
+        doctorImage = findViewById(R.id.doctorImage);
+        imageProgressBar = findViewById(R.id.imageProgressBar);
+        nameText = findViewById(R.id.nameText);
+        mobileNoText = findViewById(R.id.mobileNoText);
+        specialistText = findViewById(R.id.specialistText);
+        checkBoxLayout = findViewById(R.id.checkBoxLayout);
+        registrationNoText = findViewById(R.id.registrationNoText);
+        presentAddressText = findViewById(R.id.presentAddressText);
+        commonChamberText = findViewById(R.id.commonChamberText);
+        emailText = findViewById(R.id.emailText);
+        passwordText = findViewById(R.id.passwordText);
+        signUpButton = findViewById(R.id.newSignUpButton);
     }
 
     //This Function is needed for back button.. Without this function
@@ -140,13 +153,12 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
         switch (v.getId()) {
             case R.id.newSignUpButton : {
                 Log.d(TAG, "onClick: New Doctor Sign up button clicked");
-                progressBar.setVisibility(View.VISIBLE);
                 //Getting data from user
                 if (!getInformationFromUser()) {
-                    progressBar.setVisibility(View.INVISIBLE);
                     return;
                 }
                 Log.d(TAG, "onClick: going to registration");
+                initLoadingDialog();
                 //adding username & password to firebase also authenticate
                 userRegister();
             }
@@ -176,7 +188,6 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
         Log.d(TAG, "getInformationFromUser: getting user data 2");
         userDetails.setRegistrationInfo(registrationNoText.getText().toString());
         userDetails.setPresentAddressInfo(presentAddressText.getText().toString());
-        userDetails.setPermanentAddressInfo(permanentAddressText.getText().toString());
         userDetails.setCommonChamberInfo(commonChamberText.getText().toString());
         userDetails.setEmail(emailText.getText().toString());
         userDetails.setPassword(passwordText.getText().toString());
@@ -248,17 +259,23 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
 
                             //Image uploading method
                             uploadImageToFirebaseStorage();
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.d(TAG, "createUserWithEmail: failure", task.getException());
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // If sign in fails, display a message to the user.
+                        Log.d(TAG, "createUserWithEmail: failure"+ e.getMessage());
 
-                            if (task.getException() instanceof FirebaseAuthUserCollisionException) {
-                                Toast.makeText(SignUpActivityForDoctor.this, "User is already registered.",
-                                        Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(SignUpActivityForDoctor.this, "Error: "+task.getException().getMessage(),
-                                        Toast.LENGTH_SHORT).show();
-                            }
+                        loadingDialog.dismiss();
+
+                        if (e instanceof FirebaseAuthUserCollisionException) {
+                            Toast.makeText(SignUpActivityForDoctor.this, "User is already registered.",
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(SignUpActivityForDoctor.this, "Error: "+e.getMessage(),
+                                    Toast.LENGTH_SHORT).show();
                         }
                     }
                 })
@@ -272,10 +289,24 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
     }
 
     private void saveDoctorInto() {
-        String key = databaseReference.push().getKey();
-        
-        databaseReference.child(userDetails.getMobile()).setValue(userDetails);
-        Log.d(TAG, "saveDoctorInto: data saved into database");
+        String key = mAuth.getCurrentUser().getUid();
+        userDetails.setId(key);
+
+        databaseReference
+                .child(key)
+                .setValue(userDetails)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "saveDoctorInto: data saved into database");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "saveDoctorInto: data saved into database failed");
+                    }
+                });
     }
 
     //Method for selecting and adding image
@@ -284,13 +315,6 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Profile Image"), CHOOSE_IMAGE_REQUEST);
-    }
-
-    //For getting Image extension
-    public String getExtension(Uri imageUri) {
-        ContentResolver contentResolver = getContentResolver();
-        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(imageUri));
     }
 
     //Image selecting activity
@@ -306,12 +330,17 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uriProfileImage);
 
                 doctorImage.setImageBitmap(bitmap);
-
-                //uploadImageToFirebaseStorage();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    //For getting Image extension
+    public String getExtension(Uri imageUri) {
+        ContentResolver contentResolver = getContentResolver();
+        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(imageUri));
     }
 
     //Method for uploading image to firebase storage
@@ -341,7 +370,11 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
                             //The progress bar is set to GONE when the uploading task is done
                             imageProgressBar.setVisibility(View.GONE);
 
-                            userDetails.setDoctorImageUrl(taskSnapshot.getStorage().getDownloadUrl().toString());
+                            Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                            while (!uriTask.isSuccessful());
+
+                            userDetails.setDoctorImageUrl(uriTask.getResult().toString());
+
                             Log.d(TAG, "onSuccess: doctorImageUrl "+userDetails.getDoctorImageUrl());
                         }
                     })
@@ -351,6 +384,8 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
                             Log.d(TAG, "onFailure: Image upload failed");
                             imageProgressBar.setVisibility(View.GONE);
 
+                            loadingDialog.dismiss();
+
                             Toast.makeText(SignUpActivityForDoctor.this, "Image upload Failed", Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -358,7 +393,6 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
     }
 
     public void saveUserInformation() {
-
         FirebaseUser user = mAuth.getCurrentUser();
 
         Log.d(TAG, "saveUserInformation: entering to profile build");
@@ -377,8 +411,6 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
                                 Log.d(TAG, "onComplete: Everythings OK");
                                 Toast.makeText(SignUpActivityForDoctor.this, "Profile Updated", Toast.LENGTH_SHORT).show();
 
-                                progressBar.setVisibility(View.GONE);
-
                                 //Doctor Info saving method
                                 saveDoctorInto();
                             }
@@ -391,6 +423,8 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
                             Log.d(TAG, "onSuccess: Going to Doctor's Dash Board");
                             //Intenting to doctor's dash board
 
+                            loadingDialog.dismiss();
+
                             finish();
 
                             Intent intent = new Intent(SignUpActivityForDoctor.this, DoctorDashBoardActivity.class);
@@ -399,6 +433,12 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
 
                             // TODO: 10-Apr-20 have to implement email verification methods
                             // TODO: 10-Apr-20 have add other authentication services like Google & Facebook
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            loadingDialog.dismiss();
                         }
                     });
         }

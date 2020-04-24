@@ -1,18 +1,35 @@
 package com.hasib.carebear;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.Window;
+import android.util.Log;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
-import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.hasib.carebear.doctor.container.Chamber;
+import com.hasib.carebear.support.LatLong;
+
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
+    private static final String TAG = "SplashScreenActivity";
+
     private ProgressBar progressBar;
-    private int progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +60,15 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
 
     public void doWork() {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        try {
+            Log.d(TAG, "doWork: "+mAuth.getCurrentUser().getEmail());
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.d(TAG, "doWork: user not signed in");
+        }
 
-        for(progress = 1; progress <=100; progress += 1) {
+        for(int progress = 1; progress <=100; progress++) {
             try {
                 Thread.sleep(20);
                 progressBar.setProgress(progress);
@@ -56,6 +80,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     public void startApp() {
         Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
     }

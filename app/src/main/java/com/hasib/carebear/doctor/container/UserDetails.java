@@ -1,6 +1,12 @@
 package com.hasib.carebear.doctor.container;
 
-public class UserDetails {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
+public class UserDetails implements Parcelable {
+    private String id;
     private String fullName;
     private String email;
     private String mobile;
@@ -9,14 +15,27 @@ public class UserDetails {
     private String checkBoxInfo = "";
     private String registrationInfo;
     private String presentAddressInfo;
-    private String permanentAddressInfo;
     private String commonChamberInfo;
     private String doctorImageUrl;
 
-    public UserDetails() {
+    public UserDetails() {}
+
+    public UserDetails(Parcel parcel) {
+        id = parcel.readString();
+        fullName = parcel.readString();
+        email = parcel.readString();
+        mobile = parcel.readString();
+        password = parcel.readString();
+        specialist = parcel.readString();
+        checkBoxInfo = parcel.readString();
+        registrationInfo = parcel.readString();
+        presentAddressInfo = parcel.readString();
+        commonChamberInfo = parcel.readString();
+        doctorImageUrl = parcel.readString();
     }
 
-    public UserDetails(String fullName, String email, String mobile, String password, String specialist, String checkBoxInfo, String registrationInfo, String presentAddressInfo, String permanentAddressInfo, String commonChamberInfo, String doctorImageUrl) {
+    public UserDetails(String id, String fullName, String email, String mobile, String password, String specialist, String checkBoxInfo, String registrationInfo, String presentAddressInfo, String commonChamberInfo, String doctorImageUrl) {
+        this.id = id;
         this.fullName = fullName;
         this.email = email;
         this.mobile = mobile;
@@ -25,9 +44,16 @@ public class UserDetails {
         this.checkBoxInfo = checkBoxInfo;
         this.registrationInfo = registrationInfo;
         this.presentAddressInfo = presentAddressInfo;
-        this.permanentAddressInfo = permanentAddressInfo;
         this.commonChamberInfo = commonChamberInfo;
         this.doctorImageUrl = doctorImageUrl;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getFullName() {
@@ -66,6 +92,8 @@ public class UserDetails {
         return specialist;
     }
 
+    public void setCheckBoxInfoEmpty() { this.checkBoxInfo = ""; }
+
     public void setSpecialist(String specialist) {
         this.specialist = specialist;
     }
@@ -75,7 +103,7 @@ public class UserDetails {
     }
 
     public void setCheckBoxInfo(String checkBoxInfo) {
-        this.checkBoxInfo += checkBoxInfo+" ";
+        this.checkBoxInfo += checkBoxInfo+", ";
     }
 
     public String getRegistrationInfo() {
@@ -94,14 +122,6 @@ public class UserDetails {
         this.presentAddressInfo = presentAddressInfo;
     }
 
-    public String getPermanentAddressInfo() {
-        return permanentAddressInfo;
-    }
-
-    public void setPermanentAddressInfo(String permanentAddressInfo) {
-        this.permanentAddressInfo = permanentAddressInfo;
-    }
-
     public String getCommonChamberInfo() {
         return commonChamberInfo;
     }
@@ -116,5 +136,53 @@ public class UserDetails {
 
     public void setDoctorImageUrl(String doctorImageUrl) {
         this.doctorImageUrl = doctorImageUrl;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return ("id "+getId()+"\n"+
+                "Name "+getFullName()+"\n"+
+                "Email "+getEmail()+"\n"+
+                "Mobile "+getMobile()+"\n"+
+                "Password "+getPassword()+"\n"+
+                "Specialist "+getSpecialist()+"\n"+
+                "CheckBox "+getCheckBoxInfo()+"\n"+
+                "Registration "+getRegistrationInfo()+"\n"+
+                "Present Address "+getPresentAddressInfo()+"\n"+
+                "Common Chamber "+getCommonChamberInfo()+"\n"+
+                "Image Uri "+getDoctorImageUrl()+"\n");
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(fullName);
+        dest.writeString(email);
+        dest.writeString(mobile);
+        dest.writeString(password);
+        dest.writeString(specialist);
+        dest.writeString(checkBoxInfo);
+        dest.writeString(registrationInfo);
+        dest.writeString(presentAddressInfo);
+        dest.writeString(commonChamberInfo);
+        dest.writeString(doctorImageUrl);
+    }
+
+    public static final Parcelable.Creator<UserDetails> CREATOR = new Parcelable.Creator<UserDetails>() {
+        @Override
+        public UserDetails createFromParcel(Parcel source) {
+            return new UserDetails(source);
+        }
+
+        @Override
+        public UserDetails[] newArray(int size) {
+            return new UserDetails[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return hashCode();
     }
 }

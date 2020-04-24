@@ -130,13 +130,6 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/permanentAddressText"
-            android:hint="Permanent Address (Optional)"
-            android:inputType="textLongMessage" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/commonChamberText"
             android:hint="Common Chamber\nWhere You present Most (Mendatory)"
             android:inputType="textLongMessage" />
@@ -172,13 +165,6 @@
             android:textAllCaps="false"
             android:textStyle="bold"
             android:layout_marginTop="15dp"
-            android:layout_gravity="center"/>
-
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/progressBarUp"
-            android:visibility="invisible"
             android:layout_gravity="center"/>
 
     </LinearLayout>

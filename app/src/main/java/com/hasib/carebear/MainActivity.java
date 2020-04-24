@@ -12,7 +12,10 @@ import android.view.WindowManager;
 import android.widget.Button;
 
 import com.hasib.carebear.doctor.authentication.SignInActivityForDoctor;
+import com.hasib.carebear.doctor.container.Chamber;
 import com.hasib.carebear.patient.SignInActivityForPatient;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "MainActivity";

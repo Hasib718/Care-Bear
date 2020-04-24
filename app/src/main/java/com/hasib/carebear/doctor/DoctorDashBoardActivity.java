@@ -1,6 +1,7 @@
 package com.hasib.carebear.doctor;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,18 +13,28 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.hasib.carebear.R;
 import com.hasib.carebear.doctor.adapter.RecyclerViewAdapter;
 import com.hasib.carebear.doctor.authentication.SignInActivityForDoctor;
@@ -35,11 +46,13 @@ import com.hasib.carebear.doctor.listener.ChamberDialogListener;
 import com.hasib.carebear.doctor.listener.ChamberEventListener;
 import com.hasib.carebear.doctor.listener.ChamberAddingDialogTimeSetListener;
 import com.hasib.carebear.doctor.listener.TimePickerListener;
+import com.hasib.carebear.support.LatLong;
 
 import java.sql.Time;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -56,6 +69,7 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
 
     //Navigation Menu
     private NavigationView navigationView;
+    private View navHeader;
 
     //Chamber class
     private List<Chamber> chamberList;
@@ -71,17 +85,17 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
     //Firebase authenticator
     private FirebaseAuth mAuth;
 
-    //Firebase realtime database
-    private DatabaseReference databaseReference;
-
     //Menu Item
     private MenuItem editButton;
     private MenuItem deleteButton;
+
+    private AlertDialog builder;
 
     /**
      * Interface for setting time on ChamberAddingDialog after choosing time
      */
     private ChamberAddingDialogTimeSetListener testing;
+    private Chamber invokedChamber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,16 +119,13 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
 
         //Navigation View on click listener
         navigationView.setNavigationItemSelectedListener(this);
+        navHeader = navigationView.getHeaderView(0);
 
         //Firebase authenticator initialization
         mAuth = FirebaseAuth.getInstance();
 
-        //Firebase realtime database initialization
-        databaseReference = FirebaseDatabase.getInstance().getReference("doctors_profile_info/chamber_info");
-
         //Chamber class initialization;
         chamberList = new ArrayList<>();
-
 
         //Floating button on click listener
         chamberAddingButton.setOnClickListener(new View.OnClickListener() {
@@ -142,6 +153,119 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
                 return false;
             }
         });
+    }
+
+    private void fetchingChamberDatabasekeys() {
+        initLoadingDialog("Loading your data.....");
+
+        FirebaseDatabase
+                .getInstance()
+                .getReference("doctors_profile_info")
+                .child(mAuth.getCurrentUser().getUid())
+                .child("chamber")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        HashMap<String, String> hashMap = (HashMap<String, String>) dataSnapshot.getValue();
+
+                        try {
+                            Log.d(TAG, "onDataChange: " + hashMap.values().toString());
+
+                            for (Map.Entry<String, String> data : hashMap.entrySet()) {
+                                fetchingChamberData(data.getValue());
+                            }
+                        } catch (Exception e) {
+                            builder.dismiss();
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Log.d(TAG, "onCancelled: " + databaseError.getMessage());
+                    }
+                });
+    }
+
+    private void fetchingChamberData(String s) {
+        FirebaseDatabase
+                .getInstance()
+                .getReference("doctors_chamber_info")
+                .child(s)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        HashMap hashMap = (HashMap) dataSnapshot.getValue();
+
+                        Log.d(TAG, "onDataChange: " + hashMap.toString());
+
+                        HashMap latlng = (HashMap) hashMap.get("chamberLatLng");
+
+                        LatLong latLong = new LatLong((Double) latlng.get("latitude"), (Double) latlng.get("longitude"));
+                        Chamber chamber = new Chamber((String) hashMap.get("chamberName"), (String) hashMap.get("chamberFees"),
+                                (String) hashMap.get("chamberAddress"), latLong,
+                                (String) hashMap.get("chamberTime"), (HashMap) hashMap.get("chamberOpenDays"),
+                                (String) hashMap.get("doctorUserProfileId"), (String) hashMap.get("chamberDatabaseId"),
+                                (String) hashMap.get("chamberDatabaseIdKeyInDoctorProfile"));
+
+                        chamberList.add(chamber);
+                        adapter.notifyDataSetChanged();
+
+                        Log.d(TAG, "onDataChange: chamber " + chamber.toString());
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+        builder.dismiss();
+    }
+
+    private void initLoadingDialog(String message) {
+        LayoutInflater inflater = getLayoutInflater();
+        final View view = inflater.inflate(R.layout.dialog_progress, null);
+
+        MaterialTextView textView = view.findViewById(R.id.loadingText);
+        textView.setText(message);
+        builder = new AlertDialog.Builder(DoctorDashBoardActivity.this)
+                .setTitle("Please Wait")
+                .setCancelable(false)
+                .setView(view)
+                .create();
+        builder.show();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (mAuth.getCurrentUser() == null) {
+            finish();
+            startActivity(new Intent(DoctorDashBoardActivity.this, SignInActivityForDoctor.class));
+        }
+
+        fetchingChamberDatabasekeys();
+
+        initNavigationHeader(mAuth.getCurrentUser());
+    }
+
+    private void initNavigationHeader(final FirebaseUser user) {
+        MaterialTextView profileName = navHeader.findViewById(R.id.profileNameId);
+        MaterialTextView profileEmail = navHeader.findViewById(R.id.profileEmailId);
+        final ImageView profileImage = navHeader.findViewById(R.id.profileImageId);
+
+        Log.d(TAG, "initNavigationHeader: " + user.getPhotoUrl());
+
+        Glide.with(DoctorDashBoardActivity.this)
+                .load(user.getPhotoUrl())
+                .fitCenter()
+                .circleCrop()
+                .into(profileImage);
+
+        profileName.setText(user.getDisplayName());
+        profileEmail.setText(user.getEmail());
     }
 
     //Method for chamber adding dialog box
@@ -189,9 +313,9 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
 
         switch (item.getItemId()) {
             case R.id.editChamberId: {
-                Log.d(TAG, "onOptionsItemSelected: Chamber "+chamberList.get(position).toString());
+                Log.d(TAG, "onOptionsItemSelected: Chamber " + invokedChamber.toString());
 
-                ChamberEditingDialog chamberEditingDialog = new ChamberEditingDialog(this, chamberList.get(position), position);
+                ChamberEditingDialog chamberEditingDialog = new ChamberEditingDialog(this, invokedChamber, position);
                 chamberEditingDialog.show(getSupportFragmentManager(), "Edit Chamber Info");
             }
             break;
@@ -202,17 +326,20 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
                         .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                chamberList.remove(position);
-
-                                // TODO: 10-Apr-20 have to add firebase database support on chamber delete
-
+                                chamberList.clear();
                                 adapter.notifyDataSetChanged();
+
+                                deleteChamberDataFromDatabase();
+
+                                editButton.setVisible(false);
+                                deleteButton.setVisible(false);
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-
+                                editButton.setVisible(false);
+                                deleteButton.setVisible(false);
                             }
                         })
                         .create()
@@ -222,6 +349,50 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void deleteChamberDataFromDatabase() {
+        FirebaseDatabase
+                .getInstance()
+                .getReference("doctors_profile_info")
+                .child(mAuth.getCurrentUser().getUid())
+                .child("chamber")
+                .child(invokedChamber.getChamberDatabaseIdKeyInDoctorProfile())
+                .removeValue()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "onSuccess: "+invokedChamber.getChamberName()+" chamber Id on doctor profile deleted");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "onSuccess: "+invokedChamber.getChamberName()+" chamber Id on doctor profile deletion failed!");
+                    }
+                });
+
+        FirebaseDatabase
+                .getInstance()
+                .getReference("doctors_chamber_info")
+                .child(invokedChamber.getChamberDatabaseId())
+                .removeValue()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        onStart();
+
+                        Log.d(TAG, "onSuccess: "+invokedChamber.getChamberName()+" deleted successfully");
+                        Toast.makeText(DoctorDashBoardActivity.this, invokedChamber.getChamberName()+" deleted successfully", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "onSuccess: "+invokedChamber.getChamberName()+" deletion failed!");
+                        Toast.makeText(DoctorDashBoardActivity.this, invokedChamber.getChamberName()+" deletion failed!", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     @Override
@@ -257,7 +428,7 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
             }
             break;
 
-            case R.id.shareMenuId : {
+            case R.id.shareMenuId: {
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("text/plain");
 
@@ -279,26 +450,98 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
 
     //Method for getting data from chamber adding dialog box
     @Override
-    public void chamberAddingTexts(String name, String fess, Map<String, Boolean> activeDays, String address, LatLng latLng) {
-        chamberList.add(new Chamber(name, fess, address, latLng, chamberTime, activeDays));
-        Log.d(TAG, "chamberAddingTexts: "+ activeDays.toString());
-
-
-        // TODO: 10-Apr-20 have to add firebase database support
-
-        //Notifying recycler view for adapter on data change
+    public void chamberAddingTexts(String name, String fess, Map<String, Boolean> activeDays, String address, LatLong latLng) {
+        chamberList.clear();
         adapter.notifyDataSetChanged();
+
+        DatabaseReference chamberReference = FirebaseDatabase
+                .getInstance()
+                .getReference("doctors_chamber_info");
+
+        DatabaseReference doctorReference = FirebaseDatabase
+                .getInstance()
+                .getReference("doctors_profile_info")
+                .child(mAuth.getCurrentUser().getUid());
+
+        String key = chamberReference.push().getKey();
+        String chamberDatabaseIdKeyInDoctorProfile = doctorReference.push().getKey();
+
+        final Chamber chamber = new Chamber(name, fess, address, latLng, chamberTime, activeDays,
+                mAuth.getCurrentUser().getUid(), key, chamberDatabaseIdKeyInDoctorProfile);
+        Log.d(TAG, "chamberAddingTexts: " + chamber.toString());
+
+        chamberReference
+                .child(key)
+                .setValue(chamber)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "onSuccess: chamber info data added");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "onFailure: chamber data added failed");
+                    }
+                });
+
+        doctorReference
+                .child("chamber")
+                .child(chamberDatabaseIdKeyInDoctorProfile)
+                .setValue(key)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "onSuccess: " + chamber.getChamberDatabaseId() + " chamber added into doctor's profile");
+                        onStart();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "onFailure: " + chamber.getChamberDatabaseId() + " chamber adding into doctor's profile failed");
+                    }
+                });
     }
 
     @Override
-    public void chamberEditingTexts(String name, String fees, Map<String, Boolean> activeDays, String address, LatLng latLng, int position) {
-        chamberList.set(position, new Chamber(name, fees, address, latLng, chamberTime, activeDays));
+    public void chamberEditingTexts(String name, String fees, Map<String, Boolean> activeDays, String address, LatLong latLng, int position) {
+        adapter.notifyDataSetChanged();
+
         editButton.setVisible(false);
         deleteButton.setVisible(false);
 
-        // TODO: 10-Apr-20 have to add firebase database support on chamber info change
+        final Chamber chamber = invokedChamber;
+        chamber.setChamberName(name);
+        chamber.setChamberFees(fees);
+        chamber.setChamberOpenDays(activeDays);
+        chamber.setChamberAddress(address);
+        chamber.setChamberLatLng(latLng);
 
-        adapter.notifyDataSetChanged();
+        FirebaseDatabase
+                .getInstance()
+                .getReference("doctors_chamber_info")
+                .child(chamber.getChamberDatabaseId())
+                .setValue(chamber)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "onSuccess: chamber info updated successfully");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "onFailure: chamber info updated failed");
+                    }
+                });
+    }
+
+    @Override
+    public void chamberEditingCancel() {
+        editButton.setVisible(false);
+        deleteButton.setVisible(false);
     }
 
     @Override
@@ -314,6 +557,8 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
         deleteButton.setVisible(true);
 
         this.position = position;
+        this.invokedChamber = chamber;
+        Log.d(TAG, "onChamberLongClick: " + chamber.toString() + "\n\n" + position);
     }
 
     /**
