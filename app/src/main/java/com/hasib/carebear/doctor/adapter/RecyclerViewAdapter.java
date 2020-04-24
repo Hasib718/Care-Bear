@@ -48,13 +48,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(@NonNull ChamberViewHolder holder, final int position) {
         Log.d(TAG, "onBindViewHolder: called");
 
-        DoctorDashBoardActivity.setRecyclerViewDataChangeListener(new RecyclerViewDataChangeListener() {
-            @Override
-            public void updataRecyclerViewData(ArrayList arrayList) {
-                aChamberList = arrayList;
-            }
-        });
-
         holder.cChamberName.setText(aChamberList.get(position).getChamberName());
         holder.cChamberFees.setText(aChamberList.get(position).getChamberFees() + " Taka");
         holder.cChamberTime.setText("Time " + aChamberList.get(position).getChamberTime());
@@ -76,7 +69,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
 //                Toast.makeText(aContext, aChamberList.get(position).getChamberName(), Toast.LENGTH_SHORT).show();
 
-//                listener.onChamberClick(chamber, position);
+                listener.onChamberClick(chamber, position);
             }
         });
 
