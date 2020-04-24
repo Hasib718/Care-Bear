@@ -56,6 +56,7 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
     private ProgressBar imageProgressBar;
     private EditText nameText, mobileNoText, specialistText, registrationNoText, presentAddressText, commonChamberText, emailText, passwordText;
     private LinearLayout checkBoxLayout;
+  
     private Button signUpButton;
 
     //Info container class
