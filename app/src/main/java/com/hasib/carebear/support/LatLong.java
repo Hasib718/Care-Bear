@@ -51,7 +51,7 @@ public class LatLong implements Parcelable {
     }
 
     public static LatLong castLatLngToCustomLatLongClass(LatLng latLng) {
-        return new LatLong(latLng.latitude, latLng.longitude);
+            return new LatLong(latLng.latitude, latLng.longitude);
     }
 
     public static LatLng castCustomLatLongClassToLatLng(LatLong latLong) {

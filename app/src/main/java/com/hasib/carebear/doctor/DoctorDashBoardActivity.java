@@ -9,6 +9,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -195,11 +196,17 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        ArrayList chamberKeys = (ArrayList) dataSnapshot.getValue();
+                        HashMap<String, String> hashMap = (HashMap<String, String>) dataSnapshot.getValue();
 
-                        Log.d(TAG, "onDataChange: " + chamberKeys.toString());
-                        for (int i = 0; i < chamberKeys.size(); i++) {
-                            fetchingChamberData((String) chamberKeys.get(i));
+                        try {
+                            Log.d(TAG, "onDataChange: "+hashMap.values().toString());
+
+                            for (Map.Entry<String, String> data :  hashMap.entrySet()) {
+                                fetchingChamberData(data.getValue());
+                            }
+                        } catch (Exception e) {
+                            builder.dismiss();
+                            e.printStackTrace();
                         }
                     }
 
@@ -226,7 +233,7 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
                         Chamber chamber = new Chamber((String) hashMap.get("chamberName"), (String) hashMap.get("chamberFees"),
                                 (String) hashMap.get("chamberAddress"), latLong,
                                 (String) hashMap.get("chamberTime"), (HashMap) hashMap.get("chamberOpenDays"),
-                                (String) hashMap.get("chamberUserProfileId"), (String) hashMap.get("chamberDatabaseId"));
+                                (String) hashMap.get("doctorUserProfileId"), (String) hashMap.get("chamberDatabaseId"));
 
                         chamberList.add(chamber);
                         adapter.notifyDataSetChanged();
@@ -425,6 +432,9 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
     //Method for getting data from chamber adding dialog box
     @Override
     public void chamberAddingTexts(String name, String fess, Map<String, Boolean> activeDays, String address, LatLong latLng) {
+        chamberList.clear();
+        adapter.notifyDataSetChanged();
+
         DatabaseReference chamberReference = FirebaseDatabase
                 .getInstance()
                 .getReference("doctors_chamber_info");
@@ -456,13 +466,18 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
                     }
                 });
 
+        String chamKey = doctorReference.push().getKey();
+        Map<String, Object> n = new HashMap<>();
+        n.put(chamKey, chamber.getChamberDatabaseId());
+
         doctorReference
                 .child("chamber")
-                .setValue(chambersDatabaseKeysList)
+                .updateChildren(n)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, "onSuccess: " + chamber.getChamberDatabaseId() + " chamber added into doctor's profile");
+                        onStart();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
