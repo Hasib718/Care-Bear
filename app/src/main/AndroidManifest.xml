@@ -19,7 +19,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".doctor.fragment.DoctorProfileEditActivity"></activity>
+        <activity android:name=".support.FeedBackActivity"></activity>
+        <activity android:name=".doctor.fragment.DoctorProfileEditActivity" />
         <activity android:name=".SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -42,7 +43,7 @@
             android:name=".doctor.authentication.SignUpActivityForDoctor"
             android:parentActivityName=".doctor.authentication.SignInActivityForDoctor" />
         <activity android:name=".doctor.authentication.SignInActivityForDoctor" />
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity" />
     </application>
 
 </manifest>

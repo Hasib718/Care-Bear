@@ -7,4 +7,8 @@
 
     <!-- API keys String -->
     <string name="Map_API_Key" translatable="false">AIzaSyACtbzzIIIS1M9o_HYVsgGnK5Pd9tzrzqo</string>
+
+    <string name="email_Hasib" translatable="false">smal94@student.sust.edu</string>
+    <string name="email_Toufiqul" translatable="false">fahim.prime@gmail.com</string>
+    <string name="email_Wadud" translatable="false">wadud6065@gmail.com</string>
 </resources>

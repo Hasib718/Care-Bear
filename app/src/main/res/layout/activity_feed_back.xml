@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".support.FeedBackActivity"
+    android:orientation="vertical"
+    android:layout_centerHorizontal="true"
+    android:gravity="center_horizontal">
+
+    <EditText
+        android:id="@+id/reportText"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:hint="Enter your issues"
+        android:textColorHint="@color/Black"
+        android:inputType="textMultiLine"
+        android:lines="100"
+        android:scrollbars="vertical"
+        android:scrollHorizontally="false"
+        android:minLines="10"
+        android:gravity="top|left"
+        android:overScrollMode="always"
+        android:scrollbarStyle="insideInset"
+        android:padding="5dp"
+        android:background="@null"/>
+
+    <Button
+        android:id="@+id/reportButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="FeedBack"
+        android:textAllCaps="false"
+        android:textSize="18sp"
+        android:layout_marginTop="80dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Thanks For Your Appreciation"
+        android:textSize="20sp"
+        android:textColor="@color/Orange"
+        android:layout_marginTop="20dp"
+        android:textStyle="bold"/>
+
+</LinearLayout>

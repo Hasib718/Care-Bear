@@ -46,6 +46,7 @@ import com.hasib.carebear.doctor.listener.ChamberDialogListener;
 import com.hasib.carebear.doctor.listener.ChamberEventListener;
 import com.hasib.carebear.doctor.listener.ChamberAddingDialogTimeSetListener;
 import com.hasib.carebear.doctor.listener.TimePickerListener;
+import com.hasib.carebear.support.FeedBackActivity;
 import com.hasib.carebear.support.LatLong;
 
 import java.sql.Time;
@@ -443,6 +444,10 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
                 startActivity(Intent.createChooser(intent, "Share with"));
             }
             break;
+
+            case R.id.contactMenuId: {
+                startActivity(new Intent(DoctorDashBoardActivity.this, FeedBackActivity.class));
+            }
         }
 
         return false;
