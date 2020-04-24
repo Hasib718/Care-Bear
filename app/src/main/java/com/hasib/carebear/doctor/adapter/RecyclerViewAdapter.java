@@ -14,8 +14,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hasib.carebear.R;
+import com.hasib.carebear.doctor.DoctorDashBoardActivity;
 import com.hasib.carebear.doctor.container.Chamber;
 import com.hasib.carebear.doctor.listener.ChamberEventListener;
+import com.hasib.carebear.doctor.listener.RecyclerViewDataChangeListener;
 import com.hasib.carebear.support.DayPicker;
 
 import java.util.ArrayList;
@@ -46,6 +48,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(@NonNull ChamberViewHolder holder, final int position) {
         Log.d(TAG, "onBindViewHolder: called");
 
+        DoctorDashBoardActivity.setRecyclerViewDataChangeListener(new RecyclerViewDataChangeListener() {
+            @Override
+            public void updataRecyclerViewData(ArrayList arrayList) {
+                aChamberList = arrayList;
+            }
+        });
+
         holder.cChamberName.setText(aChamberList.get(position).getChamberName());
         holder.cChamberFees.setText(aChamberList.get(position).getChamberFees() + " Taka");
         holder.cChamberTime.setText("Time " + aChamberList.get(position).getChamberTime());
@@ -56,6 +65,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         DayPicker dayPicker = new DayPicker(holder.cChamberActiveDays, aChamberList.get(position).getChamberOpenDays());
         dayPicker.setMarkedDays();
 
+        Log.d(TAG, "onBindViewHolder: chamber count "+aChamberList.size());
+
         final Chamber chamber = aChamberList.get(position);
 
         holder.cCamberInfoLayout.setOnClickListener(new View.OnClickListener() {
@@ -65,13 +76,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
 //                Toast.makeText(aContext, aChamberList.get(position).getChamberName(), Toast.LENGTH_SHORT).show();
 
-                listener.onChamberClick(chamber, position);
+//                listener.onChamberClick(chamber, position);
             }
         });
 
         holder.cCamberInfoLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
+                Log.d(TAG, "onLongClick: "+position);
                 listener.onChamberLongClick(chamber, position);
                 return false;
             }

@@ -193,12 +193,12 @@ public class ChamberEditingDialog extends AppCompatDialogFragment implements OnM
                             longClickAddress = chamber.getChamberAddress();
                         }
                         if (longClickLatlng == null) {
-                            longClickLatlng = new LatLng(chamber.getChamberLatLng().getLatitude(), chamber.getChamberLatLng().getLongitude());
+                            longClickLatlng = LatLong.castCustomLatLongClassToLatLng(chamber.getChamberLatLng());
                         }
                         Log.d(TAG, "onClick: chamber active "+dayPicker.getMarkedDays().toString());
                         listener.chamberEditingTexts(chamberNameText.getEditableText().toString(),
                                 chamberFeesText.getText().toString(), dayPicker.getMarkedDays(), longClickAddress,
-                                new LatLong(longClickLatlng.latitude, longClickLatlng.longitude), position);
+                                LatLong.castLatLngToCustomLatLongClass(longClickLatlng), position);
                     }
                 });
 
@@ -261,12 +261,11 @@ public class ChamberEditingDialog extends AppCompatDialogFragment implements OnM
         Log.d(TAG, "lastSavedLocation: getting the device current location");
 
         if (chamber.getChamberLatLng() != null) {
-            mapGoogle.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(chamber.getChamberLatLng().getLatitude(),
-                    chamber.getChamberLatLng().getLongitude()), 15f));
+            mapGoogle.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLong.castCustomLatLongClassToLatLng(chamber.getChamberLatLng()), 15f));
 
             mapGoogle.addMarker(new MarkerOptions()
-                    .position(new LatLng(chamber.getChamberLatLng().getLatitude(), chamber.getChamberLatLng().getLongitude()))
-                    .title(LatLong.geoCoding(mContext, new LatLng(chamber.getChamberLatLng().getLatitude(), chamber.getChamberLatLng().getLongitude()))));
+                    .position(LatLong.castCustomLatLongClassToLatLng(chamber.getChamberLatLng()))
+                    .title(LatLong.geoCoding(mContext, chamber.getChamberLatLng())));
         }
     }
 }

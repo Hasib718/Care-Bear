@@ -61,7 +61,12 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     public void doWork() {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        Log.d(TAG, "doWork: "+mAuth.getCurrentUser().getEmail());
+        try {
+            Log.d(TAG, "doWork: "+mAuth.getCurrentUser().getEmail());
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.d(TAG, "doWork: user not signed in");
+        }
 
         for(int progress = 1; progress <=100; progress++) {
             try {

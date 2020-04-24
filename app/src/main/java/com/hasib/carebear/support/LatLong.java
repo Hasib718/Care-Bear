@@ -78,22 +78,11 @@ public class LatLong implements Parcelable {
     }
 
     public static String geoCoding(Context context, LatLong latLng) {
-        Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+        return geoCoding(context, new LatLng(latLng.getLatitude(),latLng.getLongitude()));
+    }
 
-        String addressLine = "";
-
-        try {
-            List<Address> addressList = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
-
-            if (addressList != null && addressList.size() > 0) {
-                Log.d(TAG, "geoCoding: " + addressList.get(0).toString());
-
-                addressLine = addressList.get(0).getAddressLine(0);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return addressLine;
+    public static String geoCoding(Context context, double latitude, double longitude) {
+        return geoCoding(context, new LatLng(latitude, longitude));
     }
 
 

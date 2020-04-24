@@ -60,6 +60,7 @@ import com.hasib.carebear.doctor.fragment.DoctorProfileEditActivity;
 import com.hasib.carebear.doctor.listener.ChamberDialogListener;
 import com.hasib.carebear.doctor.listener.ChamberEventListener;
 import com.hasib.carebear.doctor.listener.ChamberAddingDialogTimeSetListener;
+import com.hasib.carebear.doctor.listener.RecyclerViewDataChangeListener;
 import com.hasib.carebear.doctor.listener.TimePickerListener;
 import com.hasib.carebear.support.ImageSupport;
 import com.hasib.carebear.support.LatLong;
@@ -83,6 +84,7 @@ import java.util.concurrent.ExecutionException;
 public class DoctorDashBoardActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         ChamberDialogListener, ChamberEventListener, TimePickerListener {
     private static final String TAG = "DoctorDashBoardActivity";
+    private static RecyclerViewDataChangeListener recyclerViewListener;
 
     //Floating Action "+" Bar
     private FloatingActionButton chamberAddingButton;
@@ -120,6 +122,7 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
      * Interface for setting time on ChamberAddingDialog after choosing time
      */
     private ChamberAddingDialogTimeSetListener testing;
+    private Chamber invokedChamber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -271,6 +274,7 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
             startActivity(new Intent(DoctorDashBoardActivity.this, SignInActivityForDoctor.class));
         }
 
+
         initNavigationHeader(mAuth.getCurrentUser());
     }
 
@@ -336,9 +340,9 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
 
         switch (item.getItemId()) {
             case R.id.editChamberId: {
-                Log.d(TAG, "onOptionsItemSelected: Chamber " + chamberList.get(position).toString());
+                Log.d(TAG, "onOptionsItemSelected: Chamber " + invokedChamber.toString());
 
-                ChamberEditingDialog chamberEditingDialog = new ChamberEditingDialog(this, chamberList.get(position), position);
+                ChamberEditingDialog chamberEditingDialog = new ChamberEditingDialog(this, invokedChamber, position);
                 chamberEditingDialog.show(getSupportFragmentManager(), "Edit Chamber Info");
             }
             break;
@@ -349,11 +353,11 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
                         .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                chamberList.remove(position);
+//                                chamberList.remove(position);
 
                                 // TODO: 10-Apr-20 have to add firebase database support on chamber delete
 
-                                adapter.notifyDataSetChanged();
+//                                adapter.notifyDataSetChanged();
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -475,8 +479,8 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
                 });
 
         //Notifying recycler view for adapter on data change
-        chamberList.add(chamber);
-        adapter.notifyDataSetChanged();
+//        chamberList.add(chamber);
+//        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -484,19 +488,17 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
         editButton.setVisible(false);
         deleteButton.setVisible(false);
 
-        final Chamber chamber = chamberList.get(position);
+        final Chamber chamber = invokedChamber;
         chamber.setChamberName(name);
         chamber.setChamberFees(fees);
         chamber.setChamberOpenDays(activeDays);
         chamber.setChamberAddress(address);
         chamber.setChamberLatLng(latLng);
 
-        final DatabaseReference databaseReference = FirebaseDatabase
+        FirebaseDatabase
                 .getInstance()
                 .getReference("doctors_chamber_info")
-                .child(chamber.getChamberDatabaseId());
-
-        databaseReference
+                .child(chamber.getChamberDatabaseId())
                 .setValue(chamber)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -511,8 +513,7 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
                     }
                 });
 
-        chamberList.set(position, chamber);
-        adapter.notifyDataSetChanged();
+        recyclerViewListener.updataRecyclerViewData(null);
     }
 
     @Override
@@ -534,6 +535,8 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
         deleteButton.setVisible(true);
 
         this.position = position;
+        this.invokedChamber = chamber;
+        Log.d(TAG, "onChamberLongClick: "+chamber.toString()+"\n\n"+position);
     }
 
     /**
@@ -554,5 +557,9 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
      */
     public void setChamberAddingDialogTimeSetListener(ChamberAddingDialogTimeSetListener chamberAddingDialogTimeSetListener) {
         this.testing = chamberAddingDialogTimeSetListener;
+    }
+
+    public static void setRecyclerViewDataChangeListener(RecyclerViewDataChangeListener recyclerViewDataChangeListener) {
+        recyclerViewListener = recyclerViewDataChangeListener;
     }
 }
