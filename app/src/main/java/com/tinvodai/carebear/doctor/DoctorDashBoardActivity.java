@@ -158,12 +158,13 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
     private void fetchingChamberDatabasekeys() {
         initLoadingDialog("Loading your data.....");
 
-        FirebaseDatabase
+        DatabaseReference reference = FirebaseDatabase
                 .getInstance()
                 .getReference("doctors_profile_info")
                 .child(mAuth.getCurrentUser().getUid())
-                .child("chamber")
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+                .child("chamber");
+        reference.keepSynced(true);
+        reference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         HashMap<String, String> hashMap = (HashMap<String, String>) dataSnapshot.getValue();
@@ -188,11 +189,13 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
     }
 
     private void fetchingChamberData(String s) {
-        FirebaseDatabase
+        DatabaseReference reference = FirebaseDatabase
                 .getInstance()
                 .getReference("doctors_chamber_info")
-                .child(s)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+                .child(s);
+
+        reference.keepSynced(true);
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         HashMap hashMap = (HashMap) dataSnapshot.getValue();
@@ -461,11 +464,13 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
         DatabaseReference chamberReference = FirebaseDatabase
                 .getInstance()
                 .getReference("doctors_chamber_info");
+        chamberReference.keepSynced(true);
 
         DatabaseReference doctorReference = FirebaseDatabase
                 .getInstance()
                 .getReference("doctors_profile_info")
                 .child(mAuth.getCurrentUser().getUid());
+        doctorReference.keepSynced(true);
 
         String key = chamberReference.push().getKey();
         String chamberDatabaseIdKeyInDoctorProfile = doctorReference.push().getKey();
@@ -498,7 +503,6 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, "onSuccess: " + chamber.getChamberDatabaseId() + " chamber added into doctor's profile");
-                        onStart();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
