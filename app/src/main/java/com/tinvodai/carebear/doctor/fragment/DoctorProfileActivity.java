@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -51,6 +52,7 @@ public class DoctorProfileActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference("doctors_profile_info");
+        databaseReference.keepSynced(true);
 
 
         editButton.setOnClickListener(new View.OnClickListener() {
@@ -108,6 +110,7 @@ public class DoctorProfileActivity extends AppCompatActivity {
 
                         Glide.with(DoctorProfileActivity.this)
                                 .load(userDetails.getDoctorImageUrl())
+                                .diskCacheStrategy(DiskCacheStrategy.DATA)
                                 .override(600, 600)
                                 .into(profileImage);
 

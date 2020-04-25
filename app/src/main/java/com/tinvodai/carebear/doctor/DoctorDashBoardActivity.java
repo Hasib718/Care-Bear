@@ -8,8 +8,11 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +25,16 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -34,6 +47,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.tinvodai.carebear.MainActivity;
 import com.tinvodai.carebear.R;
 import com.tinvodai.carebear.doctor.adapter.RecyclerViewAdapter;
 import com.tinvodai.carebear.doctor.authentication.SignInActivityForDoctor;
@@ -96,6 +110,7 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
      */
     private ChamberAddingDialogTimeSetListener testing;
     private Chamber invokedChamber;
+    private int REQUEST_CHECK_SETTINGS = 1001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,8 +148,15 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
             public void onClick(View v) {
                 Log.d(TAG, "onClick: chamber adding button pressed");
 
-                //chamber info adding dialog box
                 openDialog();
+//                buildAlertMessageNoGps();
+//                final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+//
+//                if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+//                    buildAlertMessageNoGps();
+//                } else {
+//                    openDialog();
+//                }
             }
         });
 
@@ -243,6 +265,8 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
     @Override
     protected void onStart() {
         super.onStart();
+        chamberList.clear();
+        adapter.notifyDataSetChanged();
 
         if (mAuth.getCurrentUser() == null) {
             finish();
@@ -263,6 +287,7 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
 
         Glide.with(DoctorDashBoardActivity.this)
                 .load(user.getPhotoUrl())
+                .diskCacheStrategy(DiskCacheStrategy.DATA)
                 .fitCenter()
                 .circleCrop()
                 .into(profileImage);
@@ -270,6 +295,7 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
         profileName.setText(user.getDisplayName());
         profileEmail.setText(user.getEmail());
     }
+
 
     //Method for chamber adding dialog box
     private void openDialog() {
@@ -355,12 +381,15 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
     }
 
     private void deleteChamberDataFromDatabase() {
-        FirebaseDatabase
+        DatabaseReference doctorReference = FirebaseDatabase
                 .getInstance()
                 .getReference("doctors_profile_info")
                 .child(mAuth.getCurrentUser().getUid())
                 .child("chamber")
-                .child(invokedChamber.getChamberDatabaseIdKeyInDoctorProfile())
+                .child(invokedChamber.getChamberDatabaseIdKeyInDoctorProfile());
+
+        doctorReference.keepSynced(true);
+        doctorReference
                 .removeValue()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -375,15 +404,17 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
                     }
                 });
 
-        FirebaseDatabase
+        DatabaseReference chamberReference = FirebaseDatabase
                 .getInstance()
                 .getReference("doctors_chamber_info")
-                .child(invokedChamber.getChamberDatabaseId())
+                .child(invokedChamber.getChamberDatabaseId());
+
+        chamberReference.keepSynced(true);
+        chamberReference
                 .removeValue()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        onStart();
 
                         Log.d(TAG, "onSuccess: "+invokedChamber.getChamberName()+" deleted successfully");
                         Toast.makeText(DoctorDashBoardActivity.this, invokedChamber.getChamberName()+" deleted successfully", Toast.LENGTH_SHORT).show();
@@ -527,10 +558,13 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
         chamber.setChamberAddress(address);
         chamber.setChamberLatLng(latLng);
 
-        FirebaseDatabase
+        DatabaseReference databaseReference = FirebaseDatabase
                 .getInstance()
                 .getReference("doctors_chamber_info")
-                .child(chamber.getChamberDatabaseId())
+                .child(chamber.getChamberDatabaseId());
+
+        databaseReference.keepSynced(true);
+        databaseReference
                 .setValue(chamber)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
