@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tinvodai.carebear">
+    package="com.hasib.carebear">
 
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -13,7 +13,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:name=".support.Database"
+        android:name="com.hasib.carebear.support.Database"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -22,19 +22,19 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name="com.tinvodai.carebear.doctor.fragment.DoctorProfileActivity"
-            android:parentActivityName="com.tinvodai.carebear.doctor.DoctorDashBoardActivity" />
-        <activity android:name="com.tinvodai.carebear.doctor.DoctorDashBoardActivity" />
-        <activity android:name="com.tinvodai.carebear.patient.SignUpActivityForPatient" />
-        <activity android:name="com.tinvodai.carebear.patient.SignInActivityForPatient" />
+            android:name="com.hasib.carebear.doctor.fragment.DoctorProfileActivity"
+            android:parentActivityName="com.hasib.carebear.doctor.DoctorDashBoardActivity" />
+        <activity android:name="com.hasib.carebear.doctor.DoctorDashBoardActivity" />
+        <activity android:name="com.hasib.carebear.patient.SignUpActivityForPatient" />
+        <activity android:name="com.hasib.carebear.patient.SignInActivityForPatient" />
         <activity
-            android:name="com.tinvodai.carebear.doctor.authentication.SignUpActivityForDoctor"
-            android:parentActivityName="com.tinvodai.carebear.doctor.authentication.SignInActivityForDoctor" />
-        <activity android:name="com.tinvodai.carebear.doctor.authentication.SignInActivityForDoctor" />
-        <activity android:name="com.tinvodai.carebear.MainActivity" />
-        <activity android:name="com.tinvodai.carebear.support.FeedBackActivity"></activity>
-        <activity android:name="com.tinvodai.carebear.doctor.fragment.DoctorProfileEditActivity" />
-        <activity android:name="com.tinvodai.carebear.SplashScreenActivity">
+            android:name="com.hasib.carebear.doctor.authentication.SignUpActivityForDoctor"
+            android:parentActivityName="com.hasib.carebear.doctor.authentication.SignInActivityForDoctor" />
+        <activity android:name="com.hasib.carebear.doctor.authentication.SignInActivityForDoctor" />
+        <activity android:name="com.hasib.carebear.MainActivity" />
+        <activity android:name="com.hasib.carebear.support.FeedBackActivity"></activity>
+        <activity android:name="com.hasib.carebear.doctor.fragment.DoctorProfileEditActivity" />
+        <activity android:name="com.hasib.carebear.SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
