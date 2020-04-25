@@ -351,7 +351,7 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
                         .title(LatLong.geoCoding(mContext, new LatLng(locationResult.getLocations().get(0).getLatitude(), locationResult.getLocations().get(0).getLongitude()))));
 
                 if (fusedLocationProviderClient != null) {
-                    //fusedLocationProviderClient.requestLocationUpdates(locationCallback);
+                    fusedLocationProviderClient.removeLocationUpdates(locationCallback);
                 }
             }
         };

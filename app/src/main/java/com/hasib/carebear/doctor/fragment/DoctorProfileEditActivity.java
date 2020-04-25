@@ -37,6 +37,7 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -259,6 +260,12 @@ public class DoctorProfileEditActivity extends AppCompatActivity implements View
 
                             Toast.makeText(DoctorProfileEditActivity.this, "Image upload Failed", Toast.LENGTH_SHORT).show();
                         }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
+                            Uri sessionUri = taskSnapshot.getUploadSessionUri();
+                        }
                     });
         }
     }
@@ -336,6 +343,7 @@ public class DoctorProfileEditActivity extends AppCompatActivity implements View
                 .getReference("doctors_profile_info")
                 .child(currentUserDetails.getId());
 
+        databaseReference.keepSynced(true);
         databaseReference
                 .setValue(currentUserDetails)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
