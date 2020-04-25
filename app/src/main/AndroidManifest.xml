@@ -22,19 +22,19 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name="com.hasib.carebear.doctor.fragment.DoctorProfileActivity"
-            android:parentActivityName="com.hasib.carebear.doctor.DoctorDashBoardActivity" />
-        <activity android:name="com.hasib.carebear.doctor.DoctorDashBoardActivity" />
-        <activity android:name="com.hasib.carebear.patient.SignUpActivityForPatient" />
-        <activity android:name="com.hasib.carebear.patient.SignInActivityForPatient" />
+            android:name=".doctor.fragment.DoctorProfileActivity"
+            android:parentActivityName=".doctor.DoctorDashBoardActivity" />
+        <activity android:name=".doctor.DoctorDashBoardActivity" />
+        <activity android:name=".patient.SignUpActivityForPatient" />
+        <activity android:name=".patient.SignInActivityForPatient" />
         <activity
-            android:name="com.hasib.carebear.doctor.authentication.SignUpActivityForDoctor"
-            android:parentActivityName="com.hasib.carebear.doctor.authentication.SignInActivityForDoctor" />
-        <activity android:name="com.hasib.carebear.doctor.authentication.SignInActivityForDoctor" />
-        <activity android:name="com.hasib.carebear.MainActivity" />
-        <activity android:name="com.hasib.carebear.support.FeedBackActivity"></activity>
-        <activity android:name="com.hasib.carebear.doctor.fragment.DoctorProfileEditActivity" />
-        <activity android:name="com.hasib.carebear.SplashScreenActivity">
+            android:name=".doctor.authentication.SignUpActivityForDoctor"
+            android:parentActivityName=".doctor.authentication.SignInActivityForDoctor" />
+        <activity android:name=".doctor.authentication.SignInActivityForDoctor" />
+        <activity android:name=".MainActivity" />
+        <activity android:name=".support.FeedBackActivity"></activity>
+        <activity android:name=".doctor.fragment.DoctorProfileEditActivity" />
+        <activity android:name=".SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
