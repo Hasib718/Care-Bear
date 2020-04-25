@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.hasib.carebear">
+    package="com.tinvodai.carebear">
 
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -19,9 +19,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".support.FeedBackActivity"></activity>
-        <activity android:name=".doctor.fragment.DoctorProfileEditActivity" />
-        <activity android:name=".SplashScreenActivity">
+        <activity android:name="com.tinvodai.carebear.support.FeedBackActivity"></activity>
+        <activity android:name="com.tinvodai.carebear.doctor.fragment.DoctorProfileEditActivity" />
+        <activity android:name="com.tinvodai.carebear.SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,16 +34,16 @@
             android:value="@string/Map_API_Key" />
 
         <activity
-            android:name=".doctor.fragment.DoctorProfileActivity"
-            android:parentActivityName=".doctor.DoctorDashBoardActivity" />
-        <activity android:name=".doctor.DoctorDashBoardActivity" />
-        <activity android:name=".patient.SignUpActivityForPatient" />
-        <activity android:name=".patient.SignInActivityForPatient" />
+            android:name="com.tinvodai.carebear.doctor.fragment.DoctorProfileActivity"
+            android:parentActivityName="com.tinvodai.carebear.doctor.DoctorDashBoardActivity" />
+        <activity android:name="com.tinvodai.carebear.doctor.DoctorDashBoardActivity" />
+        <activity android:name="com.tinvodai.carebear.patient.SignUpActivityForPatient" />
+        <activity android:name="com.tinvodai.carebear.patient.SignInActivityForPatient" />
         <activity
-            android:name=".doctor.authentication.SignUpActivityForDoctor"
-            android:parentActivityName=".doctor.authentication.SignInActivityForDoctor" />
-        <activity android:name=".doctor.authentication.SignInActivityForDoctor" />
-        <activity android:name=".MainActivity" />
+            android:name="com.tinvodai.carebear.doctor.authentication.SignUpActivityForDoctor"
+            android:parentActivityName="com.tinvodai.carebear.doctor.authentication.SignInActivityForDoctor" />
+        <activity android:name="com.tinvodai.carebear.doctor.authentication.SignInActivityForDoctor" />
+        <activity android:name="com.tinvodai.carebear.MainActivity" />
     </application>
 
 </manifest>
