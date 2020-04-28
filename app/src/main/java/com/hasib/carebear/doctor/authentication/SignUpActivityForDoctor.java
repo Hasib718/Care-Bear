@@ -43,7 +43,6 @@ import com.google.firebase.storage.UploadTask;
 import com.hasib.carebear.R;
 import com.hasib.carebear.doctor.DoctorDashBoardActivity;
 import com.hasib.carebear.doctor.container.UserDetails;
-import com.hasib.carebear.support.ImageSupport;
 
 import java.io.IOException;
 

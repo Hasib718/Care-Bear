@@ -4,7 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -37,11 +43,16 @@ public class DoctorProfileActivity extends AppCompatActivity {
 
     private AlertDialog builder;
 
+    private boolean wifi = false;
+    private boolean mobileData = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctor_profile);
         this.setTitle("Profile Of Doctor");
+
+        checkConnection();
 
         //Enable back button on Menu Bar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -51,16 +62,48 @@ public class DoctorProfileActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference("doctors_profile_info");
+        databaseReference.keepSynced(true);
 
 
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(DoctorProfileActivity.this, DoctorProfileEditActivity.class);
-                intent.putExtra("user", userDetailsForPassing);
-                startActivity(intent);
+                if (wifi || mobileData) {
+                    Intent intent = new Intent(DoctorProfileActivity.this, DoctorProfileEditActivity.class);
+                    intent.putExtra("user", userDetailsForPassing);
+                    startActivity(intent);
+                } else {
+                    new AlertDialog.Builder(DoctorProfileActivity.this)
+                            .setTitle("Caution")
+                            .setCancelable(true)
+                            .setMessage("You must have a internet connection to update you profile.")
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            })
+                            .create()
+                            .show();
+                }
             }
         });
+    }
+
+    private void checkConnection() {
+        ConnectivityManager manager = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = manager.getActiveNetworkInfo();
+        if (activeNetwork !=null) {
+            switch (activeNetwork.getType()) {
+                case ConnectivityManager.TYPE_WIFI:
+                    wifi = true;
+                    break;
+                case ConnectivityManager.TYPE_MOBILE:
+                    mobileData = true;
+                    break;
+            }
+        }
     }
 
     @Override
@@ -108,6 +151,7 @@ public class DoctorProfileActivity extends AppCompatActivity {
 
                         Glide.with(DoctorProfileActivity.this)
                                 .load(userDetails.getDoctorImageUrl())
+                                .diskCacheStrategy(DiskCacheStrategy.DATA)
                                 .override(600, 600)
                                 .into(profileImage);
 

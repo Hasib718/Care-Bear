@@ -6,7 +6,6 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.hasib.carebear.support.LatLong;
 
 import java.util.HashMap;
