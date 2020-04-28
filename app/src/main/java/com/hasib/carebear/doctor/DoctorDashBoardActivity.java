@@ -136,14 +136,6 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
                 Log.d(TAG, "onClick: chamber adding button pressed");
 
                 openDialog();
-//                buildAlertMessageNoGps();
-//                final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-//
-//                if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-//                    buildAlertMessageNoGps();
-//                } else {
-//                    openDialog();
-//                }
             }
         });
 
@@ -173,6 +165,8 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
                 .child(mAuth.getCurrentUser().getUid())
                 .child("chamber");
         reference.keepSynced(true);
+
+        adapter.notifyDataSetChanged();
         reference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
