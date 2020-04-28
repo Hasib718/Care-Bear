@@ -5,12 +5,18 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.hasib.carebear.R;
 
 public class SignUpActivityForPatient extends AppCompatActivity implements View.OnClickListener {
@@ -19,6 +25,7 @@ public class SignUpActivityForPatient extends AppCompatActivity implements View.
     private EditText namePatient, presentAddressPatient, mobileNoPatient, emailPatient,
             passwordPatient;
     private CheckBox maleCheckBox, femaleCheckBox;
+    private FirebaseAuth mAuth;
 
     //Please Declare Firebase Code
 
@@ -75,8 +82,55 @@ public class SignUpActivityForPatient extends AppCompatActivity implements View.
                 break;
 
             case R.id.signUpButtonForPatientId:
-
+                patientRegister();
                 break;
         }
     }
+
+    private void patientRegister() {
+        String email = emailPatient.getText().toString().trim();
+        String password = passwordPatient.getText().toString().trim();
+
+        if(email.isEmpty()){
+            emailPatient.setError("enter an email address");
+            emailPatient.requestFocus();
+            return;
+        }
+
+        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+            emailPatient.setError("enter a valid email");
+            emailPatient.requestFocus();
+            return;
+        }
+
+        if(password.isEmpty()){
+            passwordPatient.setError("enter an email address");
+            passwordPatient.requestFocus();
+            return;
+        }
+
+        if(password.length()<6){
+            passwordPatient.setError("minimum length 6 chars");
+            passwordPatient.requestFocus();
+            return;
+        }
+
+        mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+
+                if (task.isSuccessful()) {
+                    Toast.makeText(getApplicationContext(), "accnount created",Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+                    Toast.makeText(getApplicationContext(), "SHIT "+ task.getException().getMessage(),Toast.LENGTH_SHORT).show();
+                }
+
+
+            }
+        });
+    }
+
+
 }
+
