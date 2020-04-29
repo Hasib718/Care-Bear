@@ -2,14 +2,25 @@ package com.hasib.carebear;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
 import com.hasib.carebear.doctor.authentication.SignInActivityForDoctor;
 import com.hasib.carebear.patient.PatientMapActivity;
 
@@ -65,10 +76,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onBackPressed() {
-        AlertDialog.Builder alertDialogBuilder;
+        final AlertDialog.Builder alertDialogBuilder;
         alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
 
-        alertDialogBuilder.setIcon(R.drawable.bear16px);
+        Glide.with(this)
+                .load(getDrawable(R.drawable.icon_red))
+                .apply(new RequestOptions().override(80, 80))
+                .into(new SimpleTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                        alertDialogBuilder.setIcon(resource);
+                    }
+                });
+
         alertDialogBuilder.setTitle(R.string.alertTitle);
         alertDialogBuilder.setMessage(R.string.alertMassage);
         alertDialogBuilder.setCancelable(false);

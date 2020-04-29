@@ -130,8 +130,8 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/commonChamberText"
-            android:hint="Common Chamber\nWhere You present Most (Mendatory)"
+            android:id="@+id/medicalText"
+            android:hint="Currently Associated Hospital (Optional)"
             android:inputType="textLongMessage" />
 
         <EditText
