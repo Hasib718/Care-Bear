@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/usernameText"
             android:backgroundTint="@color/colorPrimaryDark"
-            android:hint="Username or Email"
+            android:hint="Email"
             android:drawableLeft="@drawable/ic_action_name"
             android:inputType="textEmailAddress"/>
         <EditText

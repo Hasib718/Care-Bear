@@ -34,7 +34,7 @@
             android:id="@+id/usernameTextPatientId"
             android:backgroundTint="@color/colorPrimaryDark"
             android:drawableLeft="@drawable/ic_action_name"
-            android:hint="Username or Email"
+            android:hint="Email"
             android:inputType="textEmailAddress"/>
         <EditText
             android:layout_width="match_parent"
