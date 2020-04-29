@@ -13,22 +13,34 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/chamberNameId"
-            android:hint="Name"
+            android:hint="Chamber Name"
             android:inputType="textPersonName"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:weightSum="4"
             android:id="@+id/feeTimeLayout">
             <EditText
-                android:layout_width="140dp"
+                android:layout_width="90dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/chamberFeesId"
                 android:hint="Fees"
+                android:layout_weight="2"
                 android:inputType="number"/>
             <TextView
-                android:layout_width="180dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Starting\nTime"
+                android:textSize="12sp"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"/>
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/chamberTimeId"
                 android:hint="12:00 PM"
@@ -36,13 +48,22 @@
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="@color/Black"
-                android:textColorHint="@color/Black" />
+                android:textColorHint="@color/Black"
+                android:layout_weight="1"
+                />
 
         </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Press The Day When You'll Present in Chamber"
+            android:gravity="center"
+            />
         <LinearLayout
             android:id="@+id/daypicker_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:orientation="vertical">
 
             <include

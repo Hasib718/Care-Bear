@@ -37,6 +37,7 @@ import com.hasib.carebear.doctor.container.Chamber;
 import com.hasib.carebear.doctor.listener.ChamberAddingDialogTimeSetListener;
 import com.hasib.carebear.doctor.listener.ChamberDialogListener;
 import com.hasib.carebear.support.DayPicker;
+import com.hasib.carebear.support.LatLong;
 
 import java.io.IOException;
 import java.util.List;
@@ -142,7 +143,7 @@ public class ChamberEditingDialog extends AppCompatDialogFragment implements OnM
                     markerSearchView.remove();
                     markerSearchView = mapGoogle.addMarker(new MarkerOptions()
                             .position(new LatLng(address.getLatitude(), address.getLongitude()))
-                            .title(geoCoding(new LatLng(address.getLatitude(), address.getLongitude()))));
+                            .title(LatLong.geoCoding(mContext, new LatLng(address.getLatitude(), address.getLongitude()))));
                 }
 
                 return false;
@@ -182,7 +183,7 @@ public class ChamberEditingDialog extends AppCompatDialogFragment implements OnM
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+                        listener.chamberEditingCancel();
                     }
                 })
                 .setPositiveButton("Edit", new DialogInterface.OnClickListener() {
@@ -192,11 +193,12 @@ public class ChamberEditingDialog extends AppCompatDialogFragment implements OnM
                             longClickAddress = chamber.getChamberAddress();
                         }
                         if (longClickLatlng == null) {
-                            longClickLatlng = chamber.getChamberLatLng();
+                            longClickLatlng = LatLong.castCustomLatLongClassToLatLng(chamber.getChamberLatLng());
                         }
                         Log.d(TAG, "onClick: chamber active "+dayPicker.getMarkedDays().toString());
                         listener.chamberEditingTexts(chamberNameText.getEditableText().toString(),
-                                chamberFeesText.getText().toString(), dayPicker.getMarkedDays(), longClickAddress, longClickLatlng, position);
+                                chamberFeesText.getText().toString(), dayPicker.getMarkedDays(), longClickAddress,
+                                LatLong.castLatLngToCustomLatLongClass(longClickLatlng), position);
                     }
                 });
 
@@ -241,7 +243,7 @@ public class ChamberEditingDialog extends AppCompatDialogFragment implements OnM
                     markerOnMapLongClick.remove();
 
                     longClickLatlng = latLng;
-                    longClickAddress = geoCoding(latLng);
+                    longClickAddress = LatLong.geoCoding(mContext, latLng);
 
                     markerOnMapLongClick = mapGoogle.addMarker(new MarkerOptions()
                             .position(latLng)
@@ -259,29 +261,11 @@ public class ChamberEditingDialog extends AppCompatDialogFragment implements OnM
         Log.d(TAG, "lastSavedLocation: getting the device current location");
 
         if (chamber.getChamberLatLng() != null) {
-            mapGoogle.animateCamera(CameraUpdateFactory.newLatLngZoom(chamber.getChamberLatLng(), 15f));
+            mapGoogle.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLong.castCustomLatLongClassToLatLng(chamber.getChamberLatLng()), 15f));
+
             mapGoogle.addMarker(new MarkerOptions()
-                    .position(chamber.getChamberLatLng())
-                    .title(geoCoding(chamber.getChamberLatLng())));
+                    .position(LatLong.castCustomLatLongClassToLatLng(chamber.getChamberLatLng()))
+                    .title(LatLong.geoCoding(mContext, chamber.getChamberLatLng())));
         }
-    }
-
-    //Method for getting address from co-ordinates
-    public String geoCoding(LatLng latLng) {
-        String addressLine = "";
-
-        try {
-            List<Address> addressList = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
-
-            if (addressList != null && addressList.size() > 0) {
-                Log.d(TAG, "geoCoding: " + addressList.get(0).toString());
-
-                addressLine = addressList.get(0).getAddressLine(0);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return addressLine;
     }
 }

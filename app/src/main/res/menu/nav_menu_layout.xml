@@ -27,7 +27,7 @@
               android:icon="@drawable/ic_share_black_24dp"/>
           <item
               android:id="@+id/contactMenuId"
-              android:title="Contact us"
+              android:title="FeedBack"
               android:icon="@drawable/ic_call_black_24dp"/>
       </menu>
 
