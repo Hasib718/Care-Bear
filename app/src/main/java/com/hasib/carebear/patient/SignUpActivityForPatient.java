@@ -71,6 +71,7 @@ public class SignUpActivityForPatient extends AppCompatActivity implements View.
 
         patientUserDetails = new PatientUserDetails();
 
+
     }
 
     //This Function is needed for back button.. Without this function
@@ -122,6 +123,11 @@ public class SignUpActivityForPatient extends AppCompatActivity implements View.
         if (patientUserDetails.getName().isEmpty()) {
             namePatient.setError("Name required");
             namePatient.requestFocus();
+            return false;
+        }
+        if(maleCheckBox.isChecked() && femaleCheckBox.isChecked()) {
+            maleCheckBox.setError("You can choose only one");
+            maleCheckBox.requestFocus();
             return false;
         }
         if(patientUserDetails.getSex()!=false && patientUserDetails.getSex()!=true){
