@@ -2,17 +2,31 @@ package com.hasib.carebear;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Window;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
-import android.widget.TextView;
+
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.karumi.dexter.listener.multi.SnackbarOnAnyDeniedMultiplePermissionsListener;
+
+import java.util.List;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
+    private static final String TAG = "SplashScreenActivity";
+
     private ProgressBar progressBar;
-    private int progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +57,15 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
 
     public void doWork() {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        try {
+            Log.d(TAG, "doWork: "+mAuth.getCurrentUser().getEmail());
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.d(TAG, "doWork: user not signed in");
+        }
 
-        for(progress = 1; progress <=100; progress += 1) {
+        for(int progress = 1; progress <=100; progress++) {
             try {
                 Thread.sleep(20);
                 progressBar.setProgress(progress);
@@ -56,6 +77,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     public void startApp() {
         Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
     }

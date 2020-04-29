@@ -18,11 +18,11 @@
 
             <ImageView
                 android:id="@+id/doctorImageViewId"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center"
-                android:src="@drawable/bear" />
+                android:src="@drawable/ic_add_a_photo_black_24dp" />
 
             <ProgressBar
                 android:id="@+id/imageProgressBar"
@@ -286,7 +286,7 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/updateButtonnId"
+            android:id="@+id/updateButtonId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -158,12 +159,17 @@ public class SignInActivityForDoctor extends AppCompatActivity implements View.O
                             Intent intent = new Intent(SignInActivityForDoctor.this, DoctorDashBoardActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
-                        } else {
-                            Log.d(TAG, "onComplete: log in unsuccessful");
-
-                            Toast.makeText(SignInActivityForDoctor.this, "Invaid Login",
-                                    Toast.LENGTH_LONG).show();
                         }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "onComplete: log in unsuccessful" + e.getMessage());
+
+                        progressBar.setVisibility(View.GONE);
+                        Toast.makeText(SignInActivityForDoctor.this, "Invaid Login "+e.getMessage(),
+                                Toast.LENGTH_LONG).show();
                     }
                 });
     }

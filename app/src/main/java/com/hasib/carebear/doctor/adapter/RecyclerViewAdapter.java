@@ -1,14 +1,12 @@
 package com.hasib.carebear.doctor.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,7 +18,6 @@ import com.hasib.carebear.support.DayPicker;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ChamberViewHolder> {
     private static final String TAG = "RecyclerViewAdapter";
@@ -56,6 +53,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         DayPicker dayPicker = new DayPicker(holder.cChamberActiveDays, aChamberList.get(position).getChamberOpenDays());
         dayPicker.setMarkedDays();
 
+        Log.d(TAG, "onBindViewHolder: chamber count "+aChamberList.size());
+
         final Chamber chamber = aChamberList.get(position);
 
         holder.cCamberInfoLayout.setOnClickListener(new View.OnClickListener() {
@@ -72,6 +71,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.cCamberInfoLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
+                Log.d(TAG, "onLongClick: "+position);
                 listener.onChamberLongClick(chamber, position);
                 return false;
             }

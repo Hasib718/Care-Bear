@@ -14,7 +14,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.hasib.carebear.R;
-import com.hasib.carebear.doctor.container.UserDetails;
 
 public class SignInActivityForPatient extends AppCompatActivity implements View.OnClickListener {
 
