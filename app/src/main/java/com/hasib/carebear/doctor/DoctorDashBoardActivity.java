@@ -23,6 +23,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -408,6 +410,23 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
                         Toast.makeText(DoctorDashBoardActivity.this, invokedChamber.getChamberName()+" deletion failed!", Toast.LENGTH_SHORT).show();
                     }
                 });
+
+        DatabaseReference chambersLocationsReference = FirebaseDatabase
+                .getInstance()
+                .getReference("chambers_locations");
+        chambersLocationsReference.keepSynced(true);
+
+        GeoFire geoFire = new GeoFire(chambersLocationsReference);
+        geoFire.removeLocation(invokedChamber.getChamberDatabaseId(), new GeoFire.CompletionListener() {
+            @Override
+            public void onComplete(String key, DatabaseError error) {
+                if (error != null) {
+                    Log.d(TAG, "onComplete: chamber location deleted from \"chambers_location\" database successfully");
+                } else {
+                    Log.d(TAG, "onComplete: chamber location deleted from \"chambers_location\" database failed");
+                }
+            }
+        });
     }
 
     @Override
@@ -473,6 +492,13 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
         chamberList.clear();
         adapter.notifyDataSetChanged();
 
+        DatabaseReference chambersLocationsReference = FirebaseDatabase
+                .getInstance()
+                .getReference("chambers_locations");
+        chambersLocationsReference.keepSynced(true);
+
+        GeoFire geoFire = new GeoFire(chambersLocationsReference);
+
         DatabaseReference chamberReference = FirebaseDatabase
                 .getInstance()
                 .getReference("doctors_chamber_info");
@@ -484,33 +510,46 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
                 .child(mAuth.getCurrentUser().getUid());
         doctorReference.keepSynced(true);
 
-        String key = chamberReference.push().getKey();
+        String chamberKey = chamberReference.push().getKey();
         String chamberDatabaseIdKeyInDoctorProfile = doctorReference.push().getKey();
 
         final Chamber chamber = new Chamber(name, fess, address, latLng, chamberTime, activeDays,
-                mAuth.getCurrentUser().getUid(), key, chamberDatabaseIdKeyInDoctorProfile);
+                mAuth.getCurrentUser().getUid(), chamberKey, chamberDatabaseIdKeyInDoctorProfile);
         Log.d(TAG, "chamberAddingTexts: " + chamber.toString());
 
         chamberReference
-                .child(key)
+                .child(chamberKey)
                 .setValue(chamber)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "onSuccess: chamber info data added");
+                        Log.d(TAG, "onSuccess: chamber info data added on \"doctors_chamber_info\" successfully");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "onFailure: chamber data added failed");
+                        Log.d(TAG, "onFailure: chamber data added on \"doctors_chamber_info\" failed");
+                    }
+                });
+
+        geoFire.setLocation(chamberKey,
+                new GeoLocation(latLng.getLatitude(), latLng.getLongitude()),
+                new GeoFire.CompletionListener() {
+                    @Override
+                    public void onComplete(String key, DatabaseError error) {
+                        if (error != null) {
+                            Log.d(TAG, "onComplete: chamber location saved on \"chambers_location\" database successfully");
+                        } else {
+                            Log.d(TAG, "onComplete: chamber location saved on \"chambers_location\" database failed");
+                        }
                     }
                 });
 
         doctorReference
                 .child("chamber")
                 .child(chamberDatabaseIdKeyInDoctorProfile)
-                .setValue(key)
+                .setValue(chamberKey)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -543,8 +582,15 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
                 .getInstance()
                 .getReference("doctors_chamber_info")
                 .child(chamber.getChamberDatabaseId());
-
         databaseReference.keepSynced(true);
+
+        DatabaseReference chambersLocationsReference = FirebaseDatabase
+                .getInstance()
+                .getReference("chambers_locations");
+        chambersLocationsReference.keepSynced(true);
+
+        GeoFire geoFire = new GeoFire(chambersLocationsReference);
+
         databaseReference
                 .setValue(chamber)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -557,6 +603,19 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.d(TAG, "onFailure: chamber info updated failed");
+                    }
+                });
+
+        geoFire.setLocation(chamber.getChamberDatabaseId(),
+                new GeoLocation(latLng.getLatitude(), latLng.getLongitude()),
+                new GeoFire.CompletionListener() {
+                    @Override
+                    public void onComplete(String key, DatabaseError error) {
+                        if (error != null) {
+                            Log.d(TAG, "onComplete: chamber location updated on \"chambers_location\" database successfully");
+                        } else {
+                            Log.d(TAG, "onComplete: chamber location updated on \"chambers_location\" database failed");
+                        }
                     }
                 });
     }

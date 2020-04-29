@@ -155,7 +155,7 @@ public class DoctorProfileEditActivity extends AppCompatActivity implements View
         specialistEditText.setText(currentUserDetails.getSpecialist());
         bmdcRegNoEditText.setText(currentUserDetails.getRegistrationInfo());
         presentAddressEditText.setText(currentUserDetails.getPresentAddressInfo());
-        commonChamberEditText.setText(currentUserDetails.getCommonChamberInfo());
+        commonChamberEditText.setText(currentUserDetails.getMedicalInfo());
         mobileNoEditText.setText(currentUserDetails.getMobile());
         emailEditText.setText(currentUserDetails.getEmail());
         passwordEditText.setText(currentUserDetails.getPassword());
@@ -376,7 +376,7 @@ public class DoctorProfileEditActivity extends AppCompatActivity implements View
         Log.d(TAG, "getInformationFromUser: getting user data 2");
         currentUserDetails.setRegistrationInfo(bmdcRegNoEditText.getText().toString());
         currentUserDetails.setPresentAddressInfo(presentAddressEditText.getText().toString());
-        currentUserDetails.setCommonChamberInfo(commonChamberEditText.getText().toString());
+        currentUserDetails.setMedicalInfo(commonChamberEditText.getText().toString());
         currentUserDetails.setEmail(emailEditText.getText().toString());
         currentUserDetails.setPassword(passwordEditText.getText().toString());
 

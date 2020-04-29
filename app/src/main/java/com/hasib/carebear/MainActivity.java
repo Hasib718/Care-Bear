@@ -1,28 +1,20 @@
 package com.hasib.carebear;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 
-import com.google.android.material.snackbar.Snackbar;
-import com.hasib.carebear.doctor.authentication.SignInActivityForDoctor;
-import com.hasib.carebear.patient.SignInActivityForPatient;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.MultiplePermissionsReport;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
-import com.karumi.dexter.listener.multi.SnackbarOnAnyDeniedMultiplePermissionsListener;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.List;
+import com.hasib.carebear.doctor.authentication.SignInActivityForDoctor;
+import com.hasib.carebear.patient.PatientMapActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "MainActivity";
@@ -35,46 +27,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Dexter.withContext(MainActivity.this)
-                .withPermissions(
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.INTERNET,
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                )
-                .withListener(new MultiplePermissionsListener() {
-                    @Override
-                    public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
-                        LayoutInflater inflater = getLayoutInflater();
-                        final View view = inflater.inflate(R.layout.layout_permission, null);
-
-                        if (multiplePermissionsReport.isAnyPermissionPermanentlyDenied()) {
-                            MultiplePermissionsListener snackbarMultiplePermissionsListener =
-                                    SnackbarOnAnyDeniedMultiplePermissionsListener.Builder
-                                            .with(view, "Camera and audio access is needed to take pictures of your dog")
-                                            .withOpenSettingsButton("Settings")
-                                            .withCallback(new Snackbar.Callback() {
-                                                @Override
-                                                public void onShown(Snackbar snackbar) {
-                                                    // Event handler for when the given Snackbar is visible
-                                                }
-                                                @Override
-                                                public void onDismissed(Snackbar snackbar, int event) {
-                                                    // Event handler for when the given Snackbar has been dismissed
-                                                }
-                                            })
-                                            .build();
-
-                        }
-                    }
-
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
-                        permissionToken.continuePermissionRequest();
-                    }
-                });
-
-
         signUpoRInButtonForDoctor = findViewById(R.id.signInOrUpButtonForDoctorId);
         signUpoRInButtonForPatient = findViewById(R.id.signInOrUpButtonForPatientId);
         emergencyButton = findViewById(R.id.emergencyButtonId);
@@ -86,14 +38,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         signUpoRInButtonForDoctor.setOnClickListener(this);
         emergencyButton.setOnClickListener(this);
 
-        checkPermissions();
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.signInOrUpButtonForDoctorId: {
-                checkPermissions();
 
                 Intent intent1 = new Intent(MainActivity.this, SignInActivityForDoctor.class);
                 startActivity(intent1);
@@ -102,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.signInOrUpButtonForPatientId: {
                 Log.d(TAG, "onClick: tapped");
-                Intent intent2 = new Intent(MainActivity.this, SignInActivityForPatient.class);
+                Intent intent2 = new Intent(MainActivity.this, PatientMapActivity.class);
                 startActivity(intent2);
             }
             break;
@@ -116,10 +66,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onBackPressed() {
-        AlertDialog.Builder alertDialogBuilder;
+        final AlertDialog.Builder alertDialogBuilder;
         alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
 
-        alertDialogBuilder.setIcon(R.drawable.bear16px);
+        alertDialogBuilder.setIcon(resize(getDrawable(R.drawable.icon_red)));
         alertDialogBuilder.setTitle(R.string.alertTitle);
         alertDialogBuilder.setMessage(R.string.alertMassage);
         alertDialogBuilder.setCancelable(false);
@@ -140,8 +90,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         alertDialog.show();
     }
 
-    private void checkPermissions() {
+    private Drawable resize(Drawable image) {
+        Bitmap b = ((BitmapDrawable)image).getBitmap();
+        Bitmap bitmapResized = Bitmap.createScaledBitmap(b, 600, 600, false);
+        return new BitmapDrawable(getResources(), bitmapResized);
     }
-
 }
 

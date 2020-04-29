@@ -3,6 +3,7 @@ package com.hasib.carebear.doctor.authentication;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -53,7 +54,7 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
     //views
     private ImageView doctorImage;
     private ProgressBar imageProgressBar;
-    private EditText nameText, mobileNoText, specialistText, registrationNoText, presentAddressText, commonChamberText, emailText, passwordText;
+    private EditText nameText, mobileNoText, specialistText, registrationNoText, presentAddressText, medicalText, emailText, passwordText;
     private LinearLayout checkBoxLayout;
   
     private Button signUpButton;
@@ -105,7 +106,6 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
         //Setting Button on click Listener
         signUpButton.setOnClickListener(this);
         doctorImage.setOnClickListener(this);
-
     }
 
     private void initLoadingDialog() {
@@ -131,7 +131,7 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
         checkBoxLayout = findViewById(R.id.checkBoxLayout);
         registrationNoText = findViewById(R.id.registrationNoText);
         presentAddressText = findViewById(R.id.presentAddressText);
-        commonChamberText = findViewById(R.id.commonChamberText);
+        medicalText = findViewById(R.id.medicalText);
         emailText = findViewById(R.id.emailText);
         passwordText = findViewById(R.id.passwordText);
         signUpButton = findViewById(R.id.newSignUpButton);
@@ -179,6 +179,8 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
         userDetails.setFullName(nameText.getText().toString());
         userDetails.setMobile(mobileNoText.getText().toString());
         userDetails.setSpecialist(specialistText.getText().toString());
+
+        userDetails.setCheckBoxInfoNull();
         for(int i=0; i<checkBoxLayout.getChildCount(); i++) {
             if (((CheckBox) checkBoxLayout.getChildAt(i)).isChecked()) {
                 userDetails.setCheckBoxInfo(((CheckBox) checkBoxLayout.getChildAt(i)).getText().toString());
@@ -187,9 +189,14 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
         Log.d(TAG, "getInformationFromUser: getting user data 2");
         userDetails.setRegistrationInfo(registrationNoText.getText().toString());
         userDetails.setPresentAddressInfo(presentAddressText.getText().toString());
-        userDetails.setCommonChamberInfo(commonChamberText.getText().toString());
+        userDetails.setMedicalInfo(medicalText.getText().toString());
         userDetails.setEmail(emailText.getText().toString());
         userDetails.setPassword(passwordText.getText().toString());
+
+        if (doctorImage.getDrawable().getConstantState() == getResources().getDrawable(R.drawable.ic_add_a_photo_black_24dp).getConstantState()) {
+            Toast.makeText(SignUpActivityForDoctor.this, "You must select a Image\nTap the icon on the top to select an Image.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
 
         if (userDetails.getFullName().isEmpty()) {
             nameText.setError("Name required");
