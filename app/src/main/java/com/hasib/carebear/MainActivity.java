@@ -14,6 +14,7 @@ import android.widget.Button;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.hasib.carebear.doctor.authentication.SignInActivityForDoctor;
+import com.hasib.carebear.patient.PatientMapActivity;
 import com.hasib.carebear.patient.SignInActivityForPatient;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -102,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.signInOrUpButtonForPatientId: {
                 Log.d(TAG, "onClick: tapped");
-                Intent intent2 = new Intent(MainActivity.this, SignInActivityForPatient.class);
+                Intent intent2 = new Intent(MainActivity.this, PatientMapActivity.class);
                 startActivity(intent2);
             }
             break;

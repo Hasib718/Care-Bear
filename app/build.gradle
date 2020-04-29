@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "com.hasib.carebear"
-        minSdkVersion 27
+        minSdkVersion 24
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -75,4 +75,7 @@ dependencies {
 
     //Request Permission
     implementation 'com.karumi:dexter:6.1.0'
+
+    //GeoFire for nearby location
+    implementation 'com.firebase:geofire-android:3.0.0'
 }
