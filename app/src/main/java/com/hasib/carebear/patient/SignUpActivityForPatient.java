@@ -17,6 +17,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.hasib.carebear.R;
 
 public class SignUpActivityForPatient extends AppCompatActivity implements View.OnClickListener {
@@ -57,6 +58,7 @@ public class SignUpActivityForPatient extends AppCompatActivity implements View.
         femaleCheckBox = findViewById(R.id.idCheckFemale);
 
         //Please Initialize FireBase
+        mAuth = FirebaseAuth.getInstance();
 
         signInButton.setOnClickListener(this);
         signUpButton.setOnClickListener(this);
@@ -79,6 +81,7 @@ public class SignUpActivityForPatient extends AppCompatActivity implements View.
             case R.id.signInButtonForPatientId:
                 Intent intent = new Intent(SignUpActivityForPatient.this, SignInActivityForPatient.class);
                 startActivity(intent);
+
                 break;
 
             case R.id.signUpButtonForPatientId:
@@ -86,6 +89,8 @@ public class SignUpActivityForPatient extends AppCompatActivity implements View.
                 break;
         }
     }
+
+
 
     private void patientRegister() {
         String email = emailPatient.getText().toString().trim();
@@ -123,7 +128,12 @@ public class SignUpActivityForPatient extends AppCompatActivity implements View.
                     Toast.makeText(getApplicationContext(), "accnount created",Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
-                    Toast.makeText(getApplicationContext(), "SHIT "+ task.getException().getMessage(),Toast.LENGTH_SHORT).show();
+                    if(task.getException() instanceof FirebaseAuthUserCollisionException) {
+                        Toast.makeText(getApplicationContext(), "Email is alredy registered", Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        Toast.makeText(getApplicationContext(), "Error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
                 }
 
 
@@ -133,4 +143,3 @@ public class SignUpActivityForPatient extends AppCompatActivity implements View.
 
 
 }
-
