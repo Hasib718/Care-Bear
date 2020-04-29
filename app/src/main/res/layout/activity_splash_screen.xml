@@ -10,11 +10,11 @@
     tools:context=".SplashScreenActivity">
 
     <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="194dp"
         android:padding="25dp"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:src="@drawable/bear"
-        android:background="@drawable/circlebackground"
+        android:src="@drawable/icon_red"
+
         />
 
     <TextView
