@@ -1,44 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="20dp"
-    android:background="@color/colorAccent">
-
-    <com.makeramen.roundedimageview.RoundedImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    android:background="@color/DimGray"
+    android:orientation="vertical"
+    android:padding="20dp">
+    <ImageView
+        android:id="@+id/profileImageId"
+        android:layout_width="100dp"
+        android:layout_height="80dp"
         android:src="@drawable/bear"
-        android:scaleType="centerCrop"
-        android:id="@+id/imageProfileId"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:riv_oval="true"/>
+        />
 
     <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/profileNameId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
         android:text="Profile Name"
         android:textAllCaps="false"
         android:textColor="@color/White"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/imageProfileId"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:id="@+id/profileNameId"/>
+        android:textSize="18sp"
+        android:paddingTop="10dp"
+        />
 
     <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/profileEmailId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:paddingTop="5dp"
         android:text="Profile Email"
         android:textAllCaps="false"
         android:textColor="@color/White"
-        app:layout_constraintTop_toBottomOf="@id/profileNameId"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:id="@+id/profileEmailId"
-        android:paddingTop="5dp"/>
+        />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

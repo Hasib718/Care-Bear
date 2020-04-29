@@ -3,15 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:id="@+id/parentDayPicker"
     tools:context=".support.DayPicker">
+
     <ToggleButton
         android:id="@+id/toggle_Sunday"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:layout_marginLeft="2dp"
         android:layout_marginRight="5dp"
         android:textOff="S"
         android:textOn="S"
@@ -21,7 +21,6 @@
         android:clickable="false"/>
     <ToggleButton
         android:id="@+id/toggle_Monday"
-        android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_width="35dp"
         android:layout_height="35dp"
@@ -34,7 +33,6 @@
 
     <ToggleButton
         android:id="@+id/toggle_Tuesday"
-        android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_width="35dp"
         android:layout_height="35dp"
@@ -47,7 +45,6 @@
 
     <ToggleButton
         android:id="@+id/toggle_Wednesday"
-        android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_width="35dp"
         android:layout_height="35dp"
@@ -60,7 +57,6 @@
 
     <ToggleButton
         android:id="@+id/toggle_Thursday"
-        android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_width="35dp"
         android:layout_height="35dp"
@@ -73,7 +69,6 @@
 
     <ToggleButton
         android:id="@+id/toggle_Friday"
-        android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_width="35dp"
         android:layout_height="35dp"
@@ -86,8 +81,6 @@
 
     <ToggleButton
         android:id="@+id/toggle_Saturday"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:textOff="Sa"
