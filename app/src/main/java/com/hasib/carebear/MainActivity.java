@@ -1,29 +1,17 @@
 package com.hasib.carebear;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 
-import com.google.android.material.snackbar.Snackbar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.hasib.carebear.doctor.authentication.SignInActivityForDoctor;
 import com.hasib.carebear.patient.PatientMapActivity;
-import com.hasib.carebear.patient.SignInActivityForPatient;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.MultiplePermissionsReport;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
-import com.karumi.dexter.listener.multi.SnackbarOnAnyDeniedMultiplePermissionsListener;
-
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "MainActivity";
@@ -35,46 +23,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        Dexter.withContext(MainActivity.this)
-                .withPermissions(
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.INTERNET,
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                )
-                .withListener(new MultiplePermissionsListener() {
-                    @Override
-                    public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
-                        LayoutInflater inflater = getLayoutInflater();
-                        final View view = inflater.inflate(R.layout.layout_permission, null);
-
-                        if (multiplePermissionsReport.isAnyPermissionPermanentlyDenied()) {
-                            MultiplePermissionsListener snackbarMultiplePermissionsListener =
-                                    SnackbarOnAnyDeniedMultiplePermissionsListener.Builder
-                                            .with(view, "Camera and audio access is needed to take pictures of your dog")
-                                            .withOpenSettingsButton("Settings")
-                                            .withCallback(new Snackbar.Callback() {
-                                                @Override
-                                                public void onShown(Snackbar snackbar) {
-                                                    // Event handler for when the given Snackbar is visible
-                                                }
-                                                @Override
-                                                public void onDismissed(Snackbar snackbar, int event) {
-                                                    // Event handler for when the given Snackbar has been dismissed
-                                                }
-                                            })
-                                            .build();
-
-                        }
-                    }
-
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
-                        permissionToken.continuePermissionRequest();
-                    }
-                });
-
 
         signUpoRInButtonForDoctor = findViewById(R.id.signInOrUpButtonForDoctorId);
         signUpoRInButtonForPatient = findViewById(R.id.signInOrUpButtonForPatientId);

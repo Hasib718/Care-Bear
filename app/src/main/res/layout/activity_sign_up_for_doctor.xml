@@ -26,7 +26,7 @@
                 android:layout_height="150dp"
                 android:id="@+id/doctorImage"
                 android:layout_gravity="center"
-                android:src="@drawable/bear"/>
+                android:src="@drawable/baseline_add_a_photo_black_48dp"/>
             <ProgressBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

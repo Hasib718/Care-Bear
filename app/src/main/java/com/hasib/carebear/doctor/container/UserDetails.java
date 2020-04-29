@@ -106,6 +106,10 @@ public class UserDetails implements Parcelable {
         this.checkBoxInfo += checkBoxInfo+", ";
     }
 
+    public void setCheckBoxInfoNull() {
+        this.checkBoxInfo = "";
+    }
+
     public String getRegistrationInfo() {
         return registrationInfo;
     }

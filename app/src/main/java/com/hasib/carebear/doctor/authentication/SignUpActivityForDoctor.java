@@ -3,6 +3,7 @@ package com.hasib.carebear.doctor.authentication;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -179,6 +180,8 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
         userDetails.setFullName(nameText.getText().toString());
         userDetails.setMobile(mobileNoText.getText().toString());
         userDetails.setSpecialist(specialistText.getText().toString());
+
+        userDetails.setCheckBoxInfoNull();
         for(int i=0; i<checkBoxLayout.getChildCount(); i++) {
             if (((CheckBox) checkBoxLayout.getChildAt(i)).isChecked()) {
                 userDetails.setCheckBoxInfo(((CheckBox) checkBoxLayout.getChildAt(i)).getText().toString());
@@ -190,6 +193,11 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
         userDetails.setCommonChamberInfo(commonChamberText.getText().toString());
         userDetails.setEmail(emailText.getText().toString());
         userDetails.setPassword(passwordText.getText().toString());
+
+        if (doctorImage.getDrawable().getConstantState() == getResources().getDrawable(R.drawable.baseline_add_a_photo_black_48dp).getConstantState()) {
+            Toast.makeText(SignUpActivityForDoctor.this, "You must select a Image\nTap the icon on the top to select an Image.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
 
         if (userDetails.getFullName().isEmpty()) {
             nameText.setError("Name required");
