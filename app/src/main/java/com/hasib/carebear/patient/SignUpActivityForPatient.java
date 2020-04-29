@@ -113,6 +113,8 @@ public class SignUpActivityForPatient extends AppCompatActivity implements View.
         patientUserDetails.setName(namePatient.getText().toString());
         patientUserDetails.setAddress(presentAddressPatient.getText().toString());
         patientUserDetails.setMobileNum(mobileNoPatient.getText().toString());
+        patientUserDetails.setEmail(emailPatient.getText().toString());
+        patientUserDetails.setPassword(passwordPatient.getText().toString());
 
         if (maleCheckBox.isChecked())patientUserDetails.setSex(true);
         else patientUserDetails.setSex(false);
@@ -122,20 +124,31 @@ public class SignUpActivityForPatient extends AppCompatActivity implements View.
             namePatient.requestFocus();
             return false;
         }
-        if (patientUserDetails.getAddress().isEmpty()) {
-            presentAddressPatient.setError("Name required");
-            presentAddressPatient.requestFocus();
-            return false;
-        }
-        if (patientUserDetails.getMobileNum().isEmpty()) {
-            mobileNoPatient.setError("Name required");
-            mobileNoPatient.requestFocus();
-            return false;
-        }
         if(patientUserDetails.getSex()!=false && patientUserDetails.getSex()!=true){
             Toast.makeText(getApplicationContext(),"Must choose Male or Female",Toast.LENGTH_SHORT).show();
         }
-         return true;
+        if (patientUserDetails.getMobileNum().isEmpty() || patientUserDetails.getMobileNum().length()<11 ) {
+            mobileNoPatient.setError("11 digit mobile number required");
+            mobileNoPatient.requestFocus();
+            return false;
+        }
+        if (patientUserDetails.getAddress().isEmpty()) {
+            presentAddressPatient.setError("Address required");
+            presentAddressPatient.requestFocus();
+            return false;
+        }
+        if (patientUserDetails.getEmail().isEmpty()) {
+            presentAddressPatient.setError("Valid email required");
+            presentAddressPatient.requestFocus();
+            return false;
+        }
+        if (patientUserDetails.getPassword().isEmpty()) {
+            presentAddressPatient.setError("Password required");
+            presentAddressPatient.requestFocus();
+            return false;
+        }
+
+        return true;
     }
 
 

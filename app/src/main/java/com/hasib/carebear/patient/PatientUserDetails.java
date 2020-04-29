@@ -3,7 +3,7 @@ package com.hasib.carebear.patient;
 import android.widget.CheckBox;
 
 public class PatientUserDetails {
-    private String name,mobileNum,address;
+    private String name,mobileNum,address,email,password;
     private Boolean sex;
 
     public PatientUserDetails() {
@@ -32,6 +32,14 @@ public class PatientUserDetails {
         this.sex = sex;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getName() {
         return name;
     }
@@ -46,5 +54,13 @@ public class PatientUserDetails {
 
     public Boolean getSex() {
         return sex;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }
