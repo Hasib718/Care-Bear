@@ -1,4 +1,4 @@
-package com.hasib.carebear.patient;
+package com.hasib.carebear.patient.authentication;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,11 +18,13 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.hasib.carebear.R;
-import com.hasib.carebear.doctor.DoctorDashBoardActivity;
-import com.hasib.carebear.doctor.authentication.SignInActivityForDoctor;
+import com.hasib.carebear.patient.PatientMapActivity;
+import com.hasib.carebear.support.CareBear;
 
 public class SignInActivityForPatient extends AppCompatActivity implements View.OnClickListener {
 
@@ -57,8 +59,8 @@ public class SignInActivityForPatient extends AppCompatActivity implements View.
         signInButtonForPatient.setOnClickListener(this);
         signUpButtonForPatient.setOnClickListener(this);
 
-        //Firebase instantiate
-        mAuth = FirebaseAuth.getInstance();
+        //Initializing firebase authentication
+        mAuth = FirebaseAuth.getInstance(CareBear.getPatientFirebaseApp());
     }
 
     //This Function is needed for back button.. Without this function

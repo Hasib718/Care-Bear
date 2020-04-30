@@ -1,4 +1,4 @@
-package com.hasib.carebear.patient;
+package com.hasib.carebear.patient.authentication;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -21,14 +21,17 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.hasib.carebear.R;
-import com.hasib.carebear.doctor.DoctorDashBoardActivity;
-import com.hasib.carebear.doctor.authentication.SignUpActivityForDoctor;
+import com.hasib.carebear.patient.PatientMapActivity;
+import com.hasib.carebear.patient.container.PatientUserDetails;
+import com.hasib.carebear.support.CareBear;
 
 public class SignUpActivityForPatient extends AppCompatActivity implements View.OnClickListener {
 
@@ -43,15 +46,11 @@ public class SignUpActivityForPatient extends AppCompatActivity implements View.
     //Please Declare Firebase Code
     private FirebaseAuth mAuth;
     private DatabaseReference databaseReference;
-
-    //Main parent drawer layout
-    private DrawerLayout drawerLayout;
-    private ActionBarDrawerToggle toggle;
-
-    //Navigation Menu
-    private NavigationView navigationView;
-    private View navHeader;
-
+    private FirebaseOptions options = new FirebaseOptions.Builder()
+            .setApplicationId("1:875629263565:android:cbca279d8a1354b9974784")
+            .setApiKey("AIzaSyCTNXgzMm8mME8EbLRj7IR-ClJtUJR3_i0")
+            .setDatabaseUrl("https://project-875629263565.firebaseio.com/")
+            .build();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +71,6 @@ public class SignUpActivityForPatient extends AppCompatActivity implements View.
         emailPatient = findViewById(R.id.idPatientEmail);
         passwordPatient = findViewById(R.id.idPatientPassword);
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("patient_profile_info");
 
         //For Button
         signInButton = findViewById(R.id.signInButtonForPatientId);
@@ -82,15 +80,14 @@ public class SignUpActivityForPatient extends AppCompatActivity implements View.
         maleCheckBox = findViewById(R.id.idCheckMale);
         femaleCheckBox = findViewById(R.id.idCheckFemale);
 
-        //Please Initialize FireBase
-        mAuth = FirebaseAuth.getInstance();
+        //Firebase
+        mAuth = FirebaseAuth.getInstance(CareBear.getPatientFirebaseApp());
+        databaseReference = FirebaseDatabase.getInstance(CareBear.getPatientFirebaseApp()).getReference("patient_profile_info");
 
         signInButton.setOnClickListener(this);
         signUpButton.setOnClickListener(this);
 
         patientUserDetails = new PatientUserDetails();
-
-
     }
 
     //This Function is needed for back button.. Without this function

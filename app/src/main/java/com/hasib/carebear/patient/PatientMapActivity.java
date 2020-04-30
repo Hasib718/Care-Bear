@@ -1,9 +1,7 @@
 package com.hasib.carebear.patient;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -15,14 +13,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
-import com.firebase.geofire.GeoQueryDataEventListener;
 import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -39,8 +33,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.textview.MaterialTextView;
-import com.google.firebase.FirebaseError;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -50,9 +44,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.hasib.carebear.MainActivity;
 import com.hasib.carebear.R;
-import com.hasib.carebear.doctor.DoctorDashBoardActivity;
-import com.hasib.carebear.doctor.authentication.SignInActivityForDoctor;
-import com.hasib.carebear.doctor.fragment.DoctorProfileActivity;
+import com.hasib.carebear.patient.authentication.SignInActivityForPatient;
+import com.hasib.carebear.support.CareBear;
 import com.hasib.carebear.support.FeedBackActivity;
 import com.hasib.carebear.support.LatLong;
 import com.karumi.dexter.Dexter;
@@ -62,7 +55,6 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -90,7 +82,7 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
     private NavigationView navigationView;
     private View navHeader;
 
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +104,8 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
         //Navigation View on click listener
         navigationView.setNavigationItemSelectedListener(this);
 
+        //Firebase authentication
+        mAuth = FirebaseAuth.getInstance(CareBear.getPatientFirebaseApp());
 
         Dexter.withContext(this)
                 .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)

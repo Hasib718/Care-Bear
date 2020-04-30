@@ -14,8 +14,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.hasib.carebear.doctor.authentication.SignInActivityForDoctor;
-import com.hasib.carebear.patient.PatientMapActivity;
-import com.hasib.carebear.patient.SignInActivityForPatient;
+import com.hasib.carebear.patient.authentication.SignInActivityForPatient;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "MainActivity";
