@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.hasib.carebear.doctor.authentication.SignInActivityForDoctor;
 import com.hasib.carebear.patient.PatientMapActivity;
+import com.hasib.carebear.patient.SignInActivityForPatient;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "MainActivity";
@@ -52,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.signInOrUpButtonForPatientId: {
                 Log.d(TAG, "onClick: tapped");
-                Intent intent2 = new Intent(MainActivity.this, PatientMapActivity.class);
+                Intent intent2 = new Intent(MainActivity.this, SignInActivityForPatient.class);
                 startActivity(intent2);
             }
             break;

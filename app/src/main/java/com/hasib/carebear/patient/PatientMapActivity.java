@@ -1,17 +1,24 @@
 package com.hasib.carebear.patient;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
@@ -31,7 +38,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.FirebaseError;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -39,6 +50,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.hasib.carebear.MainActivity;
 import com.hasib.carebear.R;
+import com.hasib.carebear.doctor.DoctorDashBoardActivity;
+import com.hasib.carebear.doctor.authentication.SignInActivityForDoctor;
+import com.hasib.carebear.doctor.fragment.DoctorProfileActivity;
+import com.hasib.carebear.support.FeedBackActivity;
 import com.hasib.carebear.support.LatLong;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
@@ -51,7 +66,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PatientMapActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class PatientMapActivity extends AppCompatActivity implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "PatientMapActivity";
 
@@ -67,14 +82,36 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
     private DatabaseReference databaseReference;
     private GeoFire geoFire;
 
+    //Main parent drawer layout
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle toggle;
+
+    //Navigation Menu
+    private NavigationView navigationView;
+    private View navHeader;
+
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_patient_map);
         this.setTitle("Nearby Chambers");
 
+        //Enable HamBurger Action Bar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        //Navigation panel control
+        navigationView = findViewById(R.id.navigationId);
+        drawerLayout = findViewById(R.id.drawerId);
+        toggle = new ActionBarDrawerToggle(PatientMapActivity.this, drawerLayout, R.string.nav_open, R.string.nav_close);
+
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        //Navigation View on click listener
+        navigationView.setNavigationItemSelectedListener(this);
+
 
         Dexter.withContext(this)
                 .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -227,14 +264,104 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
         super.onStop();
     }
 
-    //This Function is needed for back button.. Without this function
-    //back button wouldn't work properly..
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId() == android.R.id.home) {
-            finish();
+        if (toggle.onOptionsItemSelected(item)) {
+            return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (mAuth.getCurrentUser() == null) {
+            finish();
+            startActivity(new Intent(PatientMapActivity.this, SignInActivityForPatient.class));
+        }
+
+        initNavigationHeader(mAuth.getCurrentUser());
+    }
+
+    private void initNavigationHeader(final FirebaseUser user) {
+//        MaterialTextView profileName = navHeader.findViewById(R.id.profileNameId);
+//        MaterialTextView profileEmail = navHeader.findViewById(R.id.profileEmailId);
+//        final ImageView profileImage = navHeader.findViewById(R.id.profileImageId);
+//
+//        Log.d(TAG, "initNavigationHeader: " + user.getPhotoUrl());
+//
+//        Glide.with(PatientMapActivity.this)
+//                .load(user.getPhotoUrl())
+//                .diskCacheStrategy(DiskCacheStrategy.DATA)
+//                .fitCenter()
+//                .circleCrop()
+//                .into(profileImage);
+//
+//        profileName.setText(user.getDisplayName());
+//        profileEmail.setText(user.getEmail());
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.edit_chamber_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+        //On navigation view item pressed
+        switch (item.getItemId()) {
+            case R.id.homeMenuId: {
+                Log.d(TAG, "onNavigationItemSelected: Tapped on Home Button");
+
+                //Intenting to this activity
+                startActivity(new Intent(PatientMapActivity.this, PatientMapActivity.class));
+            }
+            break;
+
+            case R.id.profileMenuId: {
+                Log.d(TAG, "onNavigationItemSelected: Profile Button Pressed");
+
+                //Intenting to doctor's profile activity
+//                startActivity(new Intent(PatientMapActivity.this, DoctorProfileActivity.class));
+            }
+            break;
+
+            case R.id.signOutMenuId: {
+                Log.d(TAG, "onNavigationItemSelected: user signing out");
+
+                //Signing out current user
+                mAuth.signOut();
+                finish();
+
+                //Intenting to sign in activity for doctor
+                startActivity(new Intent(PatientMapActivity.this, SignInActivityForPatient.class));
+            }
+            break;
+
+            case R.id.shareMenuId: {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+
+                String subject = "Care Bear- In a way of Healthiness";
+                String body = "This is a medical type app. It helps you to find catagorized doctor\n" +
+                        "easily. It's both for a doctor and a patient.\n" +
+                        "Download Link.......";
+
+                intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+                intent.putExtra(Intent.EXTRA_TEXT, body);
+
+                startActivity(Intent.createChooser(intent, "Share with"));
+            }
+            break;
+
+            case R.id.contactMenuId: {
+                startActivity(new Intent(PatientMapActivity.this, FeedBackActivity.class));
+            }
+        }
+
+        return false;
     }
 
 }

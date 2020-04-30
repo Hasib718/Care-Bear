@@ -7,11 +7,31 @@
     android:id="@+id/parentRelativeLayout"
     tools:context=".MainActivity">
 
-    <fragment
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawerId"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/google_Map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"/>
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        tools:openDrawer="start">
+
+        <fragment
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/google_Map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"/>
+
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/navigationId"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:background="@android:color/white"
+            app:headerLayout="@layout/nav_header"
+            app:menu="@menu/nav_menu_layout" />
+
+    </androidx.drawerlayout.widget.DrawerLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"

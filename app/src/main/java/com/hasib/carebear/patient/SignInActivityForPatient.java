@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,8 +21,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.hasib.carebear.R;
+import com.hasib.carebear.doctor.DoctorDashBoardActivity;
+import com.hasib.carebear.doctor.authentication.SignInActivityForDoctor;
 
 public class SignInActivityForPatient extends AppCompatActivity implements View.OnClickListener {
+
+    private static final String TAG = "SignInActivityForPatient";
 
     private Button signInButtonForPatient, signUpButtonForPatient;
     private TextView signUpTextView;
@@ -41,12 +46,12 @@ public class SignInActivityForPatient extends AppCompatActivity implements View.
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         //finding views
-        signInButtonForPatient = (Button) findViewById(R.id.signInButtonForPatientId);
-        signUpTextView = (TextView) findViewById(R.id.signUpTextView);
-        emailText = (EditText) findViewById(R.id.usernameText);
-        passwordText = (EditText) findViewById(R.id.passwordText);
-        progressBar = (ProgressBar) findViewById(R.id.progressBarIn);
-        signUpButtonForPatient = (Button) findViewById(R.id.signUpButtonForPatientId);
+        signInButtonForPatient = findViewById(R.id.signInButtonForPatientId);
+        signUpTextView = findViewById(R.id.signUpTextView);
+        emailText = findViewById(R.id.usernameTextPatientId);
+        passwordText = findViewById(R.id.passwordTextPatientId);
+        progressBar = findViewById(R.id.progressBarIn);
+        signUpButtonForPatient = findViewById(R.id.signUpButtonForPatientId);
 
         //Setting button on click listener
         signInButtonForPatient.setOnClickListener(this);
@@ -77,6 +82,8 @@ public class SignInActivityForPatient extends AppCompatActivity implements View.
     }
 
     private void patientLogin() {
+        progressBar.setVisibility(View.VISIBLE);
+
         String email = emailText.getText().toString().trim();
         String password = passwordText.getText().toString().trim();
 
@@ -108,12 +115,32 @@ public class SignInActivityForPatient extends AppCompatActivity implements View.
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-                    // TODO: 4/29/20 add activity for when the patient logs in
+                    progressBar.setVisibility(View.GONE);
+
+                    finish();
+                    startActivity(new Intent(SignInActivityForPatient.this, PatientMapActivity.class));
                 }
                 else{
+                    progressBar.setVisibility(View.GONE);
+
                     Toast.makeText(getApplicationContext(),"Login unsuccessful",Toast.LENGTH_SHORT).show();
                 }
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (mAuth.getCurrentUser() != null) {
+            Log.d(TAG, "onStart: current user: "+mAuth.getCurrentUser().getEmail());
+
+            finish();
+
+            Intent intent = new Intent(SignInActivityForPatient.this, PatientMapActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        }
     }
 }

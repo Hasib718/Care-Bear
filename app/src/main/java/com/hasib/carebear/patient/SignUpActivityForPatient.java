@@ -1,10 +1,13 @@
 package com.hasib.carebear.patient;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,25 +17,41 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.hasib.carebear.R;
+import com.hasib.carebear.doctor.DoctorDashBoardActivity;
+import com.hasib.carebear.doctor.authentication.SignUpActivityForDoctor;
 
 public class SignUpActivityForPatient extends AppCompatActivity implements View.OnClickListener {
+
+    private static final String TAG = "SignUpActivityForPatien";
 
     private Button signUpButton, signInButton;
     private EditText namePatient, presentAddressPatient, mobileNoPatient, emailPatient,
             passwordPatient;
     private CheckBox maleCheckBox, femaleCheckBox;
-    private FirebaseAuth mAuth;
-    private DatabaseReference databaseReference;
     private PatientUserDetails patientUserDetails;
 
     //Please Declare Firebase Code
+    private FirebaseAuth mAuth;
+    private DatabaseReference databaseReference;
+
+    //Main parent drawer layout
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle toggle;
+
+    //Navigation Menu
+    private NavigationView navigationView;
+    private View navHeader;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,14 +118,29 @@ public class SignUpActivityForPatient extends AppCompatActivity implements View.
                 return;
                 }
                 patientRegister();
-                savePatientInfo();
                 break;
         }
     }
 
     private void savePatientInfo() {
         String key = mAuth.getCurrentUser().getUid();
-        databaseReference.child(key).setValue(patientUserDetails);
+        databaseReference.child(key).setValue(patientUserDetails)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        finish();
+
+                        Intent intent = new Intent(SignUpActivityForPatient.this, PatientMapActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "onFailure: on data save failed");
+                    }
+                });
 
     }
 
@@ -186,7 +220,8 @@ public class SignUpActivityForPatient extends AppCompatActivity implements View.
             return;
         }
 
-        mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        mAuth.createUserWithEmailAndPassword(email,password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
 
@@ -204,8 +239,11 @@ public class SignUpActivityForPatient extends AppCompatActivity implements View.
 
 
             }
-        });
+        }).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                    @Override
+                    public void onSuccess(AuthResult authResult) {
+                        savePatientInfo();
+                    }
+                });
     }
-
-
 }
