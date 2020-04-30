@@ -34,8 +34,8 @@
             android:name=".doctor.fragment.DoctorProfileActivity"
             android:parentActivityName=".doctor.DoctorDashBoardActivity" />
         <activity android:name=".doctor.DoctorDashBoardActivity" />
-        <activity android:name=".patient.SignUpActivityForPatient" />
-        <activity android:name=".patient.SignInActivityForPatient" />
+        <activity android:name=".patient.authentication.SignUpActivityForPatient" />
+        <activity android:name=".patient.authentication.SignInActivityForPatient" />
         <activity
             android:name=".doctor.authentication.SignUpActivityForDoctor"
             android:parentActivityName=".doctor.authentication.SignInActivityForDoctor" />

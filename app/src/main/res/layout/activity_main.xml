@@ -41,7 +41,7 @@
         android:padding="5dp"
         android:drawableLeft="@drawable/patient"
         android:background="@drawable/button_reshape"
-        android:text="Sign In or Up\nAs a Patient"
+        android:text="Patient"
         android:textSize="20sp"
         android:textAllCaps="false"
         android:textStyle="bold"/>
@@ -54,7 +54,7 @@
         android:padding="5dp"
         android:background="@drawable/button_reshape"
         android:drawableLeft="@drawable/doctor"
-        android:text="Sign In or Up\nAs a Doctor"
+        android:text="Doctor"
         android:textSize="20sp"
         android:textAllCaps="false"
         android:textStyle="bold"/>

@@ -13,15 +13,19 @@ import android.widget.Button;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.hasib.carebear.doctor.authentication.SignInActivityForDoctor;
 import com.hasib.carebear.patient.PatientMapActivity;
-import com.hasib.carebear.patient.SignInActivityForPatient;
+import com.hasib.carebear.patient.authentication.SignInActivityForPatient;
+import com.hasib.carebear.support.CareBear;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "MainActivity";
 
     private Button signUpoRInButtonForDoctor, signUpoRInButtonForPatient;
     private Button emergencyButton;
+
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         signUpoRInButtonForDoctor.setOnClickListener(this);
         emergencyButton.setOnClickListener(this);
 
+        mAuth = FirebaseAuth.getInstance(CareBear.getPatientFirebaseApp());
     }
 
     @Override
@@ -52,9 +57,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             break;
 
             case R.id.signInOrUpButtonForPatientId: {
-                Log.d(TAG, "onClick: tapped");
-                Intent intent2 = new Intent(MainActivity.this, SignInActivityForPatient.class);
-                startActivity(intent2);
+                if (mAuth.getCurrentUser() != null) {
+                    startActivity(new Intent(MainActivity.this, PatientMapActivity.class));
+                } else {
+                    startActivity(new Intent(MainActivity.this, SignInActivityForPatient.class));
+                }
             }
             break;
 
