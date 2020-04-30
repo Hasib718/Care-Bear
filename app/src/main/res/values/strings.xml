@@ -19,4 +19,6 @@
     <string name="firebase_api_key" translatable="false">AIzaSyCTNXgzMm8mME8EbLRj7IR-ClJtUJR3_i0</string>
     <string name="firebase_databaseURL" translatable="false">https://care-bear-patient.firebaseio.com/</string>
     <string name="firebase_storageBucket" translatable="false">gs://care-bear-patient.appspot.com/</string>
+
+    <string name="bottom_sheet_behavior" translatable="false">com.google.android.material.bottomsheet.BottomSheetBehavior</string>
 </resources>

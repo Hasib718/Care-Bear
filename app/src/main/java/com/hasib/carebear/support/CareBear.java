@@ -6,6 +6,7 @@ import android.content.Context;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.database.FirebaseDatabase;
+import com.hasib.carebear.R;
 
 public class CareBear extends Application {
     @Override
@@ -18,11 +19,11 @@ public class CareBear extends Application {
 
         //Initialize FireBase
         FirebaseOptions options = new FirebaseOptions.Builder()
-                .setProjectId("care-bear-patient")
-                .setApplicationId("1:875629263565:android:cbca279d8a1354b9974784")
-                .setApiKey("AIzaSyCTNXgzMm8mME8EbLRj7IR-ClJtUJR3_i0")
-                .setDatabaseUrl("https://care-bear-patient.firebaseio.com/")
-                //.setStorageBucket("care-bear-patient.appspot.com")
+                .setProjectId(getString(R.string.firebase_projectID))
+                .setApplicationId(getString(R.string.firebase_applicationID))
+                .setApiKey(getString(R.string.firebase_api_key))
+                .setDatabaseUrl(getString(R.string.firebase_databaseURL))
+                .setStorageBucket(getString(R.string.firebase_storageBucket))
                 .build();
 
         //Firebase instantiate
