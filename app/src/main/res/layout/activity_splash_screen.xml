@@ -4,46 +4,63 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient_background_1"
-    android:gravity="center"
+    android:background="#1566e0"
     android:orientation="vertical"
+    android:gravity="bottom|center"
     tools:context=".SplashScreenActivity">
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="194dp"
-        android:padding="25dp"
-        android:src="@drawable/icon_red"
-
-        />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Care Bear"
-        android:textColor="#97103D"
-        android:textSize="25sp"
         android:textStyle="bold"
+        android:textColor="#ffffff"
+        android:textSize="30sp"
+        android:layout_marginBottom="20dp"
         />
+
+    <com.airbnb.lottie.LottieAnimationView
+
+        android:layout_gravity="center"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:scrollbarSize="40dp"
+        app:lottie_autoPlay="true"
+        app:lottie_fileName="doctor3.json"
+        app:lottie_loop="true" />
+
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="200sp"
         android:layout_height="wrap_content"
-        android:text="In a way of Healthiness"
-        android:textColor="#272830"
-        android:textSize="15sp"
-        android:textStyle="italic"
-        android:layout_marginBottom="50dp"/>
+        android:text="We are Here To Improve Your Health"
+        android:textColor="#ffffff"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        />
+
+    <com.airbnb.lottie.LottieAnimationView
+
+        android:layout_gravity="center"
+        android:layout_width="200dp"
+        android:layout_height="150dp"
+        android:scrollbarSize="40dp"
+        app:lottie_autoPlay="true"
+        app:lottie_fileName="second.json"
+        app:lottie_loop="true" />
 
     <ProgressBar
         android:id="@+id/progressBarId"
         android:layout_width="match_parent"
-        android:layout_height="10dp"
+        android:layout_height="5dp"
         style="@android:style/Widget.ProgressBar.Horizontal"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="60dp"
         android:layout_marginRight="60dp"
         android:layout_marginLeft="60dp"
-        android:progressTint="#B56E3F"
-        android:progressBackgroundTint="#F9FCFD"
+        android:progressTint="#ffffff"
+        android:progressBackgroundTint="#0D51B6"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="80dp"
         />
 
 </LinearLayout>
