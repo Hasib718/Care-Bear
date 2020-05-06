@@ -2,6 +2,7 @@ package com.hasib.carebear;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import android.Manifest;
 import android.content.DialogInterface;
@@ -27,8 +28,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "MainActivity";
 
-    private Button signUpoRInButtonForDoctor, signUpoRInButtonForPatient;
-    private Button emergencyButton;
+    private CardView signUpoRInButtonForDoctor, signUpoRInButtonForPatient;
+    private CardView emergencyButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
