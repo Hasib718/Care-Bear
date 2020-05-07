@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import java.util.HashMap;
+
 public class UserDetails implements Parcelable {
     private String id;
     private String fullName;
@@ -17,6 +19,7 @@ public class UserDetails implements Parcelable {
     private String presentAddressInfo;
     private String medicalInfo;
     private String doctorImageUrl;
+    private HashMap chamber;
 
     public UserDetails() {}
 
@@ -32,9 +35,12 @@ public class UserDetails implements Parcelable {
         presentAddressInfo = parcel.readString();
         medicalInfo = parcel.readString();
         doctorImageUrl = parcel.readString();
+        chamber = parcel.readHashMap(HashMap.class.getClassLoader());
     }
 
-    public UserDetails(String id, String fullName, String email, String mobile, String password, String specialist, String checkBoxInfo, String registrationInfo, String presentAddressInfo, String medicalInfo, String doctorImageUrl) {
+    public UserDetails(String id, String fullName, String email, String mobile, String password,
+                       String specialist, String checkBoxInfo, String registrationInfo, String presentAddressInfo,
+                       String medicalInfo, String doctorImageUrl, HashMap chamber) {
         this.id = id;
         this.fullName = fullName;
         this.email = email;
@@ -46,6 +52,7 @@ public class UserDetails implements Parcelable {
         this.presentAddressInfo = presentAddressInfo;
         this.medicalInfo = medicalInfo;
         this.doctorImageUrl = doctorImageUrl;
+        this.chamber = (HashMap) chamber;
     }
 
     public String getId() {
@@ -142,6 +149,14 @@ public class UserDetails implements Parcelable {
         this.doctorImageUrl = doctorImageUrl;
     }
 
+    public HashMap getChambers() {
+        return chamber;
+    }
+
+    public void setChambers(HashMap chamber) {
+        this.chamber = chamber;
+    }
+
     @NonNull
     @Override
     public String toString() {
@@ -155,7 +170,8 @@ public class UserDetails implements Parcelable {
                 "Registration "+getRegistrationInfo()+"\n"+
                 "Present Address "+getPresentAddressInfo()+"\n"+
                 "Common Chamber "+getMedicalInfo()+"\n"+
-                "Image Uri "+getDoctorImageUrl()+"\n");
+                "Image Uri "+getDoctorImageUrl()+"\n"+
+                "Chambers "+getChambers()+"\n");
     }
 
     @Override
@@ -171,6 +187,7 @@ public class UserDetails implements Parcelable {
         dest.writeString(presentAddressInfo);
         dest.writeString(medicalInfo);
         dest.writeString(doctorImageUrl);
+        dest.writeMap(chamber);
     }
 
     public static final Parcelable.Creator<UserDetails> CREATOR = new Parcelable.Creator<UserDetails>() {

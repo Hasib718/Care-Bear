@@ -1,90 +1,187 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/chamber_info_id"
-    android:orientation="horizontal">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="20dp"
+    app:cardBackgroundColor="#4CAF50"
+    app:cardCornerRadius="20dp"
+    app:cardPreventCornerOverlap="true"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:rippleColor="@color/grey_3">
 
-    <androidx.appcompat.widget.AppCompatCheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone"
-        android:id="@+id/chamberCheckBox"/>
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/chamberLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:id="@+id/camber_layout"
         android:padding="10dp">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/chamber_name_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:text="Name"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+            android:textSize="27sp"
             android:textStyle="bold"
-            android:textSize="25sp"
-            android:padding="5dp"
-            android:textColor="@color/Black"/>
+            app:fontFamily="@font/chivo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layoutFeeTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="190dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/chamber_name_id">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/chamberFeeLayout"
+                android:layout_width="180dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/chamber_fee_id"
-                android:text="Fees"
-                android:textSize="17sp"
-                android:paddingTop="5dp"
-                android:paddingLeft="15dp"
-                android:paddingBottom="5dp"
-                android:textColor="@color/Black"/>
-            <TextView
-                android:layout_width="190dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/chamber_Fee_Text"
+                    android:layout_width="40dp"
+                    android:layout_height="match_parent"
+                    android:text="Fee"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    android:textSize="20sp"
+                    app:fontFamily="@font/chivo"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/chamber_Fee_id"
+                    android:layout_width="140dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="15dp"
+                    android:text="Taka"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    android:textSize="20sp"
+                    app:fontFamily="@font/chivo"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/chamber_Fee_Text"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/chamberTimeLayout"
+                android:layout_width="180dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/chamber_time_id"
-                android:text="Time"
-                android:textSize="17sp"
-                android:paddingTop="5dp"
-                android:paddingLeft="15dp"
-                android:paddingBottom="5dp"
-                android:textColor="@color/Black" />
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/chamberFeeLayout"
+                app:layout_constraintTop_toTopOf="parent">
 
-        </LinearLayout>
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/chamber_Time_Text"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:text="Arrival\nTime"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    android:textSize="15sp"
+                    app:fontFamily="@font/chivo"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/chamber_Time_id"
+                    android:layout_width="110dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="15dp"
+                    android:text="Time"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    android:textSize="20sp"
+                    app:fontFamily="@font/chivo"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/chamber_Time_Text"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/chamberAddressLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/chamber_address_id"
-            android:text="Address"
-            android:textSize="17sp"
-            android:paddingTop="5dp"
-            android:paddingLeft="15dp"
-            android:paddingBottom="5dp"
-            android:textColor="@color/Black"/>
-        <LinearLayout
-            android:id="@+id/daypicker_layout"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layoutFeeTime">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/chamber_Address_Text"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:text="Address"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:textSize="18sp"
+                app:fontFamily="@font/chivo"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/chamber_Address_id"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:text="Address"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:textSize="20sp"
+                app:fontFamily="@font/chivo"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/chamber_Address_Text"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <include
+            android:id="@+id/daypicker"
+            layout="@layout/day_picker_unclickable"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="15dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/chamberAddressLayout" />
 
-            <include
-                android:id="@+id/daypicker"
-                layout="@layout/day_picker_unclickable"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
         <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@color/Gray"
-            android:layout_marginTop="5dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"/>
-    </LinearLayout>
-</LinearLayout>
+            android:id="@+id/spacingView"
+            android:layout_width="300dp"
+            android:layout_height="18dp"
+            app:layout_constraintEnd_toStartOf="@id/expandView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/daypicker" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/expandView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/spacingView"
+            app:layout_constraintTop_toBottomOf="@id/daypicker"
+            app:srcCompat="@drawable/ic_expand_more" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

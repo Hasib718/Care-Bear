@@ -168,7 +168,6 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
                 .child("chamber");
         reference.keepSynced(true);
 
-        adapter.notifyDataSetChanged();
         reference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -177,6 +176,7 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
                         try {
                             Log.d(TAG, "onDataChange: " + hashMap.values().toString());
 
+                            adapter.notifyDataSetChanged();
                             for (Map.Entry<String, String> data : hashMap.entrySet()) {
                                 fetchingChamberData(data.getValue());
                             }
@@ -270,6 +270,7 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
 
         Glide.with(DoctorDashBoardActivity.this)
                 .load(user.getPhotoUrl())
+                .placeholder(R.drawable.bear)
                 .diskCacheStrategy(DiskCacheStrategy.DATA)
                 .fitCenter()
                 .circleCrop()
