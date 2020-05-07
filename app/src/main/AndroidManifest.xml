@@ -13,14 +13,13 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:name="com.hasib.carebear.support.CareBear"
+        android:name=".support.CareBear"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".doctor.fragment.DoctorProfileActivity"
             android:parentActivityName=".doctor.DoctorDashBoardActivity" />
@@ -32,7 +31,7 @@
             android:parentActivityName=".doctor.authentication.SignInActivityForDoctor" />
         <activity android:name=".doctor.authentication.SignInActivityForDoctor" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".support.FeedBackActivity"></activity>
+        <activity android:name=".support.FeedBackActivity" />
         <activity android:name=".doctor.fragment.DoctorProfileEditActivity" />
         <activity android:name=".SplashScreenActivity">
             <intent-filter>
@@ -43,9 +42,8 @@
         </activity>
 
         <meta-data
-        android:name="com.google.android.geo.API_KEY"
-        android:value="@string/Map_API_Key" />
-
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/Map_API_Key" />
     </application>
 
 </manifest>
