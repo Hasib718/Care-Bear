@@ -40,7 +40,7 @@ public class SignInActivityForDoctor extends AppCompatActivity implements View.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_in_for_doctor_new);
+        setContentView(R.layout.activity_sign_in_for_doctor);
         getSupportActionBar().hide();
 
         emailTextLayout = findViewById(R.id.usernameTextLayout);

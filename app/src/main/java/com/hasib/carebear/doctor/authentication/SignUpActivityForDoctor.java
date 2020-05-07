@@ -15,9 +15,11 @@ import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -29,6 +31,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -53,8 +56,16 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
     //views
     private ImageView doctorImage;
     private ProgressBar imageProgressBar;
-    private EditText nameText, mobileNoText, specialistText, registrationNoText, presentAddressText, commonChamberText, emailText, passwordText;
+
+    private EditText nameText, mobileNoText, specialistText, registrationNoText, presentAddressText,
+            commonChamberText, emailText, passwordText;
+
+    private TextInputLayout nameTextLayout, mobileNoTextLayout, specialistTextLayout,
+            registrationNoTextLayout, presentAddressTextLayout, commonChamberTextLayout,
+            emailTextLayout, passwordTextLayout;
+
     private LinearLayout checkBoxLayout;
+    private TextView signInText;
   
     private Button signUpButton;
 
@@ -77,16 +88,15 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
 
     private AlertDialog loadingDialog;
 
+    private ImageButton imageButton;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up_for_doctor);
-        this.setTitle("Sign Up For Doctor");
 
-        //Enable back button on Menu Bar
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().hide();
 
         initViews();
 
@@ -105,7 +115,7 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
         //Setting Button on click Listener
         signUpButton.setOnClickListener(this);
         doctorImage.setOnClickListener(this);
-
+        //imageButton.setOnClickListener(this);
     }
 
     private void initLoadingDialog() {
@@ -130,21 +140,16 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
         specialistText = findViewById(R.id.specialistText);
         checkBoxLayout = findViewById(R.id.checkBoxLayout);
         registrationNoText = findViewById(R.id.registrationNoText);
-        presentAddressText = findViewById(R.id.presentAddressText);
         commonChamberText = findViewById(R.id.commonChamberText);
         emailText = findViewById(R.id.emailText);
         passwordText = findViewById(R.id.passwordText);
         signUpButton = findViewById(R.id.newSignUpButton);
-    }
+        imageButton = findViewById(R.id.backToMain);
+        signInText = findViewById(R.id.signInTextView);
 
-    //This Function is needed for back button.. Without this function
-    //back button wouldn't work properly..
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId() == android.R.id.home) {
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
+        nameTextLayout = findViewById(R.id.nameTextInputLayout);
+        mobileNoTextLayout = findViewById(R.id.mobileNoTextInputLayout);
+
     }
 
     @Override
@@ -168,6 +173,16 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
 
                 //Image chooser method
                 showImageChooser();
+            }
+            break;
+
+            case R.id.backToMain : {
+                onBackPressed();
+            }
+            break;
+
+            case R.id.signInTextView : {
+                startActivity(new Intent(SignUpActivityForDoctor.this, SignInActivityForDoctor.class));
             }
             break;
         }
