@@ -252,10 +252,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/commonChamberText"
-                        android:hint="Common Chamber"
+                        android:hint="Associated Medical"
                         android:inputType="text"
-                        android:singleLine="true"
-                        />
+                        android:singleLine="true" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 

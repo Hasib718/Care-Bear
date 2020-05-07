@@ -61,7 +61,7 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
             commonChamberText, emailText, passwordText;
 
     private TextInputLayout nameTextLayout, mobileNoTextLayout, specialistTextLayout,
-            registrationNoTextLayout, presentAddressTextLayout, commonChamberTextLayout,
+            registrationNoTextLayout, commonChamberTextLayout,
             emailTextLayout, passwordTextLayout;
 
     private LinearLayout checkBoxLayout;
@@ -115,7 +115,7 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
         //Setting Button on click Listener
         signUpButton.setOnClickListener(this);
         doctorImage.setOnClickListener(this);
-        //imageButton.setOnClickListener(this);
+        imageButton.setOnClickListener(this);
     }
 
     private void initLoadingDialog() {
@@ -144,12 +144,16 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
         emailText = findViewById(R.id.emailText);
         passwordText = findViewById(R.id.passwordText);
         signUpButton = findViewById(R.id.newSignUpButton);
-        imageButton = findViewById(R.id.backToMain);
+        imageButton = findViewById(R.id.backToMain2);
         signInText = findViewById(R.id.signInTextView);
 
         nameTextLayout = findViewById(R.id.nameTextInputLayout);
         mobileNoTextLayout = findViewById(R.id.mobileNoTextInputLayout);
-
+        specialistTextLayout = findViewById(R.id.specialistTextLayout);
+        registrationNoTextLayout = findViewById(R.id.registrationNoTextLayout);
+        commonChamberTextLayout = findViewById(R.id.commonChamberTextLayout);
+        emailTextLayout = findViewById(R.id.emailTextLayout);
+        passwordTextLayout = findViewById(R.id.passwordTextLayout);
     }
 
     @Override
@@ -189,6 +193,8 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
     }
 
     private boolean getInformationFromUser() {
+        boolean check = true;
+
         Log.d(TAG, "getInformationFromUser: getting user data");
 
         userDetails.setFullName(nameText.getText().toString());
@@ -201,63 +207,106 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
         }
         Log.d(TAG, "getInformationFromUser: getting user data 2");
         userDetails.setRegistrationInfo(registrationNoText.getText().toString());
-        userDetails.setPresentAddressInfo(presentAddressText.getText().toString());
         userDetails.setCommonChamberInfo(commonChamberText.getText().toString());
         userDetails.setEmail(emailText.getText().toString());
         userDetails.setPassword(passwordText.getText().toString());
 
         if (userDetails.getFullName().isEmpty()) {
-            nameText.setError("Name required");
+            nameTextLayout.setError("Name required");
             nameText.requestFocus();
-            return false;
+            check = false;
         }
-        if(userDetails.getEmail().isEmpty()) {
-            emailText.setError("Enter an Email Address");
-            emailText.requestFocus();
-            return false;
+        if (!userDetails.getFullName().isEmpty()) {
+            nameTextLayout.setError(null);
         }
-        if (userDetails.getPassword().isEmpty()) {
-            passwordText.setError("Enter a password");
-            passwordText.requestFocus();
-            return false;
-        }
+
         if (userDetails.getMobile().isEmpty()) {
-            mobileNoText.setError("Mobile Number Required");
+            mobileNoTextLayout.setError("Mobile Number Required");
             mobileNoText.requestFocus();
-            return false;
+            check = false;
         }
+        if (!userDetails.getMobile().isEmpty()) {
+            mobileNoTextLayout.setError(null);
+        }
+
         if (userDetails.getMobile().length() != 11) {
-            mobileNoText.setError("Number must be 11 digits");
+            mobileNoTextLayout.setError("Number must be 11 digits");
             mobileNoText.requestFocus();
-            return false;
+            check = false;
         }
+        if (userDetails.getMobile().length() == 11) {
+            mobileNoTextLayout.setError(null);
+        }
+
+        if (userDetails.getSpecialist().isEmpty()) {
+            specialistTextLayout.setError("Name required");
+            nameText.requestFocus();
+            check = false;
+        }
+        if (!userDetails.getSpecialist().isEmpty()) {
+            specialistTextLayout.setError(null);
+        }
+
         if (userDetails.getRegistrationInfo().isEmpty()) {
-            registrationNoText.setError("Registration Number Required");
+            registrationNoTextLayout.setError("Registration Number Required");
             registrationNoText.requestFocus();
-            return false;
+            check = false;
         }
+        if (!userDetails.getRegistrationInfo().isEmpty()) {
+            registrationNoTextLayout.setError(null);
+        }
+
         if (!((CheckBox) checkBoxLayout.getChildAt(0)).isChecked()) {
             ((CheckBox) checkBoxLayout.getChildAt(0)).setError("Minimum MBBS Degree Required");
             ((CheckBox) checkBoxLayout.getChildAt(0)).requestFocus();
-            return false;
+            check = false;
         }
-        return true;
+        if (((CheckBox) checkBoxLayout.getChildAt(0)).isChecked()) {
+            ((CheckBox) checkBoxLayout.getChildAt(0)).setError(null);
+        }
+
+        if(userDetails.getEmail().isEmpty()) {
+            emailTextLayout.setError("Enter an Email Address");
+            emailText.requestFocus();
+            check = false;
+        }
+        if(!userDetails.getEmail().isEmpty()) {
+            emailTextLayout.setError(null);
+        }
+
+        if (userDetails.getPassword().isEmpty()) {
+            passwordTextLayout.setError("Enter a password");
+            passwordText.requestFocus();
+            check = false;
+        }
+        if (!userDetails.getPassword().isEmpty()) {
+            passwordTextLayout.setError(null);
+        }
+
+        if (check) return true;
+        else return false;
     }
 
     //Email & Password Registration
     private void userRegister() {
         //Checking email validity
         if (!Patterns.EMAIL_ADDRESS.matcher(userDetails.getEmail()).matches()) {
-            emailText.setError("Enter a valid email address");
+            emailTextLayout.setError("Enter a valid email address");
             emailText.requestFocus();
             return;
+        }
+        if (Patterns.EMAIL_ADDRESS.matcher(userDetails.getEmail()).matches()) {
+            emailTextLayout.setError(null);
         }
 
         //checking the validity of password
         if (userDetails.getPassword().length() < 8) {
-            passwordText.setError("Minimum length of a password should be 8");
+            passwordTextLayout.setError("Minimum length of a password should be 8");
             passwordText.requestFocus();
             return;
+        }
+        if (userDetails.getPassword().length() == 8) {
+            passwordTextLayout.setError(null);
         }
 
         Log.d(TAG, "userRegister: on firebase authenticator");

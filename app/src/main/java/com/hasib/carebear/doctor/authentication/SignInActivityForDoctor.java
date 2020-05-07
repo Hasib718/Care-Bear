@@ -45,12 +45,12 @@ public class SignInActivityForDoctor extends AppCompatActivity implements View.O
 
         emailTextLayout = findViewById(R.id.usernameTextLayout);
         passwordTextLayout = findViewById(R.id.passwordTextLayout);
-        emailText = (EditText) findViewById(R.id.usernameText);
-        passwordText = (EditText) findViewById(R.id.passwordText);
+        emailText = findViewById(R.id.usernameText);
+        passwordText = findViewById(R.id.passwordText);
         signUpText = findViewById(R.id.signUpButtonForDoctorId);
         imageButton = findViewById(R.id.backToMain);
         signInButton = findViewById(R.id.signInButtonForDoctorId);
-        progressBar = (ProgressBar) findViewById(R.id.progressBarIn);
+        progressBar = findViewById(R.id.progressBarIn);
 
         //Firebase
         mAuth = FirebaseAuth.getInstance();
