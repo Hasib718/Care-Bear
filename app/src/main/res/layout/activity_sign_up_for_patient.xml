@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".patient.SignUpActivityForPatient">
+    tools:context=".patient.authentication.SignUpActivityForPatient">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -75,6 +75,7 @@
                 android:text="Male"
                 android:textSize="15sp"
                 android:layout_marginRight="20dp"
+                android:clickable="true"
                 />
 
             <CheckBox
@@ -83,6 +84,7 @@
                 android:layout_height="wrap_content"
                 android:text="Female"
                 android:textSize="15sp"
+                android:clickable="true"
                 />
 
         </LinearLayout>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/parentRelativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawerId"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        tools:openDrawer="start">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <fragment
+                android:id="@+id/google_Map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <LinearLayout
+                android:id="@+id/layoutActionBar"
+                android:layout_width="match_parent"
+                android:layout_height="?actionBarSize"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/patient_map_topbar_background"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="15dp"
+                android:paddingEnd="5dp">
+
+                <ImageView
+                    android:id="@+id/patientMapHamBurgerIcon"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/ic_menu_black_24dp" />
+
+                <SearchView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/locationSearchView"
+                    android:queryHint="Search Here"
+                    android:iconifiedByDefault="false"
+                    android:searchIcon="@null"
+                    android:searchHintIcon="@null"
+                    android:layout_margin="10dp"
+                    android:elevation="5dp" />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/navigationId"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:background="@android:color/white"
+            app:headerLayout="@layout/nav_header"
+            app:menu="@menu/nav_menu_layout" />
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout android:layout_height="match_parent"
+            android:layout_width="match_parent">
+
+            <include layout="@layout/sheet_map" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/chamberSearchButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/spacing_smlarge"
+                android:clickable="true"
+                android:tint="@color/White"
+                app:fabSize="normal"
+                app:layout_anchor="@id/bottom_sheet"
+                app:layout_anchorGravity="top|end"
+                app:rippleColor="@color/White"
+                android:src="@drawable/ic_search_black_24dp" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/deviceCurrentLocationButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/spacing_smlarge"
+                android:clickable="true"
+                android:tint="@color/White"
+                app:fabSize="normal"
+                app:layout_anchor="@id/bottom_sheet"
+                app:layout_anchorGravity="top|start"
+                app:rippleColor="@color/White"
+                android:src="@drawable/ic_my_location_black_24dp" />
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </androidx.drawerlayout.widget.DrawerLayout>
+</RelativeLayout>

@@ -22,6 +22,9 @@ android {
         }
     }
 
+    dataBinding{
+        enabled true
+    }
 }
 
 dependencies {
@@ -76,4 +79,7 @@ dependencies {
 
     //Request Permission
     implementation 'com.karumi:dexter:6.1.0'
+
+    //GeoFire for nearby location
+    implementation 'com.firebase:geofire-android:3.0.0'
 }
