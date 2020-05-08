@@ -1,87 +1,213 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#1566e0"
     android:orientation="vertical"
-    android:gravity="center"
-    android:padding="10dp"
-    android:background="@drawable/login_gradient"
     tools:context=".patient.SignInActivityForPatient">
 
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:layout_marginTop="20dp"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Sign In For Patient"
-            android:textStyle="bold"
-            android:textColor="@color/colorAccent"
-            android:layout_marginBottom="100dp"
-            android:textSize="25sp" />
-
-        <EditText
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/usernameTextPatientId"
-            android:backgroundTint="@color/colorPrimaryDark"
-            android:drawableLeft="@drawable/ic_action_name"
-            android:hint="Username or Email"
-            android:inputType="textEmailAddress"/>
-        <EditText
+            android:gravity="center">
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="20dp"
+                android:layout_gravity="center"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:scrollbarSize="40dp"
+                app:lottie_autoPlay="true"
+                app:lottie_fileName="doctor3.json"
+                app:lottie_loop="true" />
+
+        </LinearLayout>
+
+
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/passwordTextPatientId"
-            android:backgroundTint="@color/colorPrimaryDark"
-            android:hint="Password"
-            android:inputType="textPassword"
-            android:drawableLeft="@drawable/ic_action_password"
-            android:layout_marginTop="5dp"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/signInButtonForPatientId"
-            android:background="@color/Bisque"
-            android:text="Sign In"
-            android:layout_marginTop="30dp"
-            android:layout_gravity="center"
-            android:textAllCaps="false"
-            android:textStyle="bold"
-            android:textSize="20sp"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/signUpTextView"
-            android:text="Don't have an account?"
-            android:textAllCaps="false"
-            android:textStyle="bold"
-            android:layout_marginTop="30dp"
-            android:layout_gravity="center"/>
+            android:layout_marginTop="26.7dp">
 
-        <Button
-            android:id="@+id/signUpButtonForPatientId"
-            android:layout_width="60dp"
-            android:layout_height="35dp"
-            android:text="Sign Up"
-            android:textSize="10sp"
-            android:layout_gravity="center"
-            android:textAllCaps="false"/>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+                <LinearLayout
+                    android:layout_width="296dp"
+                    android:layout_height="300.3dp"
+                    android:layout_marginLeft="30.3dp"
+                    android:layout_marginBottom="35dp"
+                    android:background="@drawable/white_rounded_corner"
+                    android:orientation="vertical"
+                    android:paddingLeft="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="21.5dp"
+                        android:gravity="center_horizontal"
+                        android:text="Patient Log In"
+                        android:textColor="#333232"
+                        android:textSize="23.3sp" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/usernameTextPatientLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:boxBackgroundColor="#ffffffff"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginTop="20.3dp"
+                        app:endIconMode="clear_text"
+                        app:errorEnabled="true">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textEmailAddress"
+                            android:singleLine="true"
+                            android:hint="Email"
+                            android:id="@+id/usernameTextPatientId"
+                            />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/passwordTextPatientLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:boxBackgroundColor="#ffffffff"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginTop="15dp"
+                        app:endIconMode="password_toggle"
+                        app:errorEnabled="true">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="numberPassword"
+                            android:singleLine="true"
+                            android:hint="Password"
+                            android:id="@+id/passwordTextPatientId"
+                            />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+
+                </LinearLayout>
+
+
+            </FrameLayout>
+
+
+            <View
+                android:layout_width="7dp"
+                android:layout_height="33dp"
+                android:layout_marginLeft="27dp"
+                android:layout_marginTop="21.7dp"
+                android:background="@drawable/rounded_corner" />
+
+
+            <ImageView
+                android:id="@+id/signInButtonForPatientId"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:layout_gravity="bottom|center"
+                android:layout_marginLeft="80dp"
+                android:src="@drawable/circle_arrow"
+                android:focusable="true"
+                android:clickable="true"
+                android:foreground="?android:attr/selectableItemBackground"/>
+
+
+        </FrameLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="14dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/progressBarIn"
+                    android:layout_marginBottom="5dp"
+                    android:visibility="invisible"
+                    android:layout_gravity="center"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="New User?"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13.3sp" />
+
+                <TextView
+                    android:id="@+id/signUpTextForPatientId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:gravity="center_horizontal"
+                    android:text="Sign Up"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13.3sp"
+                    android:focusable="true"
+                    android:clickable="true"
+                    android:foreground="?android:attr/selectableItemBackground"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
 
     </LinearLayout>
 
-    <ProgressBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/progressBarIn"
-        android:visibility="invisible"
-        android:layout_gravity="center"/>
+    <ImageButton
+        android:id="@+id/backToMainFromPatient"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp"
+        android:scaleType="fitXY"
+        android:background="@drawable/image_back_34dp"
+        android:focusable="true"
+        android:clickable="true"
+        android:foreground="?android:attr/selectableItemBackground"/>
 
-</LinearLayout>
+
+</RelativeLayout>

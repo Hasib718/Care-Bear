@@ -121,6 +121,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:boxBackgroundColor="#ffffffff"
+                    app:endIconMode="clear_text"
                     android:layout_marginBottom="5dp"
                     app:errorEnabled="true">
 
@@ -141,6 +142,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:boxBackgroundColor="#ffffffff"
+                    app:endIconMode="clear_text"
                     app:errorEnabled="true"
                     android:layout_marginBottom="5dp"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -160,6 +162,7 @@
                     android:id="@+id/specialistTextLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    app:endIconMode="clear_text"
                     app:boxBackgroundColor="#ffffffff"
                     app:errorEnabled="true"
                     android:layout_marginBottom="5dp"
@@ -224,6 +227,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:boxBackgroundColor="#ffffffff"
+                    app:endIconMode="clear_text"
                     app:errorEnabled="true"
                     android:layout_marginBottom="5dp"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -244,6 +248,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:boxBackgroundColor="#ffffffff"
+                    app:endIconMode="clear_text"
                     app:errorEnabled="true"
                     android:layout_marginBottom="5dp"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">

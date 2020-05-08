@@ -180,7 +180,7 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
             }
             break;
 
-            case R.id.backToMain : {
+            case R.id.backToMain2 : {
                 onBackPressed();
             }
             break;

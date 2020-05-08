@@ -48,6 +48,7 @@
                 android:layout_marginTop="12.7dp"
                 android:layout_marginLeft="55dp"
                 android:layout_marginRight="55dp"
+                app:endIconMode="clear_text"
                 app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText

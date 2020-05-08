@@ -10,6 +10,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -17,11 +19,11 @@ import com.hasib.carebear.R;
 
 public class SignInActivityForPatient extends AppCompatActivity implements View.OnClickListener {
 
-    private Button signInButtonForPatient, signUpButtonForPatient;
-    private TextView signUpTextView;
-    private EditText emailText;
-    private EditText passwordText;
+    private ImageView signInButtonForPatient;
+    private TextView signUpTextForPatient;
+    private EditText emailText, passwordText;
     private ProgressBar progressBar;
+    private ImageButton back;
     //private FirebaseAuth mAuth;
 
     @Override
@@ -31,39 +33,33 @@ public class SignInActivityForPatient extends AppCompatActivity implements View.
         this.setTitle("Sign In For Patient");
 
         //Enable back button on Menu Bar
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().hide();
 
         //finding views
-        signInButtonForPatient = (Button) findViewById(R.id.signInButtonForPatientId);
-        signUpTextView = (TextView) findViewById(R.id.signUpTextView);
+        signInButtonForPatient = (ImageView) findViewById(R.id.signInButtonForPatientId);
+        signUpTextForPatient = (TextView) findViewById(R.id.signUpTextForPatientId);
+        progressBar = (ProgressBar) findViewById(R.id.progressBarIn);
+        back = findViewById(R.id.backToMainFromPatient);
         emailText = (EditText) findViewById(R.id.usernameText);
         passwordText = (EditText) findViewById(R.id.passwordText);
-        progressBar = (ProgressBar) findViewById(R.id.progressBarIn);
-        signUpButtonForPatient = (Button) findViewById(R.id.signUpButtonForPatientId);
 
         //Setting button on click listener
         signInButtonForPatient.setOnClickListener(this);
-        signUpButtonForPatient.setOnClickListener(this);
-    }
-
-    //This Function is needed for back button.. Without this function
-    //back button wouldn't work properly..
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId() == android.R.id.home) {
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
+        signUpTextForPatient.setOnClickListener(this);
+        back.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.signUpButtonForPatientId) {
+        if(v.getId() == R.id.signUpTextForPatientId) {
             Intent intent = new Intent(SignInActivityForPatient.this, SignUpActivityForPatient.class);
             startActivity(intent);
-        } else if (v.getId() == R.id.signInButtonForPatientId) {
+        }
+        if (v.getId() == R.id.signInButtonForPatientId) {
 
+        }
+        if (v.getId() == R.id.backToMainFromPatient) {
+            onBackPressed();
         }
     }
 }
