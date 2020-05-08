@@ -14,7 +14,7 @@ import android.view.View;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.hasib.carebear.doctor.authentication.SignInActivityForDoctor;
-import com.hasib.carebear.patient.SignInActivityForPatient;
+import com.hasib.carebear.patient.authentication.SignInActivityForPatient;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;

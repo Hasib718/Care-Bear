@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#1566e0"
     android:orientation="vertical"
-    tools:context=".patient.SignInActivityForPatient">
+    tools:context=".patient.authentication.SignInActivityForPatient">
 
 
     <LinearLayout
@@ -20,14 +20,13 @@
             android:gravity="center">
 
             <com.airbnb.lottie.LottieAnimationView
-                android:layout_marginTop="40dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginTop="20dp"
                 android:layout_gravity="center"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
                 android:scrollbarSize="40dp"
                 app:lottie_autoPlay="true"
-                app:lottie_fileName="doctor3.json"
+                app:lottie_fileName="patient2.json"
                 app:lottie_loop="true" />
 
         </LinearLayout>
@@ -36,7 +35,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="26.7dp">
+            >
 
 
             <FrameLayout

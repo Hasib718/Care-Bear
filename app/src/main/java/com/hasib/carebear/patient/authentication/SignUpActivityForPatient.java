@@ -58,9 +58,7 @@ public class SignUpActivityForPatient extends AppCompatActivity implements View.
         setContentView(R.layout.activity_sign_up_for_patient);
         this.setTitle("Sign Up For Patient");
 
-        //Enable back button on Menu Bar
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().hide();
 
         //Finding EditText for Patient
 

@@ -189,4 +189,7 @@ public class UserDetails implements Parcelable {
     public int describeContents() {
         return hashCode();
     }
+
+    public void setCommonChamberInfo(String toString) {
+    }
 }
