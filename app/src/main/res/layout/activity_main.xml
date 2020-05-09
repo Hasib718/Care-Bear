@@ -1,74 +1,258 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/login_gradient"
-    android:gravity="center"
-    android:orientation="vertical"
+    android:background="#ffffff"
     tools:context=".MainActivity">
 
+
     <ImageView
+        android:id="@+id/imageView"
         android:layout_width="wrap_content"
-        android:layout_height="180dp"
-        android:src="@drawable/icon_red"
-        />
+        android:layout_height="584dp"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentTop="false"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentRight="false"
+        android:layout_marginStart="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="-10dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginRight="1dp"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/front2perfect" />
 
-    <TextView
+    <com.airbnb.lottie.LottieAnimationView
+        android:layout_width="138dp"
+        android:layout_height="128dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="center"
+        android:layout_marginStart="137dp"
+        android:layout_marginTop="68dp"
+        android:layout_marginEnd="135dp"
+        android:scrollbarSize="40dp"
+        app:lottie_autoPlay="true"
+        app:lottie_fileName="heartbeat.json"
+        app:lottie_loop="true" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="457dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="0dp"
+        android:id="@+id/linearid2"
+        android:gravity="bottom|center"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            >
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/signInOrUpButtonForDoctorId"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_margin="20dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                app:cardElevation="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <com.airbnb.lottie.LottieAnimationView
+
+                        android:layout_gravity="center"
+                        android:layout_width="110dp"
+                        android:layout_height="110dp"
+                        android:scrollbarSize="40dp"
+                        app:lottie_autoPlay="true"
+                        app:lottie_fileName="doctor2.json"
+                        app:lottie_loop="true" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Sign In/Sign Up\nAs Doctor"
+                        android:gravity="center"/>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/signInOrUpButtonForPatientId"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_margin="20dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                app:cardElevation="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <com.airbnb.lottie.LottieAnimationView
+
+                        android:layout_gravity="center"
+                        android:layout_width="110dp"
+                        android:layout_height="110dp"
+                        android:scrollbarSize="40dp"
+                        app:lottie_autoPlay="true"
+                        app:lottie_fileName="patient.json"
+                        app:lottie_loop="true" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Sign In/Sign Up\nAs Patient"
+                        android:gravity="center"/>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/emergencyButtonId"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_margin="20dp"
+                app:cardElevation="10dp"
+                android:clickable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:layout_weight="1">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <com.airbnb.lottie.LottieAnimationView
+
+                        android:layout_gravity="center"
+                        android:layout_width="110dp"
+                        android:layout_height="110dp"
+                        android:scrollbarSize="40dp"
+                        app:lottie_autoPlay="true"
+                        app:lottie_fileName="clinicalpatient.json"
+                        app:lottie_loop="true" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Emergency Ambulance"
+                        android:gravity="center"/>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/medicineTimer"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_margin="20dp"
+                app:cardElevation="10dp"
+                android:clickable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:layout_weight="1">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <com.airbnb.lottie.LottieAnimationView
+
+                        android:layout_gravity="center"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:scrollbarSize="40dp"
+                        app:lottie_autoPlay="true"
+                        app:lottie_fileName="timer.json"
+                        app:lottie_loop="true" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Medicine Timer"
+                        android:gravity="center"/>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Care Bear"
-        android:textColor="#97103D"
-        android:textSize="25sp"
-        android:textStyle="bold"
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="In a way of Healthiness"
-        android:textColor="#272830"
-        android:textSize="15sp"
-        android:textStyle="italic"
-        android:layout_marginBottom="50dp"/>
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="20dp"
+        >
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/signInOrUpButtonForPatientId"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:padding="5dp"
-        android:drawableLeft="@drawable/patient"
-        android:background="@drawable/button_reshape"
-        android:text="Patient"
-        android:textSize="20sp"
-        android:textAllCaps="false"
-        android:textStyle="bold"/>
+            <View
+                android:layout_width="4dp"
+                android:layout_height="50dp"
+                android:background="#7C0505"/>
 
-    <Button
-        android:id="@+id/signInOrUpButtonForDoctorId"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:padding="5dp"
-        android:background="@drawable/button_reshape"
-        android:drawableLeft="@drawable/doctor"
-        android:text="Doctor"
-        android:textSize="20sp"
-        android:textAllCaps="false"
-        android:textStyle="bold"/>
+        </LinearLayout>
 
-    <Button
-        android:id="@+id/emergencyButtonId"
-        android:layout_width="120dp"
-        android:layout_height="60dp"
-        android:background="@drawable/button_reshape"
-        android:backgroundTint="@color/Brown"
-        android:padding="10sp"
-        android:text="Emergency (Ambulance)"
-        android:textAllCaps="false"
-        android:textColor="#F1EFF4"
-        android:textSize="16sp" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:orientation="vertical">
 
-</LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Care Bear"
+                android:textSize="20sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="The Way of Healthiness"
+                android:textStyle="italic"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

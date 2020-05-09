@@ -14,6 +14,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -21,6 +23,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.AuthResult;
@@ -35,13 +38,17 @@ import com.hasib.carebear.support.CareBear;
 
 public class SignUpActivityForPatient extends AppCompatActivity implements View.OnClickListener {
 
-    private static final String TAG = "SignUpActivityForPatien";
+    private static final String TAG = "SignUpActivityForPatient";
 
-    private Button signUpButton, signInButton;
+    private Button signUpButton;
+    private TextView signInText;
     private EditText namePatient, presentAddressPatient, mobileNoPatient, emailPatient,
             passwordPatient;
+    private TextInputLayout namePatientLayout, presentAddressPatientLayout, mobileNoPatientLayout,
+            emailPatientLayout, passwordPatientLayout;
     private CheckBox maleCheckBox, femaleCheckBox;
     private PatientUserDetails patientUserDetails;
+    private ImageButton imageButton;
 
     //Please Declare Firebase Code
     private FirebaseAuth mAuth;
@@ -58,23 +65,31 @@ public class SignUpActivityForPatient extends AppCompatActivity implements View.
         setContentView(R.layout.activity_sign_up_for_patient);
         this.setTitle("Sign Up For Patient");
 
-        //Enable back button on Menu Bar
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().hide();
 
         //Finding EditText for Patient
 
         //For EditText
         namePatient = findViewById(R.id.patientFullNameId);
+        namePatientLayout = findViewById(R.id.patientFullNameLayout);
+
         presentAddressPatient = findViewById(R.id.patientPresentAddressId);
+        presentAddressPatientLayout = findViewById(R.id.patientPresentAddressLayout);
+
         mobileNoPatient = findViewById(R.id.patientMobileNoTextId);
+        mobileNoPatientLayout = findViewById(R.id.patientMobileNoTextLayout);
+
         emailPatient = findViewById(R.id.idPatientEmail);
+        emailPatientLayout = findViewById(R.id.idPatientEmailLayout);
+
         passwordPatient = findViewById(R.id.idPatientPassword);
+        passwordPatientLayout = findViewById(R.id.idPatientPasswordLayout);
 
 
         //For Button
-        signInButton = findViewById(R.id.signInButtonForPatientId);
         signUpButton = findViewById(R.id.signUpButtonForPatientId);
+        signInText = findViewById(R.id.signInTextForPatientId);
+        imageButton = findViewById(R.id.backToMainFromPatientSignUp);
 
         //For CheckBox
         maleCheckBox = findViewById(R.id.idCheckMale);
@@ -84,30 +99,20 @@ public class SignUpActivityForPatient extends AppCompatActivity implements View.
         mAuth = FirebaseAuth.getInstance(CareBear.getPatientFirebaseApp());
         databaseReference = FirebaseDatabase.getInstance(CareBear.getPatientFirebaseApp()).getReference("patient_profile_info");
 
-        signInButton.setOnClickListener(this);
+        signInText.setOnClickListener(this);
         signUpButton.setOnClickListener(this);
+        imageButton.setOnClickListener(this);
 
         patientUserDetails = new PatientUserDetails();
-    }
-
-    //This Function is needed for back button.. Without this function
-    //back button wouldn't work properly..
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId() == android.R.id.home) {
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
 
-            case R.id.signInButtonForPatientId:
+            case R.id.signInTextForPatientId:
                 Intent intent = new Intent(SignUpActivityForPatient.this, SignInActivityForPatient.class);
                 startActivity(intent);
-
                 break;
 
             case R.id.signUpButtonForPatientId:
@@ -115,6 +120,10 @@ public class SignUpActivityForPatient extends AppCompatActivity implements View.
                 return;
                 }
                 patientRegister();
+                break;
+
+            case R.id.backToMainFromPatientSignUp:
+                onBackPressed();
                 break;
         }
     }
@@ -152,9 +161,12 @@ public class SignUpActivityForPatient extends AppCompatActivity implements View.
         else patientUserDetails.setSex(false);
 
         if (patientUserDetails.getName().isEmpty()) {
-            namePatient.setError("Name required");
+            namePatientLayout.setError("Name required");
             namePatient.requestFocus();
             return false;
+        }
+        if (!patientUserDetails.getName().isEmpty()) {
+            namePatientLayout.setError(null);
         }
         if(maleCheckBox.isChecked() && femaleCheckBox.isChecked()) {
             maleCheckBox.setError("You can choose only one");
@@ -164,25 +176,45 @@ public class SignUpActivityForPatient extends AppCompatActivity implements View.
         if(patientUserDetails.getSex()!=false && patientUserDetails.getSex()!=true){
             Toast.makeText(getApplicationContext(),"Must choose Male or Female",Toast.LENGTH_SHORT).show();
         }
-        if (patientUserDetails.getMobileNum().isEmpty() || patientUserDetails.getMobileNum().length()<11 ) {
-            mobileNoPatient.setError("11 digit mobile number required");
+        if (patientUserDetails.getMobileNum().isEmpty()) {
+            mobileNoPatientLayout.setError("Please Enter Your Mobile NO");
             mobileNoPatient.requestFocus();
             return false;
         }
+        if (!patientUserDetails.getMobileNum().isEmpty()) {
+            mobileNoPatientLayout.setError(null);
+        }
+        if (patientUserDetails.getMobileNum().length()<11 ) {
+            mobileNoPatientLayout.setError("11 digit mobile number required");
+            mobileNoPatient.requestFocus();
+            return false;
+        }
+        if (!(patientUserDetails.getMobileNum().length()<11) ) {
+            mobileNoPatientLayout.setError(null);
+        }
         if (patientUserDetails.getAddress().isEmpty()) {
-            presentAddressPatient.setError("Address required");
+            presentAddressPatientLayout.setError("Address required");
             presentAddressPatient.requestFocus();
             return false;
+        }
+        if (!patientUserDetails.getAddress().isEmpty()) {
+            presentAddressPatientLayout.setError(null);
         }
         if (patientUserDetails.getEmail().isEmpty()) {
-            presentAddressPatient.setError("Valid email required");
+            presentAddressPatientLayout.setError("Email required");
             presentAddressPatient.requestFocus();
             return false;
         }
+        if (!patientUserDetails.getEmail().isEmpty()) {
+            presentAddressPatientLayout.setError(null);
+        }
         if (patientUserDetails.getPassword().isEmpty()) {
-            presentAddressPatient.setError("Password required");
+            presentAddressPatientLayout.setError("Password required");
             presentAddressPatient.requestFocus();
             return false;
+        }
+        if (!patientUserDetails.getPassword().isEmpty()) {
+            presentAddressPatient.setError(null);
         }
 
         return true;
@@ -194,27 +226,39 @@ public class SignUpActivityForPatient extends AppCompatActivity implements View.
         String password = passwordPatient.getText().toString().trim();
 
         if(email.isEmpty()){
-            emailPatient.setError("enter an email address");
+            emailPatientLayout.setError("Enter an Email Address");
             emailPatient.requestFocus();
             return;
+        }
+        if(!email.isEmpty()){
+            emailPatientLayout.setError(null);
         }
 
         if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-            emailPatient.setError("enter a valid email");
+            emailPatientLayout.setError("Enter a valid email");
             emailPatient.requestFocus();
             return;
         }
+        if(Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+            emailPatientLayout.setError(null);
+        }
 
         if(password.isEmpty()){
-            passwordPatient.setError("enter an email address");
+            passwordPatientLayout.setError("Enter Password");
             passwordPatient.requestFocus();
             return;
         }
+        if(!password.isEmpty()){
+            passwordPatientLayout.setError(null);
+        }
 
         if(password.length()<6){
-            passwordPatient.setError("minimum length 6 chars");
+            passwordPatientLayout.setError("Minimum Length 6 Chars");
             passwordPatient.requestFocus();
             return;
+        }
+        if(!(password.length()<6)){
+            passwordPatient.setError(null);
         }
 
         mAuth.createUserWithEmailAndPassword(email,password)
@@ -223,11 +267,11 @@ public class SignUpActivityForPatient extends AppCompatActivity implements View.
             public void onComplete(@NonNull Task<AuthResult> task) {
 
                 if (task.isSuccessful()) {
-                    Toast.makeText(getApplicationContext(), "accnount created",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Account Created",Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
                     if(task.getException() instanceof FirebaseAuthUserCollisionException) {
-                        Toast.makeText(getApplicationContext(), "Email is alredy registered", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Email is Already Registered", Toast.LENGTH_SHORT).show();
                     }
                     else{
                         Toast.makeText(getApplicationContext(), "Error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();

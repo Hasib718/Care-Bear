@@ -29,12 +29,12 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/Map_API_Key" />
-
         <activity
             android:name=".doctor.fragment.DoctorProfileActivity"
             android:parentActivityName=".doctor.DoctorDashBoardActivity" />
         <activity android:name=".doctor.DoctorDashBoardActivity" />
-        <activity android:name=".patient.authentication.SignUpActivityForPatient" />
+        <activity android:name=".patient.authentication.SignUpActivityForPatient" >
+        </activity>
         <activity android:name=".patient.authentication.SignInActivityForPatient" />
         <activity
             android:name=".doctor.authentication.SignUpActivityForDoctor"

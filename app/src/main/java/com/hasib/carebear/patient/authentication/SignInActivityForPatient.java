@@ -12,12 +12,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.AuthResult;
@@ -30,88 +33,95 @@ public class SignInActivityForPatient extends AppCompatActivity implements View.
 
     private static final String TAG = "SignInActivityForPatient";
 
-    private Button signInButtonForPatient, signUpButtonForPatient;
-    private TextView signUpTextView;
-    private EditText emailText;
-    private EditText passwordText;
+    private ImageView signInImageForPatient;
+    private TextView signUpTextForPatient;
+    private EditText emailText, passwordText;
+    private TextInputLayout emailTextInputLayout, passwordTextInputLayout;
     private ProgressBar progressBar;
     private FirebaseAuth mAuth;
+    private ImageButton imageBackButton;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in_for_patient);
         this.setTitle("Sign In For Patient");
-
-        //Enable back button on Menu Bar
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().hide();
 
         //finding views
-        signInButtonForPatient = findViewById(R.id.signInButtonForPatientId);
-        signUpTextView = findViewById(R.id.signUpTextView);
+        signInImageForPatient = findViewById(R.id.signInButtonForPatientId);
+        signUpTextForPatient = findViewById(R.id.signUpTextForPatientId);
+        progressBar = findViewById(R.id.progressBarIn);
         emailText = findViewById(R.id.usernameTextPatientId);
         passwordText = findViewById(R.id.passwordTextPatientId);
-        progressBar = findViewById(R.id.progressBarIn);
-        signUpButtonForPatient = findViewById(R.id.signUpButtonForPatientId);
+        emailTextInputLayout = findViewById(R.id.usernameTextPatientLayout);
+        passwordTextInputLayout = findViewById(R.id.passwordTextPatientLayout);
+        imageBackButton = findViewById(R.id.backToMainFromPatient);
 
         //Setting button on click listener
-        signInButtonForPatient.setOnClickListener(this);
-        signUpButtonForPatient.setOnClickListener(this);
+        signInImageForPatient.setOnClickListener(this);
+        signUpTextForPatient.setOnClickListener(this);
+        imageBackButton.setOnClickListener(this);
 
         //Initializing firebase authentication
         mAuth = FirebaseAuth.getInstance(CareBear.getPatientFirebaseApp());
     }
 
-    //This Function is needed for back button.. Without this function
-    //back button wouldn't work properly..
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId() == android.R.id.home) {
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.signUpButtonForPatientId) {
+        if(v.getId() == R.id.signUpTextForPatientId) {
             Intent intent = new Intent(SignInActivityForPatient.this, SignUpActivityForPatient.class);
             startActivity(intent);
         } else if (v.getId() == R.id.signInButtonForPatientId) {
             patientLogin();
+        } else if (v.getId() == R.id.backToMainFromPatient) {
+            onBackPressed();
         }
     }
 
     private void patientLogin() {
-        progressBar.setVisibility(View.VISIBLE);
-
         String email = emailText.getText().toString().trim();
         String password = passwordText.getText().toString().trim();
 
         if(email.isEmpty()){
-            emailText.setError("enter an email address");
+            emailTextInputLayout.setError("Enter an Email Address");
             emailText.requestFocus();
             return;
+        }
+        if(!email.isEmpty()){
+            emailTextInputLayout.setError(null);
         }
 
         if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-            emailText.setError("enter a valid email");
+            emailTextInputLayout.setError("enter a valid email");
             emailText.requestFocus();
             return;
         }
+        if(Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+            emailTextInputLayout.setError(null);
+        }
 
         if(password.isEmpty()){
-            passwordText.setError("enter an email address");
+            passwordTextInputLayout.setError("Enter Password");
             passwordText.requestFocus();
             return;
+        }
+
+        if(!password.isEmpty()){
+            passwordTextInputLayout.setError(null);
         }
 
         if(password.length()<6){
-            passwordText.setError("minimum length 6 chars");
+            passwordTextInputLayout.setError("Minimum Length 6 chars");
             passwordText.requestFocus();
             return;
         }
+
+        if(!(password.length()<6)){
+            passwordTextInputLayout.setError(null);
+        }
+
+        progressBar.setVisibility(View.VISIBLE);
 
         mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
