@@ -8,7 +8,17 @@
     <!-- API keys String -->
     <string name="Map_API_Key" translatable="false">AIzaSyACtbzzIIIS1M9o_HYVsgGnK5Pd9tzrzqo</string>
 
+    <!-- Contributor's emails -->
     <string name="email_Hasib" translatable="false">smal94@student.sust.edu</string>
     <string name="email_Toufiqul" translatable="false">fahim.prime@gmail.com</string>
     <string name="email_Wadud" translatable="false">wadud6065@gmail.com</string>
+
+    <!-- Firebase patient project credential -->
+    <string name="firebase_projectID" translatable="false">care-bear-patient</string>
+    <string name="firebase_applicationID" translatable="false">1:875629263565:android:cbca279d8a1354b9974784</string>
+    <string name="firebase_api_key" translatable="false">AIzaSyCTNXgzMm8mME8EbLRj7IR-ClJtUJR3_i0</string>
+    <string name="firebase_databaseURL" translatable="false">https://care-bear-patient.firebaseio.com/</string>
+    <string name="firebase_storageBucket" translatable="false">gs://care-bear-patient.appspot.com/</string>
+
+    <string name="bottom_sheet_behavior" translatable="false">com.google.android.material.bottomsheet.BottomSheetBehavior</string>
 </resources>

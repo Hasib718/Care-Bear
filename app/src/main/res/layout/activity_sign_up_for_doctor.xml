@@ -1,172 +1,354 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@drawable/login_gradient"
+    android:background="#f2f2f2"
     tools:context=".doctor.authentication.SignUpActivityForDoctor">
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/infoLayout"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="0dp"
+        android:id="@+id/layout1"
+        android:orientation="horizontal">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:layout_centerHorizontal="true"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:id="@+id/doctorImage"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_add_a_photo_black_24dp"/>
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/imageProgressBar"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:visibility="invisible"/>
-        </RelativeLayout>
-
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Touch The camera to Upload your Photo"
-            android:layout_gravity="center"/>
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/nameText"
-            android:hint="Name"
-            android:inputType="textPersonName"
-            android:layout_marginTop="10dp"/>
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="22dp"
+            android:gravity="center_horizontal"
+            android:text="Doctor Registration"
+            android:textColor="#333232"
+            android:textSize="25sp" />
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="right|bottom"
+            android:orientation="vertical">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="+88"
-                android:textSize="18sp"
-                />
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/mobileNoText"
-                android:hint="Mobile No."
-                android:inputType="text|number" />
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="7.3dp"
+                android:background="@drawable/small_cicle" />
 
         </LinearLayout>
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/specialistText"
-            android:hint="If you are specialist then write topic\nOr WRITE.. NONE/none"
-            android:inputType="textPersonName" />
-        <TextView
-            android:layout_marginTop="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Please Select Your Completed Degree"
-            android:textSize="17sp"
-            android:textColor="#227825"
-            android:layout_marginLeft="4dp"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/checkBoxLayout">
-            <CheckBox
-                android:id="@+id/checkMBBSId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:text="MBBS"/>
-            <CheckBox
-                android:id="@+id/checkFCPSId"
-                android:layout_width="wrap_content"
-                android:layout_marginRight="10dp"
-                android:layout_height="wrap_content"
-                android:text="FCPS"/>
-            <CheckBox
-                android:id="@+id/checkMDId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:text="MD/MS"/>
-            <CheckBox
-                android:id="@+id/checkMPhilId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="MPhil"/>
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:id="@+id/half_circle"
+                android:layout_width="50dp"
+                android:layout_height="100dp"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/half_circle" />
+
         </LinearLayout>
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/registrationNoText"
-            android:hint="Reg. No of BMDC"
-            android:inputType="numberDecimal" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/presentAddressText"
-            android:hint="Present Address"
-            android:inputType="textLongMessage" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/commonChamberText"
-            android:hint="Common Chamber\nWhere You present Most (Mendatory)"
-            android:inputType="textLongMessage" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/emailText"
-            android:hint="Email"
-            android:inputType="textEmailAddress" />
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/passwordText"
-            android:hint="Password"
-            android:inputType="textPassword" />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/newSignUpButton"
-            android:background="@color/Crimson"
-            android:text="Sign Up"
-            android:textAllCaps="false"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/signInTextView"
-            android:text="Have an account? Sign In"
-            android:textAllCaps="false"
-            android:textStyle="bold"
-            android:layout_marginTop="15dp"
-            android:layout_gravity="center"/>
 
     </LinearLayout>
 
-</ScrollView>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/layout1"
+        android:layout_marginTop="14dp"
+        android:orientation="horizontal"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        >
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/rectangle">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="13dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="13dp"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_centerHorizontal="true"
+                        android:layout_width="140dp"
+                        android:layout_height="140dp"
+                        android:id="@+id/doctorImage"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_add_a_photo_black_24dp"/>
+                    <ProgressBar
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/imageProgressBar"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:visibility="invisible"/>
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Touch The camera to Upload your Photo"
+                    android:layout_marginBottom="8dp"
+                    android:layout_gravity="center"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:id="@+id/nameTextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:boxBackgroundColor="#ffffffff"
+                    app:endIconMode="clear_text"
+                    android:layout_marginBottom="5dp"
+                    app:errorEnabled="true">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPersonName"
+                        android:singleLine="true"
+                        android:hint="Name"
+                        android:id="@+id/nameText"
+                        />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/mobileNoTextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:boxBackgroundColor="#ffffffff"
+                    app:endIconMode="clear_text"
+                    app:errorEnabled="true"
+                    android:layout_marginBottom="5dp"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/mobileNoText"
+                        android:singleLine="true"
+                        android:hint="Mobile No"
+                        android:inputType="text|number"
+                        />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/specialistTextLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:endIconMode="clear_text"
+                    app:boxBackgroundColor="#ffffffff"
+                    app:errorEnabled="true"
+                    android:layout_marginBottom="5dp"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/specialistText"
+                        android:hint="Specialist"
+                        android:inputType="text"
+                        android:singleLine="true"
+                        />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Please Select Your Completed Degree"
+                    android:textSize="17sp"
+                    android:textColor="#227825"
+                    android:layout_marginLeft="2dp"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:id="@+id/checkBoxLayout">
+                    <CheckBox
+                        android:id="@+id/checkMBBSId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:buttonTint="#1566e0"
+                        android:text="MBBS"/>
+                    <CheckBox
+                        android:id="@+id/checkFCPSId"
+                        android:layout_width="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="#1566e0"
+                        android:text="FCPS"/>
+                    <CheckBox
+                        android:id="@+id/checkMDId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="#1566e0"
+                        android:layout_marginRight="5dp"
+                        android:text="MD/MS"/>
+
+                    <CheckBox
+                        android:id="@+id/checkMPhilId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="#1566e0"
+                        android:text="MPhil"/>
+
+                </LinearLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/registrationNoTextLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:boxBackgroundColor="#ffffffff"
+                    app:endIconMode="clear_text"
+                    app:errorEnabled="true"
+                    android:layout_marginBottom="5dp"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/registrationNoText"
+                        android:hint="BMDC Reg No"
+                        android:inputType="number"
+                        android:singleLine="true"
+                        />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/commonChamberTextLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:boxBackgroundColor="#ffffffff"
+                    app:endIconMode="clear_text"
+                    app:errorEnabled="true"
+                    android:layout_marginBottom="5dp"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/commonChamberText"
+                        android:hint="Associated Medical"
+                        android:inputType="text"
+                        android:singleLine="true" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/emailTextLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:boxBackgroundColor="#ffffffff"
+                    app:errorEnabled="true"
+                    android:layout_marginBottom="5dp"
+                    app:endIconMode="clear_text"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/emailText"
+                        android:hint="Your Email"
+                        android:inputType="textWebEmailAddress"
+                        android:singleLine="true"
+                        />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/passwordTextLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:boxBackgroundColor="#ffffffff"
+                    app:errorEnabled="true"
+                    app:endIconMode="password_toggle"
+                    android:layout_marginBottom="5dp"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/passwordText"
+                        android:hint="Password"
+                        android:inputType="numberPassword"
+                        android:singleLine="true"
+                        />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/newSignUpButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:paddingTop="14dp"
+                    android:paddingBottom="14dp"
+                    android:text="Register"
+                    android:textColor="#ffffff"
+                    android:textSize="12sp"
+                    />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/signInTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="12dp"
+                    android:text="Have an Account ? Sign In"
+                    android:background="?android:selectableItemBackground"
+                    android:clickable="true"
+                    android:textColor="#1566e0"
+                    android:layout_marginBottom="20dp"
+                    android:textSize="15sp" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <ImageButton
+        android:id="@+id/backToMain2"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp"
+        android:scaleType="fitXY"
+        android:background="@drawable/image_back_34dp"
+        android:focusable="true"
+        android:clickable="true"
+        android:foreground="?android:attr/selectableItemBackground"/>
+
+</RelativeLayout>

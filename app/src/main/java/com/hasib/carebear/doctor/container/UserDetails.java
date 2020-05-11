@@ -15,7 +15,7 @@ public class UserDetails implements Parcelable {
     private String checkBoxInfo = "";
     private String registrationInfo;
     private String presentAddressInfo;
-    private String commonChamberInfo;
+    private String medicalInfo;
     private String doctorImageUrl;
 
     public UserDetails() {}
@@ -30,11 +30,11 @@ public class UserDetails implements Parcelable {
         checkBoxInfo = parcel.readString();
         registrationInfo = parcel.readString();
         presentAddressInfo = parcel.readString();
-        commonChamberInfo = parcel.readString();
+        medicalInfo = parcel.readString();
         doctorImageUrl = parcel.readString();
     }
 
-    public UserDetails(String id, String fullName, String email, String mobile, String password, String specialist, String checkBoxInfo, String registrationInfo, String presentAddressInfo, String commonChamberInfo, String doctorImageUrl) {
+    public UserDetails(String id, String fullName, String email, String mobile, String password, String specialist, String checkBoxInfo, String registrationInfo, String presentAddressInfo, String medicalInfo, String doctorImageUrl) {
         this.id = id;
         this.fullName = fullName;
         this.email = email;
@@ -44,7 +44,7 @@ public class UserDetails implements Parcelable {
         this.checkBoxInfo = checkBoxInfo;
         this.registrationInfo = registrationInfo;
         this.presentAddressInfo = presentAddressInfo;
-        this.commonChamberInfo = commonChamberInfo;
+        this.medicalInfo = medicalInfo;
         this.doctorImageUrl = doctorImageUrl;
     }
 
@@ -106,6 +106,10 @@ public class UserDetails implements Parcelable {
         this.checkBoxInfo += checkBoxInfo+", ";
     }
 
+    public void setCheckBoxInfoNull() {
+        this.checkBoxInfo = "";
+    }
+
     public String getRegistrationInfo() {
         return registrationInfo;
     }
@@ -122,12 +126,12 @@ public class UserDetails implements Parcelable {
         this.presentAddressInfo = presentAddressInfo;
     }
 
-    public String getCommonChamberInfo() {
-        return commonChamberInfo;
+    public String getMedicalInfo() {
+        return medicalInfo;
     }
 
-    public void setCommonChamberInfo(String commonChamberInfo) {
-        this.commonChamberInfo = commonChamberInfo;
+    public void setMedicalInfo(String medicalInfo) {
+        this.medicalInfo = medicalInfo;
     }
 
     public String getDoctorImageUrl() {
@@ -150,7 +154,7 @@ public class UserDetails implements Parcelable {
                 "CheckBox "+getCheckBoxInfo()+"\n"+
                 "Registration "+getRegistrationInfo()+"\n"+
                 "Present Address "+getPresentAddressInfo()+"\n"+
-                "Common Chamber "+getCommonChamberInfo()+"\n"+
+                "Common Chamber "+getMedicalInfo()+"\n"+
                 "Image Uri "+getDoctorImageUrl()+"\n");
     }
 
@@ -165,7 +169,7 @@ public class UserDetails implements Parcelable {
         dest.writeString(checkBoxInfo);
         dest.writeString(registrationInfo);
         dest.writeString(presentAddressInfo);
-        dest.writeString(commonChamberInfo);
+        dest.writeString(medicalInfo);
         dest.writeString(doctorImageUrl);
     }
 
@@ -184,5 +188,8 @@ public class UserDetails implements Parcelable {
     @Override
     public int describeContents() {
         return hashCode();
+    }
+
+    public void setCommonChamberInfo(String toString) {
     }
 }
