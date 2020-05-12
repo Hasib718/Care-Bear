@@ -1,20 +1,27 @@
 package com.hasib.carebear.patient.authentication;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,10 +38,16 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.hasib.carebear.R;
 import com.hasib.carebear.patient.PatientMapActivity;
 import com.hasib.carebear.patient.container.PatientUserDetails;
 import com.hasib.carebear.support.CareBear;
+import com.squareup.picasso.Picasso;
+
+import java.io.IOException;
 
 public class SignUpActivityForPatient extends AppCompatActivity implements View.OnClickListener {
 
@@ -49,16 +62,15 @@ public class SignUpActivityForPatient extends AppCompatActivity implements View.
     private CheckBox maleCheckBox, femaleCheckBox;
     private PatientUserDetails patientUserDetails;
     private ImageButton imageButton;
+    private ImageView patientProfileImage;
+    private Uri patientImageUri;
+
+    private static final int IMAGE_REQUEST=1;
 
     //Please Declare Firebase Code
     private FirebaseAuth mAuth;
     private DatabaseReference databaseReference;
-    private FirebaseOptions options = new FirebaseOptions.Builder()
-            .setApplicationId("1:875629263565:android:cbca279d8a1354b9974784")
-            .setApiKey("AIzaSyCTNXgzMm8mME8EbLRj7IR-ClJtUJR3_i0")
-            .setDatabaseUrl("https://project-875629263565.firebaseio.com/")
-            .build();
-
+    private StorageReference storageReference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,10 +106,13 @@ public class SignUpActivityForPatient extends AppCompatActivity implements View.
         //For CheckBox
         maleCheckBox = findViewById(R.id.idCheckMale);
         femaleCheckBox = findViewById(R.id.idCheckFemale);
+        
+        patientProfileImage = (ImageView)findViewById(R.id.idpatientImage); 
 
         //Firebase
         mAuth = FirebaseAuth.getInstance(CareBear.getPatientFirebaseApp());
         databaseReference = FirebaseDatabase.getInstance(CareBear.getPatientFirebaseApp()).getReference("patient_profile_info");
+        storageReference = FirebaseStorage.getInstance(CareBear.getPatientFirebaseApp()).getReference("patient_profile_info");
 
         signInText.setOnClickListener(this);
         signUpButton.setOnClickListener(this);
@@ -120,12 +135,46 @@ public class SignUpActivityForPatient extends AppCompatActivity implements View.
                 return;
                 }
                 patientRegister();
+
                 break;
 
             case R.id.backToMainFromPatientSignUp:
                 onBackPressed();
                 break;
+
+            case R.id.idpatientImage:
+                selectPatientImage();
+                break;
         }
+    }
+
+
+    private void selectPatientImage() {
+
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent,IMAGE_REQUEST);
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == IMAGE_REQUEST && resultCode == RESULT_OK && data!=null && data.getData()!=null)
+        {
+            patientImageUri = data.getData();
+
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), patientImageUri);
+
+                patientProfileImage.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     private void savePatientInfo() {
@@ -220,6 +269,44 @@ public class SignUpActivityForPatient extends AppCompatActivity implements View.
         return true;
     }
 
+    //For getting Image extension
+    public String getExtension(Uri imageUri) {
+        ContentResolver contentResolver = getContentResolver();
+        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(imageUri));
+    }
+
+    //Method to upload patient profile image to firebase
+    private void uploadImage()
+    {
+        String key = mAuth.getCurrentUser().getUid();
+
+        StorageReference ref = storageReference.child(key + "." + getExtension(patientImageUri));
+
+        ref.putFile(patientImageUri)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // Get a URL to the uploaded content
+
+                        Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                        while (!uriTask.isSuccessful());
+
+                        patientUserDetails.setImageUrl(uriTask.getResult().toString());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle unsuccessful uploads
+                        Toast.makeText(getApplicationContext(), "Image upload Failed", Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+
+
+
+    }
 
     private void patientRegister() {
         String email = emailPatient.getText().toString().trim();
@@ -283,6 +370,7 @@ public class SignUpActivityForPatient extends AppCompatActivity implements View.
         }).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
+                        uploadImage();
                         savePatientInfo();
                     }
                 });
