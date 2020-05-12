@@ -2,6 +2,7 @@ package com.hasib.carebear;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import android.Manifest;
 import android.content.DialogInterface;
@@ -10,11 +11,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.hasib.carebear.doctor.authentication.SignInActivityForDoctor;
-import com.hasib.carebear.patient.SignInActivityForPatient;
+import com.hasib.carebear.patient.authentication.SignInActivityForPatient;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -27,8 +27,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "MainActivity";
 
-    private Button signUpoRInButtonForDoctor, signUpoRInButtonForPatient;
-    private Button emergencyButton;
+    private CardView signUpoRInButtonForDoctor, signUpoRInButtonForPatient;
+    private CardView emergencyButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

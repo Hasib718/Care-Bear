@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -117,8 +118,6 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
         //Adding layout for showing
         LayoutInflater inflater = getActivity().getLayoutInflater();
         final View view = inflater.inflate(R.layout.layout_chamber_dialog, null);
@@ -165,18 +164,15 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
                     e.printStackTrace();
                     Log.d(TAG, "onQueryTextSubmit: " + e.getMessage());
                 }
-                Address address = addressList.get(0);
-                LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-                //Toast.makeText(MainActivity.this, latLng.toString(), Toast.LENGTH_LONG).show();
+                Address address = null;
+                try {
+                    address = addressList.get(0);
 
-                // TODO: 10-Apr-20 Have to fix getting exception when no search result found
+                    mapGoogle.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(address.getLatitude(), address.getLongitude()), 15f));
 
-                mapGoogle.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(address.getLatitude(), address.getLongitude()), 15f));
-                if (markerSearchView != null) {
-                    markerSearchView.remove();
-                    markerSearchView = mapGoogle.addMarker(new MarkerOptions()
-                            .position(new LatLng(address.getLatitude(), address.getLongitude()))
-                            .title(LatLong.geoCoding(mContext, new LatLng(address.getLatitude(), address.getLongitude()))));
+                } catch (Exception e) {
+                    Toast.makeText(mContext, "No Place Found!\nTry to search with additional info\nExample: Gulshan, Dhaka", Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
                 }
 
                 return false;
@@ -216,7 +212,8 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
         });
 
         //Dialog builder
-        builder.setView(view)
+        final AlertDialog dialog = new AlertDialog.Builder(getActivity())
+                .setView(view)
                 .setTitle("Enter Chamber Info")
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
@@ -227,16 +224,36 @@ public class ChamberAddingDialog extends AppCompatDialogFragment implements OnMa
                 .setPositiveButton("Add", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //Check individual Day items.
-                        Log.d(TAG, "onClick: parent day picker child " + dayPicker.getMarkedDays().toString());
 
-                        listener.chamberAddingTexts(chamberNameText.getEditableText().toString(),
-                                chamberFeesText.getText().toString(), dayPicker.getMarkedDays(), longClickAddress,
-                                LatLong.castLatLngToCustomLatLongClass(longClickLatlng));
+                    }
+                })
+                .create();
+
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+
+                Button button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                button.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        if (longClickLatlng != null) {
+                            listener.chamberAddingTexts(chamberNameText.getEditableText().toString(),
+                                    chamberFeesText.getText().toString(), dayPicker.getMarkedDays(), longClickAddress,
+                                    LatLong.castLatLngToCustomLatLongClass(longClickLatlng));
+
+                            dialog.dismiss();
+                        } else {
+                            Toast.makeText(mContext, "You Must Select Chamber Location", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
+            }
+        });
 
-        return builder.create();
+        return dialog;
     }
 
     //On attaching fragment to the parent activity

@@ -15,9 +15,11 @@ import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -29,6 +31,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -53,8 +56,16 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
     //views
     private ImageView doctorImage;
     private ProgressBar imageProgressBar;
-    private EditText nameText, mobileNoText, specialistText, registrationNoText, presentAddressText, commonChamberText, emailText, passwordText;
+
+    private EditText nameText, mobileNoText, specialistText, registrationNoText, presentAddressText,
+            commonChamberText, emailText, passwordText;
+
+    private TextInputLayout nameTextLayout, mobileNoTextLayout, specialistTextLayout,
+            registrationNoTextLayout, commonChamberTextLayout,
+            emailTextLayout, passwordTextLayout;
+
     private LinearLayout checkBoxLayout;
+    private TextView signInText;
   
     private Button signUpButton;
 
@@ -77,16 +88,15 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
 
     private AlertDialog loadingDialog;
 
+    private ImageButton imageButton;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up_for_doctor);
-        this.setTitle("Sign Up For Doctor");
 
-        //Enable back button on Menu Bar
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().hide();
 
         initViews();
 
@@ -105,7 +115,7 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
         //Setting Button on click Listener
         signUpButton.setOnClickListener(this);
         doctorImage.setOnClickListener(this);
-
+        imageButton.setOnClickListener(this);
     }
 
     private void initLoadingDialog() {
@@ -130,21 +140,20 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
         specialistText = findViewById(R.id.specialistText);
         checkBoxLayout = findViewById(R.id.checkBoxLayout);
         registrationNoText = findViewById(R.id.registrationNoText);
-        presentAddressText = findViewById(R.id.presentAddressText);
         commonChamberText = findViewById(R.id.commonChamberText);
         emailText = findViewById(R.id.emailText);
         passwordText = findViewById(R.id.passwordText);
         signUpButton = findViewById(R.id.newSignUpButton);
-    }
+        imageButton = findViewById(R.id.backToMain2);
+        signInText = findViewById(R.id.signInTextView);
 
-    //This Function is needed for back button.. Without this function
-    //back button wouldn't work properly..
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId() == android.R.id.home) {
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
+        nameTextLayout = findViewById(R.id.nameTextInputLayout);
+        mobileNoTextLayout = findViewById(R.id.mobileNoTextInputLayout);
+        specialistTextLayout = findViewById(R.id.specialistTextLayout);
+        registrationNoTextLayout = findViewById(R.id.registrationNoTextLayout);
+        commonChamberTextLayout = findViewById(R.id.commonChamberTextLayout);
+        emailTextLayout = findViewById(R.id.emailTextLayout);
+        passwordTextLayout = findViewById(R.id.passwordTextLayout);
     }
 
     @Override
@@ -170,10 +179,22 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
                 showImageChooser();
             }
             break;
+
+            case R.id.backToMain2 : {
+                onBackPressed();
+            }
+            break;
+
+            case R.id.signInTextView : {
+                startActivity(new Intent(SignUpActivityForDoctor.this, SignInActivityForDoctor.class));
+            }
+            break;
         }
     }
 
     private boolean getInformationFromUser() {
+        boolean check = true;
+
         Log.d(TAG, "getInformationFromUser: getting user data");
 
         userDetails.setFullName(nameText.getText().toString());
@@ -186,63 +207,106 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
         }
         Log.d(TAG, "getInformationFromUser: getting user data 2");
         userDetails.setRegistrationInfo(registrationNoText.getText().toString());
-        userDetails.setPresentAddressInfo(presentAddressText.getText().toString());
         userDetails.setCommonChamberInfo(commonChamberText.getText().toString());
         userDetails.setEmail(emailText.getText().toString());
         userDetails.setPassword(passwordText.getText().toString());
 
         if (userDetails.getFullName().isEmpty()) {
-            nameText.setError("Name required");
+            nameTextLayout.setError("Name required");
             nameText.requestFocus();
-            return false;
+            check = false;
         }
-        if(userDetails.getEmail().isEmpty()) {
-            emailText.setError("Enter an Email Address");
-            emailText.requestFocus();
-            return false;
+        if (!userDetails.getFullName().isEmpty()) {
+            nameTextLayout.setError(null);
         }
-        if (userDetails.getPassword().isEmpty()) {
-            passwordText.setError("Enter a password");
-            passwordText.requestFocus();
-            return false;
-        }
+
         if (userDetails.getMobile().isEmpty()) {
-            mobileNoText.setError("Mobile Number Required");
+            mobileNoTextLayout.setError("Mobile Number Required");
             mobileNoText.requestFocus();
-            return false;
+            check = false;
         }
+        if (!userDetails.getMobile().isEmpty()) {
+            mobileNoTextLayout.setError(null);
+        }
+
         if (userDetails.getMobile().length() != 11) {
-            mobileNoText.setError("Number must be 11 digits");
+            mobileNoTextLayout.setError("Number must be 11 digits");
             mobileNoText.requestFocus();
-            return false;
+            check = false;
         }
+        if (userDetails.getMobile().length() == 11) {
+            mobileNoTextLayout.setError(null);
+        }
+
+        if (userDetails.getSpecialist().isEmpty()) {
+            specialistTextLayout.setError("Name required");
+            nameText.requestFocus();
+            check = false;
+        }
+        if (!userDetails.getSpecialist().isEmpty()) {
+            specialistTextLayout.setError(null);
+        }
+
         if (userDetails.getRegistrationInfo().isEmpty()) {
-            registrationNoText.setError("Registration Number Required");
+            registrationNoTextLayout.setError("Registration Number Required");
             registrationNoText.requestFocus();
-            return false;
+            check = false;
         }
+        if (!userDetails.getRegistrationInfo().isEmpty()) {
+            registrationNoTextLayout.setError(null);
+        }
+
         if (!((CheckBox) checkBoxLayout.getChildAt(0)).isChecked()) {
             ((CheckBox) checkBoxLayout.getChildAt(0)).setError("Minimum MBBS Degree Required");
             ((CheckBox) checkBoxLayout.getChildAt(0)).requestFocus();
-            return false;
+            check = false;
         }
-        return true;
+        if (((CheckBox) checkBoxLayout.getChildAt(0)).isChecked()) {
+            ((CheckBox) checkBoxLayout.getChildAt(0)).setError(null);
+        }
+
+        if(userDetails.getEmail().isEmpty()) {
+            emailTextLayout.setError("Enter an Email Address");
+            emailText.requestFocus();
+            check = false;
+        }
+        if(!userDetails.getEmail().isEmpty()) {
+            emailTextLayout.setError(null);
+        }
+
+        if (userDetails.getPassword().isEmpty()) {
+            passwordTextLayout.setError("Enter a password");
+            passwordText.requestFocus();
+            check = false;
+        }
+        if (!userDetails.getPassword().isEmpty()) {
+            passwordTextLayout.setError(null);
+        }
+
+        if (check) return true;
+        else return false;
     }
 
     //Email & Password Registration
     private void userRegister() {
         //Checking email validity
         if (!Patterns.EMAIL_ADDRESS.matcher(userDetails.getEmail()).matches()) {
-            emailText.setError("Enter a valid email address");
+            emailTextLayout.setError("Enter a valid email address");
             emailText.requestFocus();
             return;
+        }
+        if (Patterns.EMAIL_ADDRESS.matcher(userDetails.getEmail()).matches()) {
+            emailTextLayout.setError(null);
         }
 
         //checking the validity of password
         if (userDetails.getPassword().length() < 8) {
-            passwordText.setError("Minimum length of a password should be 8");
+            passwordTextLayout.setError("Minimum length of a password should be 8");
             passwordText.requestFocus();
             return;
+        }
+        if (userDetails.getPassword().length() == 8) {
+            passwordTextLayout.setError(null);
         }
 
         Log.d(TAG, "userRegister: on firebase authenticator");

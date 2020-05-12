@@ -43,16 +43,11 @@ public class DoctorProfileActivity extends AppCompatActivity {
 
     private AlertDialog builder;
 
-    private boolean wifi = false;
-    private boolean mobileData = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctor_profile);
         this.setTitle("Profile Of Doctor");
-
-        checkConnection();
 
         //Enable back button on Menu Bar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -68,7 +63,7 @@ public class DoctorProfileActivity extends AppCompatActivity {
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (wifi || mobileData) {
+                if (checkConnection()) {
                     Intent intent = new Intent(DoctorProfileActivity.this, DoctorProfileEditActivity.class);
                     intent.putExtra("user", userDetailsForPassing);
                     startActivity(intent);
@@ -90,20 +85,22 @@ public class DoctorProfileActivity extends AppCompatActivity {
         });
     }
 
-    private void checkConnection() {
+    private boolean checkConnection() {
         ConnectivityManager manager = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo activeNetwork = manager.getActiveNetworkInfo();
         if (activeNetwork !=null) {
             switch (activeNetwork.getType()) {
                 case ConnectivityManager.TYPE_WIFI:
-                    wifi = true;
-                    break;
-                case ConnectivityManager.TYPE_MOBILE:
-                    mobileData = true;
-                    break;
+                    return true;
+                case ConnectivityManager.TYPE_MOBILE: {
+                    return true;
+                }
+                default:
+                    return false;
             }
         }
+        return false;
     }
 
     @Override
