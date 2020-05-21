@@ -172,7 +172,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/medicineTimer"
+                android:id="@+id/aboutus"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:layout_margin="20dp"
@@ -194,13 +194,13 @@
                         android:layout_height="100dp"
                         android:scrollbarSize="40dp"
                         app:lottie_autoPlay="true"
-                        app:lottie_fileName="timer.json"
+                        app:lottie_fileName="about.json"
                         app:lottie_loop="true" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Medicine Timer"
+                        android:text="About Us"
                         android:gravity="center"/>
 
                 </LinearLayout>
