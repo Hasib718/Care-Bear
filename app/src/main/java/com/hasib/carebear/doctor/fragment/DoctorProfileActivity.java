@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -43,15 +44,14 @@ public class DoctorProfileActivity extends AppCompatActivity {
 
     private AlertDialog builder;
 
+    private ImageButton imageButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctor_profile);
         this.setTitle("Profile Of Doctor");
-
-        //Enable back button on Menu Bar
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().hide();
 
         initViews();
 
@@ -81,6 +81,13 @@ public class DoctorProfileActivity extends AppCompatActivity {
                             .create()
                             .show();
                 }
+            }
+        });
+
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
             }
         });
     }
@@ -128,12 +135,12 @@ public class DoctorProfileActivity extends AppCompatActivity {
         editButton = findViewById(R.id.editButtonId);
         profileImage = findViewById(R.id.imageViewId);
         profileName = findViewById(R.id.nameTextViewId);
-        degree = findViewById(R.id.degreeId);
         specialist = findViewById(R.id.specialistId);
         registration = findViewById(R.id.bmdcRegNoId);
         mobile = findViewById(R.id.mobileText);
         email = findViewById(R.id.emailId);
         presentAddress = findViewById(R.id.presentAddressId);
+        imageButton = findViewById(R.id.backToDashBoard);
     }
 
     private void initInfo() {
@@ -153,7 +160,6 @@ public class DoctorProfileActivity extends AppCompatActivity {
                                 .into(profileImage);
 
                         profileName.setText(userDetails.getFullName());
-                        degree.setText(userDetails.getCheckBoxInfo());
                         specialist.setText(userDetails.getSpecialist());
                         registration.setText(userDetails.getRegistrationInfo());
                         mobile.setText(userDetails.getMobile());
@@ -168,18 +174,8 @@ public class DoctorProfileActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                onBackPressed();
             }
         });
-    }
-
-    //This Function is needed for back button.. Without this function
-    //back button wouldn't work properly..
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
     }
 }
