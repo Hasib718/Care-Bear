@@ -33,8 +33,8 @@ public class DoctorProfileActivity extends AppCompatActivity {
 
     private static final String TAG = "DoctorProfileActivity";
 
-    private ImageView profileImage;
-    private TextView profileName, degree, specialist, registration, mobile, email, presentAddress;
+    private ImageView profileImage, dMBBS, dFCPS, dFRCS, dMDMS, dMPhil;
+    private TextView profileName, specialist, registration, mobile, email, presentAddress;
     private Button editButton;
 
     private FirebaseAuth mAuth;
@@ -141,6 +141,12 @@ public class DoctorProfileActivity extends AppCompatActivity {
         email = findViewById(R.id.emailId);
         presentAddress = findViewById(R.id.presentAddressId);
         imageButton = findViewById(R.id.backToDashBoard);
+
+        dMBBS = findViewById(R.id.degreeImage1);
+        dFCPS = findViewById(R.id.degreeImage2);
+        dFRCS = findViewById(R.id.degreeImage3);
+        dMDMS = findViewById(R.id.degreeImage4);
+        dMPhil = findViewById(R.id.degreeImage5);
     }
 
     private void initInfo() {
@@ -165,6 +171,23 @@ public class DoctorProfileActivity extends AppCompatActivity {
                         mobile.setText(userDetails.getMobile());
                         email.setText(userDetails.getEmail());
                         presentAddress.setText(userDetails.getPresentAddressInfo());
+
+                        String str = userDetails.getCheckBoxInfo();
+                        if (str.matches("(.*)MBBS(.*)")) {
+                            dMBBS.setImageDrawable(getDrawable(R.drawable.right));
+                        }
+                        if (str.matches("(.*)FCPS(.*)")) {
+                            dFCPS.setImageDrawable(getDrawable(R.drawable.right));
+                        }
+                        if (str.matches("(.*)FRCS(.*)")) {
+                            dFRCS.setImageDrawable(getDrawable(R.drawable.right));
+                        }
+                        if (str.matches("(.*)MD/MS(.*)")) {
+                            dMDMS.setImageDrawable(getDrawable(R.drawable.right));
+                        }
+                        if (str.matches("(.*)MPhil(.*)")) {
+                            dMPhil.setImageDrawable(getDrawable(R.drawable.right));
+                        }
 
                         builder.dismiss();
                         break;

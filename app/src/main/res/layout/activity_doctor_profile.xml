@@ -137,6 +137,7 @@
                                 android:textColor="#120E0E"/>
 
                             <ImageView
+                                android:id="@+id/degreeImage1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
@@ -165,6 +166,7 @@
                                 android:textColor="#120E0E"/>
 
                             <ImageView
+                                android:id="@+id/degreeImage2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
@@ -192,6 +194,7 @@
                                 android:textColor="#120E0E"/>
 
                             <ImageView
+                                android:id="@+id/degreeImage3"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
@@ -229,6 +232,7 @@
                                 android:textColor="#120E0E"/>
 
                             <ImageView
+                                android:id="@+id/degreeImage4"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
@@ -257,6 +261,7 @@
                                 android:textColor="#120E0E"/>
 
                             <ImageView
+                                android:id="@+id/degreeImage5"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
