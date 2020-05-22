@@ -3,10 +3,13 @@ package com.hasib.carebear;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final String TAG = "MainActivity";
 
     private CardView signUpoRInButtonForDoctor, signUpoRInButtonForPatient;
-    private CardView emergencyButton;
+    private CardView emergencyButton, about;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                                 public void onShown(Snackbar snackbar) {
                                                     // Event handler for when the given Snackbar is visible
                                                 }
+
                                                 @Override
                                                 public void onDismissed(Snackbar snackbar, int event) {
                                                     // Event handler for when the given Snackbar has been dismissed
@@ -78,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         signUpoRInButtonForDoctor = findViewById(R.id.signInOrUpButtonForDoctorId);
         signUpoRInButtonForPatient = findViewById(R.id.signInOrUpButtonForPatientId);
         emergencyButton = findViewById(R.id.emergencyButtonId);
+        about = findViewById(R.id.aboutus);
 
         getSupportActionBar().hide();
 
@@ -85,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         signUpoRInButtonForPatient.setOnClickListener(this);
         signUpoRInButtonForDoctor.setOnClickListener(this);
         emergencyButton.setOnClickListener(this);
+        about.setOnClickListener(this);
 
         checkPermissions();
     }
@@ -107,8 +113,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             break;
 
-            case R.id.emergencyButtonId : {
-                // TODO: 10-Apr-20 have to implement emergency ambulance service.
+            case R.id.emergencyButtonId: {
+                startActivity(new Intent(Intent.ACTION_DIAL,Uri.parse("tel:999")));
+            }
+            break;
+
+            case R.id.aboutus: {
+
             }
             break;
         }

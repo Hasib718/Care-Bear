@@ -53,11 +53,6 @@ public class SignUpActivityForPatient extends AppCompatActivity implements View.
     //Please Declare Firebase Code
     private FirebaseAuth mAuth;
     private DatabaseReference databaseReference;
-    private FirebaseOptions options = new FirebaseOptions.Builder()
-            .setApplicationId("1:875629263565:android:cbca279d8a1354b9974784")
-            .setApiKey("AIzaSyCTNXgzMm8mME8EbLRj7IR-ClJtUJR3_i0")
-            .setDatabaseUrl("https://project-875629263565.firebaseio.com/")
-            .build();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
