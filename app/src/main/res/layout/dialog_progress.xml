@@ -17,15 +17,13 @@
         android:id="@+id/loadingText"
         android:layout_marginRight="15dp"/>
 
-    <com.airbnb.lottie.LottieAnimationView
-
-        android:layout_gravity="center"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:scrollbarSize="40dp"
-        app:lottie_autoPlay="true"
-        app:lottie_fileName="loading.json"
-        android:layout_marginTop="5dp"
-        app:lottie_loop="true" />
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/loadingProgressBar"
+        app:layout_constraintLeft_toRightOf="@id/loadingText"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="0dp" />
 
 </LinearLayout>
