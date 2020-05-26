@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/chamber_info_id"
-    android:orientation="horizontal">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="20dp"
+    app:cardBackgroundColor="#4CAF50"
+    app:cardCornerRadius="20dp"
+    app:cardPreventCornerOverlap="true"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:rippleColor="@color/grey_3">
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
@@ -24,16 +30,20 @@
         android:id="@+id/camber_layout"
         android:layout_margin="10dp">
 
-        <TextView
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/chamber_name_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/chamber_name_id"
             android:text="Name"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+            android:textSize="27sp"
             android:textStyle="bold"
             android:textSize="22sp"
             android:textColor="@color/Black"/>
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layoutFeeTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -57,8 +67,19 @@
                 android:textSize="17sp"
                 android:textColor="@color/Black" />
 
-        </LinearLayout>
-
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/chamber_Time_id"
+                    android:layout_width="110dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="15dp"
+                    android:text="Time"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    android:textSize="20sp"
+                    app:fontFamily="@font/chivo"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/chamber_Time_Text"
+                    app:layout_constraintTop_toTopOf="parent" />
+          
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
