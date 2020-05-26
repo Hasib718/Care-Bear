@@ -44,8 +44,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         Log.d(TAG, "onBindViewHolder: called");
 
         holder.cChamberName.setText(aChamberList.get(position).getChamberName());
-        holder.cChamberFees.setText("Fees: " + aChamberList.get(position).getChamberFees() + " Tk");
-        holder.cChamberTime.setText("Time: " + aChamberList.get(position).getChamberTime());
+        holder.cChamberFees.setText(aChamberList.get(position).getChamberFees() + " Taka");
+        holder.cChamberTime.setText("Time " + aChamberList.get(position).getChamberTime());
         holder.cChamberAddress.setText(aChamberList.get(position).getChamberAddress());
 
         Log.d(TAG, "onBindViewHolder: "+aChamberList.get(position).getChamberOpenDays().toString());
