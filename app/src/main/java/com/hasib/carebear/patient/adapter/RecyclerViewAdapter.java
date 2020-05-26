@@ -1,28 +1,29 @@
-package com.hasib.carebear.doctor.adapter;
+package com.hasib.carebear.patient.adapter;
 
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.textview.MaterialTextView;
 import com.hasib.carebear.R;
 import com.hasib.carebear.doctor.container.Chamber;
-import com.hasib.carebear.doctor.listener.ChamberEventListener;
+import com.hasib.carebear.patient.listener.ChamberEventListener;
 import com.hasib.carebear.support.DayPicker;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecyclerViewAdapter extends Recyc {
-    private static final String TAG = "DoctorRecyclerViewAdapter";
+public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ChamberViewHolder> {
+    private static final String TAG = "RecyclerViewAdapter";
 
     private List<Chamber> aChamberList = new ArrayList<>();
     private Context aContext;
@@ -46,9 +47,11 @@ public class RecyclerViewAdapter extends Recyc {
         Log.d(TAG, "onBindViewHolder: called");
 
         holder.cChamberName.setText(aChamberList.get(position).getChamberName());
-        holder.cChamberFees.setText(aChamberList.get(position).getChamberFees() + "\u09F3");
-        holder.cChamberTime.setText(aChamberList.get(position).getChamberTime());
+        holder.cChamberFees.setText(aChamberList.get(position).getChamberFees() + " Taka");
+        holder.cChamberTime.setText("Time " + aChamberList.get(position).getChamberTime());
         holder.cChamberAddress.setText(aChamberList.get(position).getChamberAddress());
+
+        Log.d(TAG, "onBindViewHolder: "+aChamberList.get(position).getChamberOpenDays().toString());
 
         DayPicker dayPicker = new DayPicker(holder.cChamberActiveDays, aChamberList.get(position).getChamberOpenDays());
         dayPicker.setMarkedDays();
@@ -101,16 +104,6 @@ public class RecyclerViewAdapter extends Recyc {
             cChamberAddress = itemView.findViewById(R.id.chamber_Address_id);
             cChamberActiveDays = itemView.findViewById(R.id.daypicker);
             cCamberInfoLayout = itemView.findViewById(R.id.chamber_info_id);
-        }
-    }
-
-    public class TestViewHolder extends RecyclerView.ViewHolder {
-        MaterialButton button;
-
-        public TestViewHolder(@NonNull View itemView) {
-            super(itemView);
-
-            button = itemView.findViewById(R.id.button);
         }
     }
 }

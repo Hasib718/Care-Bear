@@ -83,4 +83,7 @@ dependencies {
 
     //GeoFire for nearby location
     implementation 'com.firebase:geofire-android:3.0.0'
+
+    //Expandable RecyclerView
+    implementation 'com.thoughtbot:expandablerecyclerview:1.3'
 }
