@@ -10,88 +10,71 @@
 
     <ToggleButton
         android:id="@+id/toggle_Sunday"
-        style="@style/toggleButton"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:layout_marginRight="7dp"
-        android:background="@drawable/toggle_background"
-        android:clickable="false"
-        android:gravity="center"
-        android:fontFamily="@font/baloo_bhaina"
+        android:layout_marginRight="5dp"
         android:textOff="S"
         android:textOn="S"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        style="@style/toggleButton"
+        android:background="@drawable/toggle_background"
+        android:clickable="false"/>
     <ToggleButton
         android:id="@+id/toggle_Monday"
-        android:layout_marginRight="7dp"
-        android:layout_marginLeft="7dp"
+        android:layout_marginRight="5dp"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:textOff="M"
         android:textOn="M"
         android:textSize="20sp"
-        android:gravity="center"
-        android:fontFamily="@font/baloo_bhaina"
         style="@style/toggleButton"
         android:background="@drawable/toggle_background"
         android:clickable="false"/>
 
     <ToggleButton
         android:id="@+id/toggle_Tuesday"
-        android:layout_marginRight="7dp"
-        android:layout_marginLeft="7dp"
+        android:layout_marginRight="5dp"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:textOff="T"
         android:textOn="T"
         android:textSize="20sp"
-        android:gravity="center"
-        android:fontFamily="@font/baloo_bhaina"
         style="@style/toggleButton"
         android:background="@drawable/toggle_background"
         android:clickable="false"/>
 
     <ToggleButton
         android:id="@+id/toggle_Wednesday"
-        android:layout_marginRight="7dp"
-        android:layout_marginLeft="7dp"
+        android:layout_marginRight="5dp"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:textOff="W"
         android:textOn="W"
         android:textSize="20sp"
-        android:gravity="center"
-        android:fontFamily="@font/baloo_bhaina"
         style="@style/toggleButton"
         android:background="@drawable/toggle_background"
         android:clickable="false"/>
 
     <ToggleButton
         android:id="@+id/toggle_Thursday"
-        android:layout_marginRight="7dp"
-        android:layout_marginLeft="7dp"
+        android:layout_marginRight="5dp"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:textOff="Th"
         android:textOn="Th"
         android:textSize="20sp"
-        android:gravity="center"
-        android:fontFamily="@font/baloo_bhaina"
         style="@style/toggleButton"
         android:background="@drawable/toggle_background"
         android:clickable="false"/>
 
     <ToggleButton
         android:id="@+id/toggle_Friday"
-        android:layout_marginRight="7dp"
-        android:layout_marginLeft="7dp"
+        android:layout_marginRight="5dp"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:textOff="F"
         android:textOn="F"
         android:textSize="20sp"
-        android:gravity="center"
-        android:fontFamily="@font/baloo_bhaina"
         style="@style/toggleButton"
         android:background="@drawable/toggle_background"
         android:clickable="false"/>
@@ -103,8 +86,6 @@
         android:textOff="Sa"
         android:textOn="Sa"
         android:textSize="20sp"
-        android:gravity="center"
-        android:fontFamily="@font/baloo_bhaina"
         style="@style/toggleButton"
         android:background="@drawable/toggle_background"
         android:clickable="false"/>

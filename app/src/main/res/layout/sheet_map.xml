@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="@android:color/white"
     android:orientation="vertical"
-    android:fitsSystemWindows="true"
     app:behavior_hideable="true"
     app:behavior_peekHeight="175dp"
     app:layout_behavior="@string/bottom_sheet_behavior">
@@ -87,13 +86,13 @@
                             android:background="@color/grey_10" />
 
                         <TextView
-                            android:id="@+id/doctorSpecialityShow"
+                            android:id="@+id/doctorDegreeShow"
                             android:layout_width="match_parent"
                             android:layout_height="30dp"
                             android:layout_marginLeft="30dp"
                             android:layout_marginStart="30dp"
                             android:gravity="center_vertical"
-                            android:text="Doctor Speciality"
+                            android:text="Doctor Degree"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                             android:textColor="@color/colorPrimary" />
 
@@ -105,13 +104,13 @@
                             android:background="@color/grey_10" />
 
                         <TextView
-                            android:id="@+id/doctorDegreeShow"
+                            android:id="@+id/doctorMedicalShow"
                             android:layout_width="match_parent"
                             android:layout_height="30dp"
                             android:layout_marginLeft="30dp"
                             android:layout_marginStart="30dp"
                             android:gravity="center_vertical"
-                            android:text="Doctor Degree"
+                            android:text="Doctor medical"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                             android:textColor="@color/colorPrimary" />
                     </LinearLayout>

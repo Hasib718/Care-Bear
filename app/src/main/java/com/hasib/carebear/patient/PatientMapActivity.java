@@ -1,5 +1,11 @@
 package com.hasib.carebear.patient;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
@@ -20,16 +26,6 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
@@ -69,9 +65,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.hasib.carebear.MainActivity;
 import com.hasib.carebear.R;
 import com.hasib.carebear.doctor.container.Chamber;
-import com.hasib.carebear.doctor.container.UserDetails;
-import com.hasib.carebear.patient.listener.ChamberEventListener;
-import com.hasib.carebear.patient.adapter.RecyclerViewAdapter;
 import com.hasib.carebear.patient.authentication.SignInActivityForPatient;
 import com.hasib.carebear.support.CareBear;
 import com.hasib.carebear.support.FeedBackActivity;
@@ -85,14 +78,13 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class PatientMapActivity extends AppCompatActivity implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener, ChamberEventListener {
+public class PatientMapActivity extends AppCompatActivity implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "PatientMapActivity";
     private static final int REQUEST_CHECK_SETTINGS = 8001;
@@ -128,12 +120,8 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
 
     private BottomSheetBehavior bottomSheetBehavior;
 
-    private TextView chamberNameShow, doctorNameShow, doctorDegreeShow, doctorSpecialityShow, chamberAddressShow, chamberFeeShow, chamberOpenDaysShow;
+    private TextView chamberNameShow, doctorNameShow, doctorDegreeShow, doctorMedicalShow, chamberAddressShow, chamberFeeShow, chamberOpenDaysShow;
     private ImageView doctorImageShow;
-
-    private RecyclerView recyclerView;
-    private RecyclerViewAdapter adapterPatient;
-    private List<Chamber> chamberList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,8 +153,6 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
         mAuth = FirebaseAuth.getInstance(CareBear.getPatientFirebaseApp());
 
         initBottomSheet();
-
-        initBottomSheetRecyclerView();
 
         Dexter.withContext(this)
                 .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -232,30 +218,13 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
         onLocationSearch();
     }
 
-    private void initBottomSheetRecyclerView() {
-        chamberList = new ArrayList<>();
-
-        recyclerView = findViewById(R.id.otherChambersShowRecyclerView);
-        adapterPatient = new RecyclerViewAdapter(this, chamberList);
-        recyclerView.setAdapter(adapterPatient);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        this.adapterPatient.setListener(PatientMapActivity.this);
-    }
-
     private void initBottomSheet() {
         // get the bottom sheet view
         LinearLayout llBottomSheet = findViewById(R.id.bottom_sheet);
 
         // init the bottom sheet behavior
-        bottomSheetBehavior = BottomSheetBehavior.from(llBottomSheet);
+      bottomSheetBehavior = BottomSheetBehavior.from(llBottomSheet);
 
-        llBottomSheet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-            }
-        });
         // change the state of the bottom sheet
          bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
@@ -274,7 +243,7 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
         chamberNameShow = findViewById(R.id.chamberNameShow);
         doctorNameShow = findViewById(R.id.doctorNameShow);
         doctorDegreeShow = findViewById(R.id.doctorDegreeShow);
-        doctorSpecialityShow = findViewById(R.id.doctorSpecialityShow);
+        doctorMedicalShow = findViewById(R.id.doctorMedicalShow);
         chamberAddressShow = findViewById(R.id.chamberAddressShow);
         chamberFeeShow = findViewById(R.id.chamberFeeShow);
         chamberOpenDaysShow = findViewById(R.id.chamberOpenDaysShow);
@@ -416,8 +385,44 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
 
                        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
-                       fetchingClickedChamberInfo(queryMarker.get(marker));
+                        FirebaseDatabase
+                                .getInstance()
+                                .getReference("doctors_chamber_info")
+                                .child(queryMarker.get(marker))
+                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        HashMap hashMap = (HashMap) dataSnapshot.getValue();
 
+                                        Log.d(TAG, "onDataChange: " + hashMap.toString());
+
+                                        HashMap latlng = (HashMap) hashMap.get("chamberLatLng");
+
+                                        LatLong latLong = new LatLong((Double) latlng.get("latitude"), (Double) latlng.get("longitude"));
+                                        Chamber chamber = new Chamber((String) hashMap.get("chamberName"), (String) hashMap.get("chamberFees"),
+                                                (String) hashMap.get("chamberAddress"), latLong,
+                                                (String) hashMap.get("chamberTime"), (HashMap) hashMap.get("chamberOpenDays"),
+                                                (String) hashMap.get("doctorUserProfileId"), (String) hashMap.get("chamberDatabaseId"),
+                                                (String) hashMap.get("chamberDatabaseIdKeyInDoctorProfile"));
+
+                                        chamberNameShow.setText(chamber.getChamberName());
+                                        chamberAddressShow.setText(chamber.getChamberAddress());
+                                        chamberFeeShow.setText(chamber.getChamberFees() + " Taka");
+                                        StringBuilder stringBuilder = new StringBuilder();
+                                        for (Map.Entry<String, Boolean> data : chamber.getChamberOpenDays().entrySet()) {
+                                            if (data.getValue().equals(Boolean.TRUE)) {
+                                                stringBuilder.append(data.getKey()+",  "+chamber.getChamberTime()+"\n");
+                                            }
+                                        }
+                                        chamberOpenDaysShow.setText(stringBuilder);
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
                         return false;
                     }
                 });
@@ -430,139 +435,6 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
         };
 
         geoQuery.addGeoQueryEventListener(listener);
-    }
-
-    private void fetchingClickedChamberInfo(String s) {
-        FirebaseDatabase
-                .getInstance()
-                .getReference("doctors_chamber_info")
-                .child(s)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        HashMap hashMap = (HashMap) dataSnapshot.getValue();
-
-                        Log.d(TAG, "onDataChange: " + hashMap.toString());
-
-                        HashMap latlng = (HashMap) hashMap.get("chamberLatLng");
-
-                        LatLong latLong = new LatLong((Double) latlng.get("latitude"), (Double) latlng.get("longitude"));
-                        Chamber chamber = new Chamber((String) hashMap.get("chamberName"), (String) hashMap.get("chamberFees"),
-                                (String) hashMap.get("chamberAddress"), latLong,
-                                (String) hashMap.get("chamberTime"), (HashMap) hashMap.get("chamberOpenDays"),
-                                (String) hashMap.get("doctorUserProfileId"), (String) hashMap.get("chamberDatabaseId"),
-                                (String) hashMap.get("chamberDatabaseIdKeyInDoctorProfile"));
-
-                        chamberNameShow.setText(chamber.getChamberName());
-                        chamberAddressShow.setText(chamber.getChamberAddress());
-                        chamberFeeShow.setText(chamber.getChamberFees() + " Taka");
-                        StringBuilder stringBuilder = new StringBuilder();
-                        for (Map.Entry<String, Boolean> data : chamber.getChamberOpenDays().entrySet()) {
-                            if (data.getValue().equals(Boolean.TRUE)) {
-                                stringBuilder.append(data.getKey()+",  "+chamber.getChamberTime()+"\n");
-                            }
-                        }
-                        chamberOpenDaysShow.setText(stringBuilder);
-
-                        fetchingAssociatedDoctorInfoForClickedChamber(chamber.getDoctorUserProfileId());
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-    }
-
-    private void fetchingAssociatedDoctorInfoForClickedChamber(String doctorUserProfileId) {
-        FirebaseDatabase
-                .getInstance()
-                .getReference("doctors_profile_info")
-                .child(doctorUserProfileId)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        UserDetails userDetails = dataSnapshot.getValue(UserDetails.class);
-                        Log.d(TAG, "onDataChange: "+userDetails.toString());
-
-                        Glide.with(PatientMapActivity.this)
-                                .load(userDetails.getDoctorImageUrl())
-                                .diskCacheStrategy(DiskCacheStrategy.DATA)
-                                .fitCenter()
-                                .circleCrop()
-                                .into(doctorImageShow);
-
-                        doctorNameShow.setText(userDetails.getFullName());
-                        doctorSpecialityShow.setText(userDetails.getSpecialist());
-
-//                        String str = "", degree = userDetails.getCheckBoxInfo();
-//                        if (degree.matches("(.*)MBBS(.*)")) {
-//                            str.concat("MBBS");
-//                            Log.d(TAG, "onDataChange: degree"+str);
-//                        }
-//                        if (degree.matches("(.*)FCPS(.*)")) {
-//                            str.concat(", FCPS");
-//                            Log.d(TAG, "onDataChange: degree"+str);
-//                        }
-//                        if (degree.matches("(.*)MD/MS(.*)")) {
-//                            str.concat(", MD/MS");
-//                            Log.d(TAG, "onDataChange: degree"+str);
-//                        }
-//                        if (degree.matches("(.*)MPhil(.*)")) {
-//                            str.concat(", MPhil");
-//                            Log.d(TAG, "onDataChange: degree"+str);
-//                        }
-//                        doctorDegreeShow.setText(str);
-                        doctorDegreeShow.setText(userDetails.getCheckBoxInfo());
-
-                        adapterPatient.notifyDataSetChanged();
-                        HashMap<String, String> doctorChambers = (HashMap<String, String>) dataSnapshot.child("chamber").getValue();
-                        for (Map.Entry<String, String> data : doctorChambers.entrySet()) {
-                            fetchingOthersChamberData(data.getValue());
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-    }
-
-    private void fetchingOthersChamberData(String s) {
-        DatabaseReference reference = FirebaseDatabase
-                .getInstance()
-                .getReference("doctors_chamber_info")
-                .child(s);
-
-        reference.keepSynced(true);
-        reference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                HashMap hashMap = (HashMap) dataSnapshot.getValue();
-
-                Log.d(TAG, "onDataChange: " + hashMap.toString());
-
-                HashMap latlng = (HashMap) hashMap.get("chamberLatLng");
-
-                LatLong latLong = new LatLong((Double) latlng.get("latitude"), (Double) latlng.get("longitude"));
-                Chamber chamber = new Chamber((String) hashMap.get("chamberName"), (String) hashMap.get("chamberFees"),
-                        (String) hashMap.get("chamberAddress"), latLong,
-                        (String) hashMap.get("chamberTime"), (HashMap) hashMap.get("chamberOpenDays"),
-                        (String) hashMap.get("doctorUserProfileId"), (String) hashMap.get("chamberDatabaseId"),
-                        (String) hashMap.get("chamberDatabaseIdKeyInDoctorProfile"));
-
-                chamberList.add(chamber);
-                adapterPatient.notifyDataSetChanged();
-
-                Log.d(TAG, "onDataChange: chamber " + chamber.toString());
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
     }
 
     private void buildLocationCallBack() {
@@ -753,13 +625,4 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
             }
         });    }
 
-    @Override
-    public void onChamberClick(Chamber chamber, int position) {
-
-    }
-
-    @Override
-    public void onChamberLongClick(Chamber chamber, int position) {
-
-    }
 }

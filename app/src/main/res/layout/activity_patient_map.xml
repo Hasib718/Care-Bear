@@ -58,9 +58,16 @@
 
         </RelativeLayout>
 
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/navigationId"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:background="@android:color/white"
+            app:headerLayout="@layout/nav_header"
+            app:menu="@menu/nav_menu_layout" />
 
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
-            android:layout_height="wrap_content"
+        <androidx.coordinatorlayout.widget.CoordinatorLayout android:layout_height="match_parent"
             android:layout_width="match_parent">
 
             <include layout="@layout/sheet_map" />
@@ -91,14 +98,5 @@
                 app:rippleColor="@color/White"
                 android:src="@drawable/ic_my_location_black_24dp" />
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-        <com.google.android.material.navigation.NavigationView
-            android:id="@+id/navigationId"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:background="@android:color/white"
-            app:headerLayout="@layout/nav_header"
-            app:menu="@menu/nav_menu_layout" />
     </androidx.drawerlayout.widget.DrawerLayout>
 </RelativeLayout>

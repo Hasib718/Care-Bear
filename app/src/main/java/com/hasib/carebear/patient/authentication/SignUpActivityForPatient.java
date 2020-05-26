@@ -124,8 +124,6 @@ public class SignUpActivityForPatient extends AppCompatActivity implements View.
     }
 
     private void savePatientInfo() {
-        Log.d(TAG, "savePatientInfo: here");
-        
         String key = mAuth.getCurrentUser().getUid();
         databaseReference.child(key).setValue(patientUserDetails)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -258,7 +256,6 @@ public class SignUpActivityForPatient extends AppCompatActivity implements View.
             passwordPatient.setError(null);
         }
 
-        Log.d(TAG, "patientRegister: here");
         mAuth.createUserWithEmailAndPassword(email,password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
