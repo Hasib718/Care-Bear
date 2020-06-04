@@ -59,7 +59,7 @@ public class DoctorSearchAdapter extends RecyclerView.Adapter<DoctorSearchAdapte
         public viewHolder(@NonNull View itemView) {
             super(itemView);
 
-            name = itemView.findViewById((R.id.iddoctorName);
+            name = itemView.findViewById(R.id.iddoctorName);
             // TODO: 6/3/20  find the things declared in the todo above this
 
         }

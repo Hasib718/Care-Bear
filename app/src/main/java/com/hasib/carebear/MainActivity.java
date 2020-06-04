@@ -11,9 +11,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.hasib.carebear.doctor.authentication.SignInActivityForDoctor;
+import com.hasib.carebear.patient.DoctorSearch;
 import com.hasib.carebear.patient.authentication.SignInActivityForPatient;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -29,6 +31,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private CardView signUpoRInButtonForDoctor, signUpoRInButtonForPatient;
     private CardView emergencyButton;
+
+    // TODO: 6/5/20 delete docSearch
+
+    private Button docSearch;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +94,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         signUpoRInButtonForDoctor.setOnClickListener(this);
         emergencyButton.setOnClickListener(this);
 
+
+        // TODO: 6/5/20 delete docSearch
+        docSearch = (Button)findViewById(R.id.iddocSearch);
+
+
         checkPermissions();
     }
 
@@ -111,6 +124,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 // TODO: 10-Apr-20 have to implement emergency ambulance service.
             }
             break;
+
+            case R.id.iddocSearch : {
+
+                Intent intent3 = new Intent(MainActivity.this, DoctorSearch.class);
+            }
+            break;
+
         }
     }
 
