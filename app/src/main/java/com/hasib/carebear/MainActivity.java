@@ -33,11 +33,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private CardView signUpoRInButtonForDoctor, signUpoRInButtonForPatient;
     private CardView emergencyButton;
 
-    // TODO: 6/5/20 delete docSearch
-
-    private Button docSearch;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,9 +91,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         emergencyButton.setOnClickListener(this);
 
 
-        // TODO: 6/5/20 delete docSearch
-        docSearch = (Button)findViewById(R.id.iddocSearch);
-
 
         checkPermissions();
     }
@@ -129,10 +121,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             break;
 
-            case R.id.iddocSearch : {
-
-            }
-            break;
 
         }
     }
