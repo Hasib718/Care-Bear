@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.hasib.carebear.doctor.authentication.SignInActivityForDoctor;
@@ -122,12 +123,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.emergencyButtonId : {
                 // TODO: 10-Apr-20 have to implement emergency ambulance service.
+                Toast.makeText(this,"pressed",Toast.LENGTH_SHORT).show();
+                Intent intent3 = new Intent(MainActivity.this, DoctorSearch.class);
+                startActivity(intent3);
             }
             break;
 
             case R.id.iddocSearch : {
 
-                Intent intent3 = new Intent(MainActivity.this, DoctorSearch.class);
             }
             break;
 
