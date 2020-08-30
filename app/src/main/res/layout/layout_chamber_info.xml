@@ -7,84 +7,144 @@
     android:id="@+id/chamber_info_id"
     android:orientation="horizontal">
 
-    <androidx.appcompat.widget.AppCompatCheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone"
-        android:id="@+id/chamberCheckBox"/>
-    <LinearLayout
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:id="@+id/camber_layout"
-        android:padding="10dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/chamber_name_id"
-            android:text="Name"
-            android:textStyle="bold"
-            android:textSize="25sp"
-            android:padding="5dp"
-            android:textColor="@color/Black"/>
-
+        android:layout_margin="15dp"
+        android:focusable="true"
+        app:cardBackgroundColor="#D7569B64"
+        app:cardElevation="10dp"
+        android:foreground="?android:attr/selectableItemBackground"
+        app:cardCornerRadius="8dp">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:id="@+id/camber_layout"
+            android:padding="10dp">
+
             <TextView
-                android:layout_width="190dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/chamber_fee_id"
-                android:text="Fees"
+                android:id="@+id/chamber_name_id"
+                android:text="Name"
+                android:textStyle="bold"
+                android:textSize="25sp"
+                android:padding="5dp"
+                android:textColor="@color/Black"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="2"
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Fees: "
+                        android:textSize="17sp"
+                        android:paddingTop="5dp"
+                        android:paddingLeft="5dp"
+                        android:paddingBottom="5dp"
+                        android:textStyle="bold"
+                        android:textColor="@color/Black"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/chamber_fee_id"
+                        android:text="Fees"
+                        android:textSize="17sp"
+                        android:paddingTop="5dp"
+                        android:paddingLeft="0dp"
+                        android:paddingBottom="5dp"
+                        android:textColor="@color/Black"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Time: "
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        android:paddingTop="5dp"
+                        android:paddingLeft="5dp"
+                        android:paddingBottom="5dp"
+                        android:textColor="@color/Black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/chamber_time_id"
+                        android:text="Time"
+                        android:textSize="17sp"
+                        android:paddingTop="5dp"
+                        android:paddingLeft="0dp"
+                        android:paddingBottom="5dp"
+                        android:textColor="@color/Black" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Address:"
                 android:textSize="17sp"
                 android:paddingTop="5dp"
-                android:paddingLeft="15dp"
-                android:paddingBottom="5dp"
+                android:paddingLeft="5dp"
+                android:paddingBottom="0dp"
+                android:textStyle="bold"
                 android:textColor="@color/Black"/>
             <TextView
-                android:layout_width="190dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/chamber_time_id"
-                android:text="Time"
+                android:id="@+id/chamber_address_id"
+                android:text="Address"
+                android:textSize="17sp"
+                android:paddingTop="0dp"
+                android:paddingLeft="5dp"
+                android:paddingBottom="5dp"
+                android:textColor="@color/Black"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Days when You'll be available"
                 android:textSize="17sp"
                 android:paddingTop="5dp"
-                android:paddingLeft="15dp"
+                android:paddingLeft="5dp"
                 android:paddingBottom="5dp"
-                android:textColor="@color/Black" />
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textColor="@color/Black"/>
 
+            <LinearLayout
+                android:id="@+id/daypicker_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:orientation="vertical">
+
+                <include
+                    android:id="@+id/daypicker"
+                    layout="@layout/day_picker_unclickable"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+            </LinearLayout>
         </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/chamber_address_id"
-            android:text="Address"
-            android:textSize="17sp"
-            android:paddingTop="5dp"
-            android:paddingLeft="15dp"
-            android:paddingBottom="5dp"
-            android:textColor="@color/Black"/>
-        <LinearLayout
-            android:id="@+id/daypicker_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <include
-                android:id="@+id/daypicker"
-                layout="@layout/day_picker_unclickable"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@color/Gray"
-            android:layout_marginTop="5dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"/>
-    </LinearLayout>
 </LinearLayout>
