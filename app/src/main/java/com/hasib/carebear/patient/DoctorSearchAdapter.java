@@ -53,6 +53,8 @@ public class DoctorSearchAdapter extends RecyclerView.Adapter<DoctorSearchAdapte
     class viewHolder extends RecyclerView.ViewHolder{
 
         TextView name;
+        TextView specialist;
+        TextView checkboxinfo;
         // TODO: 6/3/20 declare other thing to show while searching doctor
 
 

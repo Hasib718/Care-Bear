@@ -1,24 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:id="@+id/id_doctor_list_layout">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/id_doctor_list_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/idDoctorProfilePic"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:src="@drawable/icon_red"
-        />
-
-    <TextView
-        android:id="@+id/iddoctorName"
+    <LinearLayout
+        android:layout_weight="1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Name"
-        android:layout_toRightOf="@id/idDoctorProfilePic"
-        android:layout_centerHorizontal="true"
-        android:textStyle="bold"
-        />
+        android:gravity="center">
 
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/idDoctorProfilePic"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/icon_red" />
 
-</RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_weight="6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Shakib"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Shakib"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Shakib"/>
+
+    </LinearLayout>
+
+</LinearLayout>

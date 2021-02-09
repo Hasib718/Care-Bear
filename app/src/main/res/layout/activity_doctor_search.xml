@@ -6,6 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".patient.DoctorSearch">
 
+    <SearchView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/idDoctorSearchBar"
+        android:padding="10dp"
+        android:layout_margin="5dp"
+        ></SearchView>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/idDoctorSearchRecView"
         android:layout_width="match_parent"
