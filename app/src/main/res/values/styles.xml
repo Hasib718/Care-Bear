@@ -3,7 +3,7 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar.Bridge">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">#4553AF</item>
+        <item name="colorPrimary">@color/colorPrimaryDark</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent_v2</item>
     </style>
@@ -35,4 +35,5 @@
         <item name="colorControlNormal">@color/grey_60</item>
         <item name="colorControlActivated">@color/yellow_600</item>
     </style>
+
 </resources>
