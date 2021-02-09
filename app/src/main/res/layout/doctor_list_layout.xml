@@ -29,19 +29,22 @@
         android:gravity="center">
 
         <TextView
+            android:id="@+id/idDoctorName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Shakib"/>
+            android:text="name"/>
 
         <TextView
+            android:id="@+id/idDocSpecialis"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Shakib"/>
+            android:text="specialist"/>
 
         <TextView
+            android:id="@+id/idListinfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Shakib"/>
+            android:text="checkbox"/>
 
     </LinearLayout>
 

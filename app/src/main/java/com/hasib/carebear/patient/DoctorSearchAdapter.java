@@ -40,6 +40,8 @@ public class DoctorSearchAdapter extends RecyclerView.Adapter<DoctorSearchAdapte
     public void onBindViewHolder(@NonNull viewHolder holder, int position) {
         UserDetails userDetails = doctorList.get(position);
         holder.name.setText(userDetails.getFullName());
+        holder.specialist.setText(userDetails.getSpecialist());
+        holder.checkboxinfo.setText(userDetails.getCheckBoxInfo());
 
         // TODO: 6/3/20 bind other details of doctor to the UI elements
 
@@ -61,7 +63,9 @@ public class DoctorSearchAdapter extends RecyclerView.Adapter<DoctorSearchAdapte
         public viewHolder(@NonNull View itemView) {
             super(itemView);
 
-            name = itemView.findViewById(R.id.iddoctorName);
+            name = itemView.findViewById(R.id.idDoctorName);
+            specialist = itemView.findViewById(R.id.idDocSpecialis);
+            checkboxinfo = itemView.findViewById(R.id.idListinfo);
             // TODO: 6/3/20  find the things declared in the todo above this
 
         }
