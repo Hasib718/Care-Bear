@@ -79,6 +79,7 @@
                 android:layout_margin="@dimen/spacing_smlarge"
                 android:clickable="true"
                 android:tint="@color/White"
+                android:onClick="onClick"
                 app:fabSize="normal"
                 app:layout_anchor="@id/bottom_sheet"
                 app:layout_anchorGravity="top|end"
