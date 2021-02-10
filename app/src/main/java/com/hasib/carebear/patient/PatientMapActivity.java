@@ -92,8 +92,6 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
     private static final String TAG = "PatientMapActivity";
     private static final int REQUEST_CHECK_SETTINGS = 8001;
 
-    private FloatingActionButton chamberSearchButton, deviceLocation;
-
     private GoogleMap mMap;
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
@@ -126,7 +124,7 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
     private TextView chamberNameShow, doctorNameShow, doctorDegreeShow, doctorMedicalShow, chamberAddressShow, chamberFeeShow, chamberOpenDaysShow;
     private ImageView doctorImageShow;
 
-    private Button searchButton;
+    private FloatingActionButton searchButton;
 
     @Override
 
@@ -158,17 +156,16 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
         //Firebase authentication
         mAuth = FirebaseAuth.getInstance(CareBear.getPatientFirebaseApp());
 
-        searchButton = (Button) findViewById(R.id.chamberSearchButton);
+//        searchButton = findViewById(R.id.chamberSearchButton);
 
         initBottomSheet();
 
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(PatientMapActivity.this, DoctorSearch.class);
-                startActivity(intent);
-            }
-        });
+//        searchButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//            }
+//        });
 
         Dexter.withContext(this)
                 .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -198,7 +195,6 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
                     }
                 }).check();
 
-        chamberSearchButton = findViewById(R.id.chamberSearchButton);
 
         //calling method of getting device current location
         final LocationManager manager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
@@ -207,6 +203,8 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
             @Override
             public void onClick(View v) {
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                Intent intent = new Intent(PatientMapActivity.this, DoctorSearch.class);
+                startActivity(intent);
             }
         });
 

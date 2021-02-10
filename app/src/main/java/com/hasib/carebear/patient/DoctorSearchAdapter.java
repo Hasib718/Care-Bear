@@ -43,7 +43,6 @@ public class DoctorSearchAdapter extends RecyclerView.Adapter<DoctorSearchAdapte
         holder.specialist.setText(userDetails.getSpecialist());
         holder.checkboxinfo.setText(userDetails.getCheckBoxInfo());
 
-        // TODO: 6/3/20 bind other details of doctor to the UI elements
 
     }
 
@@ -57,7 +56,7 @@ public class DoctorSearchAdapter extends RecyclerView.Adapter<DoctorSearchAdapte
         TextView name;
         TextView specialist;
         TextView checkboxinfo;
-        // TODO: 6/3/20 declare other thing to show while searching doctor
+
 
 
         public viewHolder(@NonNull View itemView) {
@@ -66,7 +65,7 @@ public class DoctorSearchAdapter extends RecyclerView.Adapter<DoctorSearchAdapte
             name = itemView.findViewById(R.id.idDoctorName);
             specialist = itemView.findViewById(R.id.idDocSpecialis);
             checkboxinfo = itemView.findViewById(R.id.idListinfo);
-            // TODO: 6/3/20  find the things declared in the todo above this
+
 
         }
     }
