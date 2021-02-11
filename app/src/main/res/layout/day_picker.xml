@@ -19,7 +19,7 @@
         android:textSize="20sp"
         android:textColor="@color/Black"
         style="@style/toggleButton"
-        android:background="@drawable/rounded_corner" />
+        />
 
     <ToggleButton
         android:id="@+id/toggle_Sunday"
@@ -31,7 +31,7 @@
         android:textSize="20sp"
         style="@style/toggleButton"
         android:textColor="@color/Black"
-        android:background="@drawable/rounded_corner" />
+        />
     <ToggleButton
         android:id="@+id/toggle_Monday"
         android:layout_marginEnd="5dp"
@@ -42,7 +42,7 @@
         android:textSize="20sp"
         style="@style/toggleButton"
         android:textColor="@color/Black"
-        android:background="@drawable/rounded_corner" />
+        />
 
     <ToggleButton
         android:id="@+id/toggle_Tuesday"
@@ -54,7 +54,7 @@
         android:textSize="20sp"
         style="@style/toggleButton"
         android:textColor="@color/Black"
-        android:background="@drawable/rounded_corner" />
+        />
 
     <ToggleButton
         android:id="@+id/toggle_Wednesday"
@@ -66,7 +66,7 @@
         android:textSize="20sp"
         android:textColor="@color/Black"
         style="@style/toggleButton"
-        android:background="@drawable/rounded_corner" />
+        />
 
     <ToggleButton
         android:id="@+id/toggle_Thursday"
@@ -78,7 +78,7 @@
         android:textSize="20sp"
         style="@style/toggleButton"
         android:textColor="@color/Black"
-        android:background="@drawable/rounded_corner" />
+        />
 
     <ToggleButton
         android:id="@+id/toggle_Friday"
@@ -89,6 +89,6 @@
         android:textSize="20sp"
         android:textColor="@color/Black"
         style="@style/toggleButton"
-        android:background="@drawable/rounded_corner" />
+        />
 
 </LinearLayout>
