@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.widget.SearchView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -25,6 +26,8 @@ public class DoctorSearch extends AppCompatActivity {
     private RecyclerView recyclerView;
     private DoctorSearchAdapter adapter;
     private List<UserDetails> doctorList;
+    private SearchView searchView;
+    private String searchViewStr;
 
     DatabaseReference databaseReference;
 
@@ -39,14 +42,35 @@ public class DoctorSearch extends AppCompatActivity {
         doctorList = new ArrayList<>();
         adapter = new DoctorSearchAdapter(this,doctorList);
         recyclerView.setAdapter(adapter);
+        searchView = (SearchView)findViewById(R.id.idDoctorSearchBar);
 
         databaseReference = FirebaseDatabase.getInstance().getReference("doctors_profile_info");
 
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
 
-        Query query = FirebaseDatabase.getInstance().getReference("doctors_profile_info")
-                .orderByChild("id").equalTo("0emALksmxsTCTFKRef70qtvRpXr2");
+                searchViewStr = searchView.getQuery().toString();
 
-        query.addValueEventListener(valueEventListener);
+                Query query = FirebaseDatabase.getInstance().getReference("doctors_profile_info")
+                        .orderByChild("fullName").equalTo(searchViewStr);
+
+                query.addValueEventListener(valueEventListener);
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
+
+
+
+
+
+
     }
 
     ValueEventListener valueEventListener = new ValueEventListener() {
