@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/id_doctor_list_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:clickable="true">
+
+    <LinearLayout
+        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:clickable="false">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/idDoctorProfilePic"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/icon_red"
+            android:clickable="false"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_weight="6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:clickable="false">
+
+        <TextView
+            android:id="@+id/idDoctorName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="name"
+            android:clickable="false"/>
+
+        <TextView
+            android:id="@+id/idDocSpecialis"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="specialist"
+            android:clickable="false"/>
+
+        <TextView
+            android:id="@+id/idListinfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="checkbox"
+            android:clickable="false"/>
+
+    </LinearLayout>
+
+</LinearLayout>

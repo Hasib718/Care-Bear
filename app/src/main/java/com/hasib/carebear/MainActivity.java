@@ -14,9 +14,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.hasib.carebear.doctor.authentication.SignInActivityForDoctor;
+import com.hasib.carebear.patient.DoctorSearch;
 import com.hasib.carebear.patient.authentication.SignInActivityForPatient;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -32,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private CardView signUpoRInButtonForDoctor, signUpoRInButtonForPatient;
     private CardView emergencyButton, about;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +96,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         emergencyButton.setOnClickListener(this);
         about.setOnClickListener(this);
 
+
+
         checkPermissions();
     }
 
@@ -113,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             break;
 
+
             case R.id.emergencyButtonId: {
                 startActivity(new Intent(Intent.ACTION_DIAL,Uri.parse("tel:999")));
             }
@@ -120,8 +127,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.aboutus: {
 
+
             }
             break;
+
+
         }
     }
 
