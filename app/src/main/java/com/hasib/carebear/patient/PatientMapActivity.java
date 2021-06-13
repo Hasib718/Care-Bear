@@ -156,7 +156,6 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
         //Firebase authentication
         mAuth = FirebaseAuth.getInstance(CareBear.getPatientFirebaseApp());
 
-//        searchButton = findViewById(R.id.chamberSearchButton);
 
         initBottomSheet();
 
