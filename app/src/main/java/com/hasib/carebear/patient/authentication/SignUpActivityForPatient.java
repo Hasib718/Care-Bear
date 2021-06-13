@@ -71,6 +71,7 @@ public class SignUpActivityForPatient extends AppCompatActivity implements View.
     private FirebaseAuth mAuth;
     private DatabaseReference databaseReference;
     private StorageReference storageReference;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
