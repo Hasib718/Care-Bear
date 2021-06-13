@@ -67,6 +67,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.hasib.carebear.MainActivity;
 import com.hasib.carebear.R;
+import com.hasib.carebear.doctor.authentication.SignInActivityForDoctor;
+import com.hasib.carebear.doctor.authentication.SignUpActivityForDoctor;
 import com.hasib.carebear.doctor.container.Chamber;
 import com.hasib.carebear.patient.authentication.SignInActivityForPatient;
 import com.hasib.carebear.support.CareBear;
@@ -203,7 +205,9 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
             public void onClick(View v) {
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                 Intent intent = new Intent(PatientMapActivity.this, DoctorSearch.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -506,9 +510,12 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
 
     @Override
     protected void onStop() {
-        geoQuery.removeGeoQueryEventListener(listener);
-        fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+        if(geoQuery != null && fusedLocationProviderClient !=null) {
+            geoQuery.removeGeoQueryEventListener(listener);
+            fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+        }
         super.onStop();
+
     }
 
     @Override

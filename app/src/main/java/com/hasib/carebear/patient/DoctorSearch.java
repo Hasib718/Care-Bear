@@ -32,7 +32,7 @@ public class DoctorSearch extends AppCompatActivity {
     private List<UserDetails> doctorList;
     private SearchView searchView;
     private String searchViewStr;
-    private LinearLayout docBox;
+
 
     DatabaseReference databaseReference;
 
@@ -48,7 +48,7 @@ public class DoctorSearch extends AppCompatActivity {
         adapter = new DoctorSearchAdapter(this,doctorList);
         recyclerView.setAdapter(adapter);
         searchView = (SearchView)findViewById(R.id.idDoctorSearchBar);
-        docBox = recyclerView.findViewById(R.id.id_doctor_list_layout);
+
 
         databaseReference = FirebaseDatabase.getInstance().getReference("doctors_profile_info");
 
@@ -72,23 +72,6 @@ public class DoctorSearch extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.id_doctor_list_layout).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO: 6/13/2021 add the page to go after clicking on doctor from search 
-//            Intent intent = new Intent(DoctorSearch.this, .class);
-//            startActivity(intent);
-
-            }
-        });
-
-
-//        docBox.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//            }
-//        });
     }
     
 

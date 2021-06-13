@@ -4,8 +4,10 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -43,6 +45,14 @@ public class DoctorSearchAdapter extends RecyclerView.Adapter<DoctorSearchAdapte
         holder.specialist.setText(userDetails.getSpecialist());
         holder.checkboxinfo.setText(userDetails.getCheckBoxInfo());
 
+        holder.doc_box.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(context, "ksdjalsdkj", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
 
     }
 
@@ -56,6 +66,7 @@ public class DoctorSearchAdapter extends RecyclerView.Adapter<DoctorSearchAdapte
         TextView name;
         TextView specialist;
         TextView checkboxinfo;
+        LinearLayout doc_box;
 
 
 
@@ -65,7 +76,7 @@ public class DoctorSearchAdapter extends RecyclerView.Adapter<DoctorSearchAdapte
             name = itemView.findViewById(R.id.idDoctorName);
             specialist = itemView.findViewById(R.id.idDocSpecialis);
             checkboxinfo = itemView.findViewById(R.id.idListinfo);
-
+            doc_box = itemView.findViewById(R.id.id_doctor_list_layout);
 
         }
     }
