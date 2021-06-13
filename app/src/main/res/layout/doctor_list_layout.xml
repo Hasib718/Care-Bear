@@ -47,10 +47,17 @@
             android:clickable="false"/>
 
         <TextView
-            android:id="@+id/idListinfo"
+            android:id="@+id/idChechBoxInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="checkbox"
+            android:text="checkbox info"
+            android:clickable="false"/>
+
+        <TextView
+            android:id="@+id/idPhoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="contacts"
             android:clickable="false"/>
 
     </LinearLayout>

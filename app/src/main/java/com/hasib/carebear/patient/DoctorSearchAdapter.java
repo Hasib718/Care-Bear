@@ -24,6 +24,8 @@ public class DoctorSearchAdapter extends RecyclerView.Adapter<DoctorSearchAdapte
 
     private Context context;
     private List<UserDetails> doctorList;
+    private String id, doctorimageurl;
+
 
     public DoctorSearchAdapter(Context context, List<UserDetails> doctorList) {
         this.context = context;
@@ -44,6 +46,10 @@ public class DoctorSearchAdapter extends RecyclerView.Adapter<DoctorSearchAdapte
         holder.name.setText(userDetails.getFullName());
         holder.specialist.setText(userDetails.getSpecialist());
         holder.checkboxinfo.setText(userDetails.getCheckBoxInfo());
+        holder.phoneNum.setText(userDetails.getMobile());
+
+        doctorimageurl= userDetails.getDoctorImageUrl();
+        id= userDetails.getId();
 
         holder.doc_box.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,6 +73,8 @@ public class DoctorSearchAdapter extends RecyclerView.Adapter<DoctorSearchAdapte
         TextView specialist;
         TextView checkboxinfo;
         LinearLayout doc_box;
+        TextView phoneNum;
+
 
 
 
@@ -75,8 +83,9 @@ public class DoctorSearchAdapter extends RecyclerView.Adapter<DoctorSearchAdapte
 
             name = itemView.findViewById(R.id.idDoctorName);
             specialist = itemView.findViewById(R.id.idDocSpecialis);
-            checkboxinfo = itemView.findViewById(R.id.idListinfo);
+            checkboxinfo = itemView.findViewById(R.id.idChechBoxInfo);
             doc_box = itemView.findViewById(R.id.id_doctor_list_layout);
+            phoneNum = itemView.findViewById(R.id.idPhoneNumber);
 
         }
     }
