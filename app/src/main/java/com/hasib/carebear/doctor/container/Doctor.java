@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-public class UserDetails implements Parcelable {
+public class Doctor implements Parcelable {
     private String id;
     private String fullName;
     private String email;
@@ -16,11 +16,11 @@ public class UserDetails implements Parcelable {
     private String registrationInfo;
     private String presentAddressInfo;
     private String medicalInfo;
-    private String doctorImageUrl;
+    private String doctorImageUrl = "";
 
-    public UserDetails() {}
+    public Doctor() {}
 
-    public UserDetails(Parcel parcel) {
+    public Doctor(Parcel parcel) {
         id = parcel.readString();
         fullName = parcel.readString();
         email = parcel.readString();
@@ -34,7 +34,7 @@ public class UserDetails implements Parcelable {
         doctorImageUrl = parcel.readString();
     }
 
-    public UserDetails(String id, String fullName, String email, String mobile, String password, String specialist, String checkBoxInfo, String registrationInfo, String presentAddressInfo, String medicalInfo, String doctorImageUrl) {
+    public Doctor(String id, String fullName, String email, String mobile, String password, String specialist, String checkBoxInfo, String registrationInfo, String presentAddressInfo, String medicalInfo, String doctorImageUrl) {
         this.id = id;
         this.fullName = fullName;
         this.email = email;
@@ -173,15 +173,15 @@ public class UserDetails implements Parcelable {
         dest.writeString(doctorImageUrl);
     }
 
-    public static final Parcelable.Creator<UserDetails> CREATOR = new Parcelable.Creator<UserDetails>() {
+    public static final Parcelable.Creator<Doctor> CREATOR = new Parcelable.Creator<Doctor>() {
         @Override
-        public UserDetails createFromParcel(Parcel source) {
-            return new UserDetails(source);
+        public Doctor createFromParcel(Parcel source) {
+            return new Doctor(source);
         }
 
         @Override
-        public UserDetails[] newArray(int size) {
-            return new UserDetails[size];
+        public Doctor[] newArray(int size) {
+            return new Doctor[size];
         }
     };
 

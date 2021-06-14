@@ -1,15 +1,22 @@
 package com.hasib.carebear.patient;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hasib.carebear.R;
+import com.hasib.carebear.databinding.ActivityDoctorProfile2Binding;
+import com.hasib.carebear.doctor.container.Doctor;
 
 public class Doctor_Profile extends AppCompatActivity {
+
+    private ActivityDoctorProfile2Binding binding;
+
     private ImageView backToSearch;
     private TextView doctorName, doctorSpecialized, doctorBMDCNo, doctorEmail, doctorMobile;
     private ImageView mbbsImage, fcpsImage, frcsImage, mdImage, mphilImage;
@@ -17,27 +24,47 @@ public class Doctor_Profile extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_doctor_profile2);
+        binding = ActivityDoctorProfile2Binding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        backToSearch = findViewById(R.id.backToSearchBar);
-        doctorName = findViewById(R.id.doctorName);
-        doctorSpecialized = findViewById(R.id.doctorSpecialist);
-        doctorBMDCNo = findViewById(R.id.doctorBmdcRegNo);
+        populateUi(getIntent());
 
-        mbbsImage = findViewById(R.id.mbbsDegreeImage);
-        fcpsImage = findViewById(R.id.fcpsDegreeImage);
-        frcsImage = findViewById(R.id.frcsDegreeImage);
-        mdImage = findViewById(R.id.mdDegreeImage);
-        mphilImage = findViewById(R.id.mphilDegreeImage);
-
-        doctorEmail = findViewById(R.id.doctorEmail);
-        doctorMobile = findViewById(R.id.doctorMobileText);
-
-        backToSearch.setOnClickListener(new View.OnClickListener() {
+        binding.backToSearchBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onBackPressed();
             }
         });
+    }
+
+    private void populateUi(Intent intent) {
+        Doctor doctor = intent.getParcelableExtra("doctor_clicked");
+
+        binding.doctorName.setText(doctor.getFullName());
+        binding.doctorSpecialist.setText(doctor.getSpecialist());
+        binding.doctorBmdcRegNo.setText(doctor.getRegistrationInfo());
+
+        String str = doctor.getCheckBoxInfo();
+        if (str.matches("(.*)FCPS(.*)")) {
+            binding.cardFCPS.setVisibility(View.VISIBLE);
+            binding.fcpsDegreeImage.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.right));
+        }
+        if (str.matches("(.*)FRCS(.*)")) {
+            binding.cardFRCS.setVisibility(View.VISIBLE);
+            binding.frcsDegreeImage.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.right));
+        }
+        if (str.matches("(.*)MD/MS(.*)")) {
+            binding.secondRowOfDegree.setVisibility(View.VISIBLE);
+            binding.cardMD.setVisibility(View.VISIBLE);
+            binding.mdDegreeImage.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.right));
+        }
+        if (str.matches("(.*)MPhil(.*)")) {
+            binding.secondRowOfDegree.setVisibility(View.VISIBLE);
+            binding.cardMPhil.setVisibility(View.VISIBLE);
+            binding.mphilDegreeImage.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.right));
+        }
+
+        binding.doctorEmail.setText(doctor.getEmail());
+        binding.doctorMobileText.setText(doctor.getMobile());
     }
 }

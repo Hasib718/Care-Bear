@@ -2,17 +2,17 @@ package com.hasib.carebear.patient.container;
 
 import android.widget.CheckBox;
 
-public class PatientUserDetails {
+public class Patient {
     private String name,mobileNum,address,email,password;
     private Boolean sex;
     private String imageName;
     private String imageUrl;
 
 
-    public PatientUserDetails() {
+    public Patient() {
     }
 
-    public PatientUserDetails(String name, String mobileNum, String address, Boolean sex) {
+    public Patient(String name, String mobileNum, String address, Boolean sex) {
         this.name = name;
         this.mobileNum = mobileNum;
         this.address = address;

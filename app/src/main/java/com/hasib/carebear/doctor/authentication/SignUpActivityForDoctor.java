@@ -9,7 +9,6 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -45,7 +44,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.hasib.carebear.R;
 import com.hasib.carebear.doctor.DoctorDashBoardActivity;
-import com.hasib.carebear.doctor.container.UserDetails;
+import com.hasib.carebear.doctor.container.Doctor;
 
 import java.io.IOException;
 
@@ -70,7 +69,7 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
     private Button signUpButton;
 
     //Info container class
-    private UserDetails userDetails;
+    private Doctor doctor;
 
     //Firebase Authenticator
     private FirebaseAuth mAuth;
@@ -101,7 +100,7 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
         initViews();
 
         //info container class
-        userDetails = new UserDetails();
+        doctor = new Doctor();
 
         //Firebase Authenticator
         mAuth = FirebaseAuth.getInstance();
@@ -186,7 +185,11 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
             break;
 
             case R.id.signInTextView : {
-                startActivity(new Intent(SignUpActivityForDoctor.this, SignInActivityForDoctor.class));
+                finish();
+
+                Intent intent = new Intent(SignUpActivityForDoctor.this, SignInActivityForDoctor.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
             }
             break;
         }
@@ -197,62 +200,62 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
 
         Log.d(TAG, "getInformationFromUser: getting user data");
 
-        userDetails.setFullName(nameText.getText().toString());
-        userDetails.setMobile(mobileNoText.getText().toString());
-        userDetails.setSpecialist(specialistText.getText().toString());
+        doctor.setFullName(nameText.getText().toString());
+        doctor.setMobile(mobileNoText.getText().toString());
+        doctor.setSpecialist(specialistText.getText().toString());
         for(int i=0; i<checkBoxLayout.getChildCount(); i++) {
             if (((CheckBox) checkBoxLayout.getChildAt(i)).isChecked()) {
-                userDetails.setCheckBoxInfo(((CheckBox) checkBoxLayout.getChildAt(i)).getText().toString());
+                doctor.setCheckBoxInfo(((CheckBox) checkBoxLayout.getChildAt(i)).getText().toString());
             }
         }
         Log.d(TAG, "getInformationFromUser: getting user data 2");
-        userDetails.setRegistrationInfo(registrationNoText.getText().toString());
-        userDetails.setCommonChamberInfo(commonChamberText.getText().toString());
-        userDetails.setEmail(emailText.getText().toString());
-        userDetails.setPassword(passwordText.getText().toString());
+        doctor.setRegistrationInfo(registrationNoText.getText().toString());
+        doctor.setCommonChamberInfo(commonChamberText.getText().toString());
+        doctor.setEmail(emailText.getText().toString());
+        doctor.setPassword(passwordText.getText().toString());
 
-        if (userDetails.getFullName().isEmpty()) {
+        if (doctor.getFullName().isEmpty()) {
             nameTextLayout.setError("Name required");
             nameText.requestFocus();
             check = false;
         }
-        if (!userDetails.getFullName().isEmpty()) {
+        if (!doctor.getFullName().isEmpty()) {
             nameTextLayout.setError(null);
         }
 
-        if (userDetails.getMobile().isEmpty()) {
+        if (doctor.getMobile().isEmpty()) {
             mobileNoTextLayout.setError("Mobile Number Required");
             mobileNoText.requestFocus();
             check = false;
         }
-        if (!userDetails.getMobile().isEmpty()) {
+        if (!doctor.getMobile().isEmpty()) {
             mobileNoTextLayout.setError(null);
         }
 
-        if (userDetails.getMobile().length() != 11) {
+        if (doctor.getMobile().length() != 11) {
             mobileNoTextLayout.setError("Number must be 11 digits");
             mobileNoText.requestFocus();
             check = false;
         }
-        if (userDetails.getMobile().length() == 11) {
+        if (doctor.getMobile().length() == 11) {
             mobileNoTextLayout.setError(null);
         }
 
-        if (userDetails.getSpecialist().isEmpty()) {
+        if (doctor.getSpecialist().isEmpty()) {
             specialistTextLayout.setError("Name required");
             nameText.requestFocus();
             check = false;
         }
-        if (!userDetails.getSpecialist().isEmpty()) {
+        if (!doctor.getSpecialist().isEmpty()) {
             specialistTextLayout.setError(null);
         }
 
-        if (userDetails.getRegistrationInfo().isEmpty()) {
+        if (doctor.getRegistrationInfo().isEmpty()) {
             registrationNoTextLayout.setError("Registration Number Required");
             registrationNoText.requestFocus();
             check = false;
         }
-        if (!userDetails.getRegistrationInfo().isEmpty()) {
+        if (!doctor.getRegistrationInfo().isEmpty()) {
             registrationNoTextLayout.setError(null);
         }
 
@@ -265,53 +268,60 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
             ((CheckBox) checkBoxLayout.getChildAt(0)).setError(null);
         }
 
-        if(userDetails.getEmail().isEmpty()) {
+        if(doctor.getEmail().isEmpty()) {
             emailTextLayout.setError("Enter an Email Address");
             emailText.requestFocus();
             check = false;
         }
-        if(!userDetails.getEmail().isEmpty()) {
+        if(!doctor.getEmail().isEmpty()) {
             emailTextLayout.setError(null);
         }
 
-        if (userDetails.getPassword().isEmpty()) {
+        if (doctor.getPassword().isEmpty()) {
             passwordTextLayout.setError("Enter a password");
             passwordText.requestFocus();
             check = false;
         }
-        if (!userDetails.getPassword().isEmpty()) {
+        if (!doctor.getPassword().isEmpty()) {
             passwordTextLayout.setError(null);
         }
 
-        if (check) return true;
-        else return false;
+        return check;
     }
 
     //Email & Password Registration
     private void userRegister() {
         //Checking email validity
-        if (!Patterns.EMAIL_ADDRESS.matcher(userDetails.getEmail()).matches()) {
+        if (!Patterns.EMAIL_ADDRESS.matcher(doctor.getEmail()).matches()) {
             emailTextLayout.setError("Enter a valid email address");
             emailText.requestFocus();
+            loadingDialog.dismiss();
             return;
         }
-        if (Patterns.EMAIL_ADDRESS.matcher(userDetails.getEmail()).matches()) {
+        if (Patterns.EMAIL_ADDRESS.matcher(doctor.getEmail()).matches()) {
             emailTextLayout.setError(null);
         }
 
         //checking the validity of password
-        if (userDetails.getPassword().length() < 8) {
+        if (doctor.getPassword().length() < 8) {
             passwordTextLayout.setError("Minimum length of a password should be 8");
             passwordText.requestFocus();
+            loadingDialog.dismiss();
             return;
         }
-        if (userDetails.getPassword().length() == 8) {
+        if (doctor.getPassword().length() == 8) {
             passwordTextLayout.setError(null);
+        }
+
+        if (uriProfileImage == null) {
+            Toast.makeText(this, "Please add recent photo of you", Toast.LENGTH_SHORT).show();
+            loadingDialog.dismiss();
+            return;
         }
 
         Log.d(TAG, "userRegister: on firebase authenticator");
         //Firebase authenticate
-        mAuth.createUserWithEmailAndPassword(userDetails.getEmail(), userDetails.getPassword())
+        mAuth.createUserWithEmailAndPassword(doctor.getEmail(), doctor.getPassword())
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -353,11 +363,11 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
 
     private void saveDoctorInto() {
         String key = mAuth.getCurrentUser().getUid();
-        userDetails.setId(key);
+        doctor.setId(key);
 
         databaseReference
                 .child(key)
-                .setValue(userDetails)
+                .setValue(doctor)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -436,9 +446,9 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
                             Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
                             while (!uriTask.isSuccessful());
 
-                            userDetails.setDoctorImageUrl(uriTask.getResult().toString());
+                            doctor.setDoctorImageUrl(uriTask.getResult().toString());
 
-                            Log.d(TAG, "onSuccess: doctorImageUrl "+userDetails.getDoctorImageUrl());
+                            Log.d(TAG, "onSuccess: doctorImageUrl "+ doctor.getDoctorImageUrl());
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -452,6 +462,8 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
                             Toast.makeText(SignUpActivityForDoctor.this, "Image upload Failed", Toast.LENGTH_SHORT).show();
                         }
                     });
+        } else {
+            Toast.makeText(this, "Please add recent photo of you", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -461,8 +473,8 @@ public class SignUpActivityForDoctor extends AppCompatActivity implements View.O
         Log.d(TAG, "saveUserInformation: entering to profile build");
         if (user != null) {
             UserProfileChangeRequest profile = new UserProfileChangeRequest.Builder()
-                    .setDisplayName(userDetails.getFullName())
-                    .setPhotoUri(Uri.parse(userDetails.getDoctorImageUrl()))
+                    .setDisplayName(doctor.getFullName())
+                    .setPhotoUri(Uri.parse(doctor.getDoctorImageUrl()))
                     .build();
             Log.d(TAG, "saveUserInformation: profile built");
 

@@ -42,7 +42,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import com.hasib.carebear.R;
-import com.hasib.carebear.doctor.container.UserDetails;
+import com.hasib.carebear.doctor.container.Doctor;
 
 import java.io.IOException;
 
@@ -59,7 +59,7 @@ public class DoctorProfileEditActivity extends AppCompatActivity implements View
     private ProgressBar imageProgressBar;
     private Button updateButton;
 
-    private UserDetails currentUserDetails;
+    private Doctor currentDoctor;
 
     private FirebaseAuth mAuth;
 
@@ -83,7 +83,7 @@ public class DoctorProfileEditActivity extends AppCompatActivity implements View
         //Firebase Realtime Database reference
 
         Intent intent = getIntent();
-        currentUserDetails = intent.getParcelableExtra("user");
+        currentDoctor = intent.getParcelableExtra("user");
 
         settingValuesIntoViews();
 
@@ -151,21 +151,21 @@ public class DoctorProfileEditActivity extends AppCompatActivity implements View
     }
 
     private void settingValuesIntoViews() {
-        doctorNameEditText.setText(currentUserDetails.getFullName());
-        specialistEditText.setText(currentUserDetails.getSpecialist());
-        bmdcRegNoEditText.setText(currentUserDetails.getRegistrationInfo());
-        presentAddressEditText.setText(currentUserDetails.getPresentAddressInfo());
-        commonChamberEditText.setText(currentUserDetails.getMedicalInfo());
-        mobileNoEditText.setText(currentUserDetails.getMobile());
-        emailEditText.setText(currentUserDetails.getEmail());
-        passwordEditText.setText(currentUserDetails.getPassword());
+        doctorNameEditText.setText(currentDoctor.getFullName());
+        specialistEditText.setText(currentDoctor.getSpecialist());
+        bmdcRegNoEditText.setText(currentDoctor.getRegistrationInfo());
+        presentAddressEditText.setText(currentDoctor.getPresentAddressInfo());
+        commonChamberEditText.setText(currentDoctor.getMedicalInfo());
+        mobileNoEditText.setText(currentDoctor.getMobile());
+        emailEditText.setText(currentDoctor.getEmail());
+        passwordEditText.setText(currentDoctor.getPassword());
 
         Glide.with(DoctorProfileEditActivity.this)
-                .load(currentUserDetails.getDoctorImageUrl())
+                .load(currentDoctor.getDoctorImageUrl())
                 .override(600, 600)
                 .into(doctorImageView);
 
-        String str = currentUserDetails.getCheckBoxInfo();
+        String str = currentDoctor.getCheckBoxInfo();
         if (str.matches("(.*)MBBS(.*)")) {
             checkMBBS.setChecked(true);
         }
@@ -271,8 +271,8 @@ public class DoctorProfileEditActivity extends AppCompatActivity implements View
     }
 
     private void deletePreviousImage(final String newUploadedImageUri) {
-        StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(currentUserDetails.getDoctorImageUrl());
-        Log.d(TAG, "deletePreviousImage: prev uri "+currentUserDetails.getDoctorImageUrl());
+        StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(currentDoctor.getDoctorImageUrl());
+        Log.d(TAG, "deletePreviousImage: prev uri "+currentDoctor.getDoctorImageUrl());
 
         storageReference.delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -280,7 +280,7 @@ public class DoctorProfileEditActivity extends AppCompatActivity implements View
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, "onSuccess: previous image deleted successfully");
                         Log.d(TAG, "onSuccess: new uri "+newUploadedImageUri);
-                        currentUserDetails.setDoctorImageUrl(newUploadedImageUri);
+                        currentDoctor.setDoctorImageUrl(newUploadedImageUri);
                         builder.dismiss();
                         Toast.makeText(DoctorProfileEditActivity.this, "Image uploaded successfully", Toast.LENGTH_LONG).show();
 
@@ -308,8 +308,8 @@ public class DoctorProfileEditActivity extends AppCompatActivity implements View
         Log.d(TAG, "updateData: entering to profile builder");
         if (collectEditedData() && user != null) {
             UserProfileChangeRequest profile = new UserProfileChangeRequest.Builder()
-                    .setDisplayName(currentUserDetails.getFullName())
-                    .setPhotoUri(Uri.parse(currentUserDetails.getDoctorImageUrl()))
+                    .setDisplayName(currentDoctor.getFullName())
+                    .setPhotoUri(Uri.parse(currentDoctor.getDoctorImageUrl()))
                     .build();
 
             Log.d(TAG, "updateData: profile build");
@@ -341,11 +341,11 @@ public class DoctorProfileEditActivity extends AppCompatActivity implements View
         DatabaseReference databaseReference = FirebaseDatabase
                 .getInstance()
                 .getReference("doctors_profile_info")
-                .child(currentUserDetails.getId());
+                .child(currentDoctor.getId());
 
         databaseReference.keepSynced(true);
         databaseReference
-                .setValue(currentUserDetails)
+                .setValue(currentDoctor)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -363,24 +363,24 @@ public class DoctorProfileEditActivity extends AppCompatActivity implements View
     private boolean collectEditedData() {
         Log.d(TAG, "getInformationFromUser: getting user data");
 
-        currentUserDetails.setFullName(doctorNameEditText.getText().toString());
-        currentUserDetails.setMobile(mobileNoEditText.getText().toString());
-        currentUserDetails.setSpecialist(specialistEditText.getText().toString());
+        currentDoctor.setFullName(doctorNameEditText.getText().toString());
+        currentDoctor.setMobile(mobileNoEditText.getText().toString());
+        currentDoctor.setSpecialist(specialistEditText.getText().toString());
 
-        currentUserDetails.setCheckBoxInfoEmpty();
+        currentDoctor.setCheckBoxInfoEmpty();
         for(int i=0; i<checkBoxLinearLayout.getChildCount(); i++) {
             if (((CheckBox) checkBoxLinearLayout.getChildAt(i)).isChecked()) {
-                currentUserDetails.setCheckBoxInfo(((CheckBox) checkBoxLinearLayout.getChildAt(i)).getText().toString());
+                currentDoctor.setCheckBoxInfo(((CheckBox) checkBoxLinearLayout.getChildAt(i)).getText().toString());
             }
         }
         Log.d(TAG, "getInformationFromUser: getting user data 2");
-        currentUserDetails.setRegistrationInfo(bmdcRegNoEditText.getText().toString());
-        currentUserDetails.setPresentAddressInfo(presentAddressEditText.getText().toString());
-        currentUserDetails.setMedicalInfo(commonChamberEditText.getText().toString());
-        currentUserDetails.setEmail(emailEditText.getText().toString());
-        currentUserDetails.setPassword(passwordEditText.getText().toString());
+        currentDoctor.setRegistrationInfo(bmdcRegNoEditText.getText().toString());
+        currentDoctor.setPresentAddressInfo(presentAddressEditText.getText().toString());
+        currentDoctor.setMedicalInfo(commonChamberEditText.getText().toString());
+        currentDoctor.setEmail(emailEditText.getText().toString());
+        currentDoctor.setPassword(passwordEditText.getText().toString());
 
-        if (currentUserDetails.getFullName().isEmpty()) {
+        if (currentDoctor.getFullName().isEmpty()) {
             doctorNameEditText.setError("Name required");
             doctorNameEditText.requestFocus();
             return false;
@@ -389,41 +389,41 @@ public class DoctorProfileEditActivity extends AppCompatActivity implements View
          * Will be added these verification after implementing email verification and forget password facilities
          * // TODO: 22-Apr-20 Have to implement forget password and email, mobile number verification
          */
-        if(currentUserDetails.getEmail().isEmpty()) {
+        if(currentDoctor.getEmail().isEmpty()) {
             emailEditText.setError("Enter an Email Address");
             emailEditText.requestFocus();
             return false;
         }
         //Checking email validity
-        if (!Patterns.EMAIL_ADDRESS.matcher(currentUserDetails.getEmail()).matches()) {
+        if (!Patterns.EMAIL_ADDRESS.matcher(currentDoctor.getEmail()).matches()) {
             emailEditText.setError("Enter a valid email address");
             emailEditText.requestFocus();
             return false;
         }
 
         //checking the validity of password
-        if (currentUserDetails.getPassword().length() < 8) {
+        if (currentDoctor.getPassword().length() < 8) {
             passwordEditText.setError("Minimum length of a password should be 8");
             passwordEditText.requestFocus();
             return false;
         }
 
-        if (currentUserDetails.getPassword().isEmpty()) {
+        if (currentDoctor.getPassword().isEmpty()) {
             passwordEditText.setError("Enter a password");
             passwordEditText.requestFocus();
             return false;
         }
-        if (currentUserDetails.getMobile().isEmpty()) {
+        if (currentDoctor.getMobile().isEmpty()) {
             mobileNoEditText.setError("Mobile Number Required");
             mobileNoEditText.requestFocus();
             return false;
         }
-        if (currentUserDetails.getMobile().length() != 11) {
+        if (currentDoctor.getMobile().length() != 11) {
             mobileNoEditText.setError("Number must be 11 digits");
             mobileNoEditText.requestFocus();
             return false;
         }
-        if (currentUserDetails.getRegistrationInfo().isEmpty()) {
+        if (currentDoctor.getRegistrationInfo().isEmpty()) {
             bmdcRegNoEditText.setError("Registration Number Required");
             bmdcRegNoEditText.requestFocus();
             return false;
