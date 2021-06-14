@@ -16,9 +16,9 @@
         android:textOff="Sa"
         android:textOn="Sa"
         android:textSize="20sp"
+        android:textColor="@color/Black"
         style="@style/toggleButton"
-        android:background="@drawable/toggle_background"
-        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
         android:clickable="false"/>
 
     <ToggleButton
@@ -29,8 +29,8 @@
         android:textOff="S"
         android:textOn="S"
         android:textSize="20sp"
+        android:textColor="@color/Black"
         style="@style/toggleButton"
-        android:background="@drawable/toggle_background"
         android:clickable="false"/>
     <ToggleButton
         android:id="@+id/toggle_Monday"
@@ -41,7 +41,7 @@
         android:textOn="M"
         android:textSize="20sp"
         style="@style/toggleButton"
-        android:background="@drawable/toggle_background"
+        android:textColor="@color/Black"
         android:clickable="false"/>
 
     <ToggleButton
@@ -51,9 +51,9 @@
         android:layout_height="35dp"
         android:textOff="T"
         android:textOn="T"
+        android:textColor="@color/Black"
         android:textSize="20sp"
         style="@style/toggleButton"
-        android:background="@drawable/toggle_background"
         android:clickable="false"/>
 
     <ToggleButton
@@ -63,9 +63,9 @@
         android:layout_height="35dp"
         android:textOff="W"
         android:textOn="W"
+        android:textColor="@color/Black"
         android:textSize="20sp"
         style="@style/toggleButton"
-        android:background="@drawable/toggle_background"
         android:clickable="false"/>
 
     <ToggleButton
@@ -75,9 +75,9 @@
         android:layout_height="35dp"
         android:textOff="Th"
         android:textOn="Th"
+        android:textColor="@color/Black"
         android:textSize="20sp"
         style="@style/toggleButton"
-        android:background="@drawable/toggle_background"
         android:clickable="false"/>
 
     <ToggleButton
@@ -86,9 +86,9 @@
         android:layout_height="35dp"
         android:textOff="F"
         android:textOn="F"
+        android:textColor="@color/Black"
         android:textSize="20sp"
         style="@style/toggleButton"
-        android:background="@drawable/toggle_background"
         android:clickable="false"/>
 
 </LinearLayout>
