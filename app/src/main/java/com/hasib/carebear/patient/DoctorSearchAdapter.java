@@ -12,6 +12,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.hasib.carebear.MainActivity;
 import com.hasib.carebear.R;
 import com.hasib.carebear.doctor.container.UserDetails;
 
@@ -49,6 +52,12 @@ public class DoctorSearchAdapter extends RecyclerView.Adapter<DoctorSearchAdapte
         holder.phoneNum.setText(userDetails.getMobile());
 
         doctorimageurl= userDetails.getDoctorImageUrl();
+        Glide.with(context)
+                .load(doctorimageurl)
+                .placeholder(R.drawable.icon_red)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .into(holder.doc_image);
+
         id= userDetails.getId();
 
         holder.doc_box.setOnClickListener(new View.OnClickListener() {
@@ -74,7 +83,7 @@ public class DoctorSearchAdapter extends RecyclerView.Adapter<DoctorSearchAdapte
         TextView checkboxinfo;
         LinearLayout doc_box;
         TextView phoneNum;
-
+        CircleImageView doc_image;
 
 
 
@@ -86,7 +95,7 @@ public class DoctorSearchAdapter extends RecyclerView.Adapter<DoctorSearchAdapte
             checkboxinfo = itemView.findViewById(R.id.idChechBoxInfo);
             doc_box = itemView.findViewById(R.id.id_doctor_list_layout);
             phoneNum = itemView.findViewById(R.id.idPhoneNumber);
-
+            doc_image = itemView.findViewById(R.id.idDoctorProfilePic);
         }
     }
 }
