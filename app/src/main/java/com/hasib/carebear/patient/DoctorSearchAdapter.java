@@ -6,27 +6,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hasib.carebear.R;
-import com.hasib.carebear.doctor.container.UserDetails;
+import com.hasib.carebear.doctor.container.Doctor;
 
 import java.util.List;
-import java.util.concurrent.RecursiveAction;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class DoctorSearchAdapter extends RecyclerView.Adapter<DoctorSearchAdapter.viewHolder>{
 
     private Context context;
-    private List<UserDetails> doctorList;
+    private List<Doctor> doctorList;
 
-    public DoctorSearchAdapter(Context context, List<UserDetails> doctorList) {
+    public DoctorSearchAdapter(Context context, List<Doctor> doctorList) {
         this.context = context;
         this.doctorList = doctorList;
     }
@@ -41,15 +36,16 @@ public class DoctorSearchAdapter extends RecyclerView.Adapter<DoctorSearchAdapte
 
     @Override
     public void onBindViewHolder(@NonNull viewHolder holder, int position) {
-        UserDetails userDetails = doctorList.get(position);
-        holder.name.setText(userDetails.getFullName());
-        holder.specialist.setText(userDetails.getSpecialist());
-        holder.checkboxinfo.setText(userDetails.getCheckBoxInfo());
+        final Doctor doctor = doctorList.get(position);
+        holder.name.setText(doctor.getFullName());
+        holder.specialist.setText(doctor.getSpecialist());
+        holder.checkboxinfo.setText(doctor.getCheckBoxInfo());
 
         holder.doc_box.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(view.getContext(), Doctor_Profile.class);
+                i.putExtra("doctor_clicked", doctor);
                 view.getContext().startActivity(i);
             }
         });
