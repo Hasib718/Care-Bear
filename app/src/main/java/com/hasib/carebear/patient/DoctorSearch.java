@@ -7,7 +7,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 
@@ -32,7 +35,6 @@ public class DoctorSearch extends AppCompatActivity {
     private List<UserDetails> doctorList;
     private SearchView searchView;
     private String searchViewStr;
-
 
     DatabaseReference databaseReference;
 

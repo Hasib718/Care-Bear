@@ -1,6 +1,7 @@
 package com.hasib.carebear.patient;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,12 +49,10 @@ public class DoctorSearchAdapter extends RecyclerView.Adapter<DoctorSearchAdapte
         holder.doc_box.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, "ksdjalsdkj", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(view.getContext(), Doctor_Profile.class);
+                view.getContext().startActivity(i);
             }
         });
-
-
-
     }
 
     @Override
@@ -67,8 +66,6 @@ public class DoctorSearchAdapter extends RecyclerView.Adapter<DoctorSearchAdapte
         TextView specialist;
         TextView checkboxinfo;
         LinearLayout doc_box;
-
-
 
         public viewHolder(@NonNull View itemView) {
             super(itemView);
