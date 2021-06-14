@@ -1,13 +1,5 @@
 package com.hasib.carebear.doctor;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,6 +12,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -38,15 +38,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.hasib.carebear.R;
-import com.hasib.carebear.doctor.adapter.RecyclerViewAdapter;
+import com.hasib.carebear.doctor.adapter.ChamberRecyclerViewAdapter;
 import com.hasib.carebear.doctor.authentication.SignInActivityForDoctor;
 import com.hasib.carebear.doctor.container.Chamber;
 import com.hasib.carebear.doctor.fragment.ChamberAddingDialog;
 import com.hasib.carebear.doctor.fragment.ChamberEditingDialog;
-import com.hasib.carebear.doctor.fragment.DoctorProfileActivity;
+import com.hasib.carebear.doctor.listener.ChamberAddingDialogTimeSetListener;
 import com.hasib.carebear.doctor.listener.ChamberDialogListener;
 import com.hasib.carebear.doctor.listener.ChamberEventListener;
-import com.hasib.carebear.doctor.listener.ChamberAddingDialogTimeSetListener;
 import com.hasib.carebear.doctor.listener.TimePickerListener;
 import com.hasib.carebear.support.FeedBackActivity;
 import com.hasib.carebear.support.LatLong;
@@ -83,7 +82,7 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
 
     //For showing chamber details to user
     private RecyclerView recyclerView;
-    private RecyclerViewAdapter adapter;
+    private final int REQUEST_CHECK_SETTINGS = 1001;
 
     //Firebase authenticator
     private FirebaseAuth mAuth;
@@ -99,7 +98,7 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
      */
     private ChamberAddingDialogTimeSetListener testing;
     private Chamber invokedChamber;
-    private int REQUEST_CHECK_SETTINGS = 1001;
+    private ChamberRecyclerViewAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -296,7 +295,7 @@ public class DoctorDashBoardActivity extends AppCompatActivity implements Naviga
         recyclerView = findViewById(R.id.doctorChamberRecyclerView);
 
         //Initializing recycler view adapter
-        adapter = new RecyclerViewAdapter(this, chamberList);
+        adapter = new ChamberRecyclerViewAdapter(this, chamberList);
 
         //setting adapter to recycler view
         recyclerView.setAdapter(adapter);

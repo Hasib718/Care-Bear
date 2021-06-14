@@ -1,7 +1,7 @@
 package com.hasib.carebear.doctor.listener;
 
-import com.hasib.carebear.doctor.container.UserDetails;
+import com.hasib.carebear.doctor.container.Doctor;
 
 public interface ProfileDetailsListener {
-    void shareUserProfileData(UserDetails userDetails);
+    void shareUserProfileData(Doctor doctor);
 }

@@ -1,0 +1,513 @@
+Index: app/src/main/java/com/hasib/carebear/doctor/authentication/SignUpActivityForDoctor.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.hasib.carebear.doctor.authentication;\n\nimport android.content.ContentResolver;\nimport android.content.Intent;\nimport android.graphics.Bitmap;\nimport android.net.Uri;\nimport android.os.Bundle;\nimport android.provider.MediaStore;\nimport android.util.Log;\nimport android.util.Patterns;\nimport android.view.LayoutInflater;\nimport android.view.MenuItem;\nimport android.view.View;\nimport android.webkit.MimeTypeMap;\nimport android.widget.Button;\nimport android.widget.CheckBox;\nimport android.widget.EditText;\nimport android.widget.ImageButton;\nimport android.widget.ImageView;\nimport android.widget.LinearLayout;\nimport android.widget.ProgressBar;\nimport android.widget.TextView;\nimport android.widget.Toast;\n\nimport androidx.annotation.NonNull;\nimport androidx.annotation.Nullable;\nimport androidx.appcompat.app.AlertDialog;\nimport androidx.appcompat.app.AppCompatActivity;\n\nimport com.google.android.gms.tasks.OnCompleteListener;\nimport com.google.android.gms.tasks.OnFailureListener;\nimport com.google.android.gms.tasks.OnSuccessListener;\nimport com.google.android.gms.tasks.Task;\nimport com.google.android.material.textfield.TextInputLayout;\nimport com.google.android.material.textview.MaterialTextView;\nimport com.google.firebase.auth.AuthResult;\nimport com.google.firebase.auth.FirebaseAuth;\nimport com.google.firebase.auth.FirebaseAuthUserCollisionException;\nimport com.google.firebase.auth.FirebaseUser;\nimport com.google.firebase.auth.UserProfileChangeRequest;\nimport com.google.firebase.database.DatabaseReference;\nimport com.google.firebase.database.FirebaseDatabase;\nimport com.google.firebase.storage.FirebaseStorage;\nimport com.google.firebase.storage.StorageReference;\nimport com.google.firebase.storage.UploadTask;\nimport com.hasib.carebear.R;\nimport com.hasib.carebear.doctor.DoctorDashBoardActivity;\nimport com.hasib.carebear.doctor.container.UserDetails;\n\nimport java.io.IOException;\n\npublic class SignUpActivityForDoctor extends AppCompatActivity implements View.OnClickListener {\n    private static final String TAG = \"SignUpActivityForDoctor\";\n    private static final int CHOOSE_IMAGE_REQUEST = 101;\n\n    //views\n    private ImageView doctorImage;\n    private ProgressBar imageProgressBar;\n\n    private EditText nameText, mobileNoText, specialistText, registrationNoText, presentAddressText,\n            commonChamberText, emailText, passwordText;\n\n    private TextInputLayout nameTextLayout, mobileNoTextLayout, specialistTextLayout,\n            registrationNoTextLayout, commonChamberTextLayout,\n            emailTextLayout, passwordTextLayout;\n\n    private LinearLayout checkBoxLayout;\n    private TextView signInText;\n  \n    private Button signUpButton;\n\n    //Info container class\n    private UserDetails userDetails;\n\n    //Firebase Authenticator\n    private FirebaseAuth mAuth;\n\n    //Firebase Storage Reference\n    private StorageReference storageReference;\n    //Uploaded Image URL\n    private String doctorImageUrl;\n\n    //Firebase Realtime Database Reference\n    private DatabaseReference databaseReference;\n\n    //image uri\n    private Uri uriProfileImage;\n\n    private AlertDialog loadingDialog;\n\n    private ImageButton imageButton;\n\n\n    @Override\n    protected void onCreate(@Nullable Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n        setContentView(R.layout.activity_sign_up_for_doctor);\n\n        getSupportActionBar().hide();\n\n        initViews();\n\n        //info container class\n        userDetails = new UserDetails();\n\n        //Firebase Authenticator\n        mAuth = FirebaseAuth.getInstance();\n\n        //Firebase Storage reference\n        storageReference = FirebaseStorage.getInstance().getReference(\"doctors_profile_images\");\n\n        //Firebase Realtime Database reference\n        databaseReference = FirebaseDatabase.getInstance().getReference(\"doctors_profile_info\");\n\n        //Setting Button on click Listener\n        signUpButton.setOnClickListener(this);\n        doctorImage.setOnClickListener(this);\n        imageButton.setOnClickListener(this);\n    }\n\n    private void initLoadingDialog() {\n        LayoutInflater inflater = getLayoutInflater();\n        final View view = inflater.inflate(R.layout.dialog_progress, null);\n\n        MaterialTextView textView = view.findViewById(R.id.loadingText);\n        textView.setText(\"Signing Up......\");\n        loadingDialog = new AlertDialog.Builder(SignUpActivityForDoctor.this)\n                .setTitle(\"Please wait\")\n                .setCancelable(false)\n                .setView(view)\n                .create();\n        loadingDialog.show();\n    }\n\n    private void initViews() {\n        doctorImage = findViewById(R.id.doctorImage);\n        imageProgressBar = findViewById(R.id.imageProgressBar);\n        nameText = findViewById(R.id.nameText);\n        mobileNoText = findViewById(R.id.mobileNoText);\n        specialistText = findViewById(R.id.specialistText);\n        checkBoxLayout = findViewById(R.id.checkBoxLayout);\n        registrationNoText = findViewById(R.id.registrationNoText);\n        commonChamberText = findViewById(R.id.commonChamberText);\n        emailText = findViewById(R.id.emailText);\n        passwordText = findViewById(R.id.passwordText);\n        signUpButton = findViewById(R.id.newSignUpButton);\n        imageButton = findViewById(R.id.backToMain2);\n        signInText = findViewById(R.id.signInTextView);\n\n        nameTextLayout = findViewById(R.id.nameTextInputLayout);\n        mobileNoTextLayout = findViewById(R.id.mobileNoTextInputLayout);\n        specialistTextLayout = findViewById(R.id.specialistTextLayout);\n        registrationNoTextLayout = findViewById(R.id.registrationNoTextLayout);\n        commonChamberTextLayout = findViewById(R.id.commonChamberTextLayout);\n        emailTextLayout = findViewById(R.id.emailTextLayout);\n        passwordTextLayout = findViewById(R.id.passwordTextLayout);\n    }\n\n    @Override\n    public void onClick(View v) {\n        switch (v.getId()) {\n            case R.id.newSignUpButton : {\n                Log.d(TAG, \"onClick: New Doctor Sign up button clicked\");\n                //Getting data from user\n                if (!getInformationFromUser()) {\n                    return;\n                }\n                Log.d(TAG, \"onClick: going to registration\");\n                initLoadingDialog();\n                //adding username & password to firebase also authenticate\n                userRegister();\n            }\n            break;\n\n            case R.id.doctorImage : {\n                Log.d(TAG, \"onClick: selecting profile picture\");\n\n                //Image chooser method\n                showImageChooser();\n            }\n            break;\n\n            case R.id.backToMain2 : {\n                onBackPressed();\n            }\n            break;\n\n            case R.id.signInTextView : {\n                startActivity(new Intent(SignUpActivityForDoctor.this, SignInActivityForDoctor.class));\n            }\n            break;\n        }\n    }\n\n    private boolean getInformationFromUser() {\n        boolean check = true;\n\n        Log.d(TAG, \"getInformationFromUser: getting user data\");\n\n        userDetails.setFullName(nameText.getText().toString());\n        userDetails.setMobile(mobileNoText.getText().toString());\n        userDetails.setSpecialist(specialistText.getText().toString());\n        for(int i=0; i<checkBoxLayout.getChildCount(); i++) {\n            if (((CheckBox) checkBoxLayout.getChildAt(i)).isChecked()) {\n                userDetails.setCheckBoxInfo(((CheckBox) checkBoxLayout.getChildAt(i)).getText().toString());\n            }\n        }\n        Log.d(TAG, \"getInformationFromUser: getting user data 2\");\n        userDetails.setRegistrationInfo(registrationNoText.getText().toString());\n        userDetails.setCommonChamberInfo(commonChamberText.getText().toString());\n        userDetails.setEmail(emailText.getText().toString());\n        userDetails.setPassword(passwordText.getText().toString());\n\n        if (userDetails.getFullName().isEmpty()) {\n            nameTextLayout.setError(\"Name required\");\n            nameText.requestFocus();\n            check = false;\n        }\n        if (!userDetails.getFullName().isEmpty()) {\n            nameTextLayout.setError(null);\n        }\n\n        if (userDetails.getMobile().isEmpty()) {\n            mobileNoTextLayout.setError(\"Mobile Number Required\");\n            mobileNoText.requestFocus();\n            check = false;\n        }\n        if (!userDetails.getMobile().isEmpty()) {\n            mobileNoTextLayout.setError(null);\n        }\n\n        if (userDetails.getMobile().length() != 11) {\n            mobileNoTextLayout.setError(\"Number must be 11 digits\");\n            mobileNoText.requestFocus();\n            check = false;\n        }\n        if (userDetails.getMobile().length() == 11) {\n            mobileNoTextLayout.setError(null);\n        }\n\n        if (userDetails.getSpecialist().isEmpty()) {\n            specialistTextLayout.setError(\"Name required\");\n            nameText.requestFocus();\n            check = false;\n        }\n        if (!userDetails.getSpecialist().isEmpty()) {\n            specialistTextLayout.setError(null);\n        }\n\n        if (userDetails.getRegistrationInfo().isEmpty()) {\n            registrationNoTextLayout.setError(\"Registration Number Required\");\n            registrationNoText.requestFocus();\n            check = false;\n        }\n        if (!userDetails.getRegistrationInfo().isEmpty()) {\n            registrationNoTextLayout.setError(null);\n        }\n\n        if (!((CheckBox) checkBoxLayout.getChildAt(0)).isChecked()) {\n            ((CheckBox) checkBoxLayout.getChildAt(0)).setError(\"Minimum MBBS Degree Required\");\n            ((CheckBox) checkBoxLayout.getChildAt(0)).requestFocus();\n            check = false;\n        }\n        if (((CheckBox) checkBoxLayout.getChildAt(0)).isChecked()) {\n            ((CheckBox) checkBoxLayout.getChildAt(0)).setError(null);\n        }\n\n        if(userDetails.getEmail().isEmpty()) {\n            emailTextLayout.setError(\"Enter an Email Address\");\n            emailText.requestFocus();\n            check = false;\n        }\n        if(!userDetails.getEmail().isEmpty()) {\n            emailTextLayout.setError(null);\n        }\n\n        if (userDetails.getPassword().isEmpty()) {\n            passwordTextLayout.setError(\"Enter a password\");\n            passwordText.requestFocus();\n            check = false;\n        }\n        if (!userDetails.getPassword().isEmpty()) {\n            passwordTextLayout.setError(null);\n        }\n\n        if (check) return true;\n        else return false;\n    }\n\n    //Email & Password Registration\n    private void userRegister() {\n        //Checking email validity\n        if (!Patterns.EMAIL_ADDRESS.matcher(userDetails.getEmail()).matches()) {\n            emailTextLayout.setError(\"Enter a valid email address\");\n            emailText.requestFocus();\n            return;\n        }\n        if (Patterns.EMAIL_ADDRESS.matcher(userDetails.getEmail()).matches()) {\n            emailTextLayout.setError(null);\n        }\n\n        //checking the validity of password\n        if (userDetails.getPassword().length() < 8) {\n            passwordTextLayout.setError(\"Minimum length of a password should be 8\");\n            passwordText.requestFocus();\n            return;\n        }\n        if (userDetails.getPassword().length() == 8) {\n            passwordTextLayout.setError(null);\n        }\n\n        Log.d(TAG, \"userRegister: on firebase authenticator\");\n        //Firebase authenticate\n        mAuth.createUserWithEmailAndPassword(userDetails.getEmail(), userDetails.getPassword())\n                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {\n                    @Override\n                    public void onComplete(@NonNull Task<AuthResult> task) {\n                        //changed progress bar's visibility to GONE\n                        if (task.isSuccessful()) {\n                            // Sign in success, update UI with the signed-in user's information\n                            Log.d(TAG, \"createUserWithEmail: success\");\n\n                            //Image uploading method\n                            uploadImageToFirebaseStorage();\n                        }\n                    }\n                })\n                .addOnFailureListener(new OnFailureListener() {\n                    @Override\n                    public void onFailure(@NonNull Exception e) {\n                        // If sign in fails, display a message to the user.\n                        Log.d(TAG, \"createUserWithEmail: failure\"+ e.getMessage());\n\n                        loadingDialog.dismiss();\n\n                        if (e instanceof FirebaseAuthUserCollisionException) {\n                            Toast.makeText(SignUpActivityForDoctor.this, \"User is already registered.\",\n                                    Toast.LENGTH_SHORT).show();\n                        } else {\n                            Toast.makeText(SignUpActivityForDoctor.this, \"Error: \"+e.getMessage(),\n                                    Toast.LENGTH_SHORT).show();\n                        }\n                    }\n                })\n                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {\n                    @Override\n                    public void onSuccess(AuthResult authResult) {\n                        Log.d(TAG, \"onSuccess: current user \"+authResult.getUser().toString());\n                        \n                    }\n                });\n    }\n\n    private void saveDoctorInto() {\n        String key = mAuth.getCurrentUser().getUid();\n        userDetails.setId(key);\n\n        databaseReference\n                .child(key)\n                .setValue(userDetails)\n                .addOnSuccessListener(new OnSuccessListener<Void>() {\n                    @Override\n                    public void onSuccess(Void aVoid) {\n                        Log.d(TAG, \"saveDoctorInto: data saved into database\");\n                    }\n                })\n                .addOnFailureListener(new OnFailureListener() {\n                    @Override\n                    public void onFailure(@NonNull Exception e) {\n                        Log.d(TAG, \"saveDoctorInto: data saved into database failed\");\n                    }\n                });\n    }\n\n    //Method for selecting and adding image\n    public void showImageChooser() {\n        Intent intent = new Intent();\n        intent.setType(\"image/*\");\n        intent.setAction(Intent.ACTION_GET_CONTENT);\n        startActivityForResult(Intent.createChooser(intent, \"Select Profile Image\"), CHOOSE_IMAGE_REQUEST);\n    }\n\n    //Image selecting activity\n    @Override\n    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {\n        super.onActivityResult(requestCode, resultCode, data);\n\n        if (requestCode == CHOOSE_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {\n            uriProfileImage = data.getData();\n            Log.d(TAG, \"onActivityResult: \"+uriProfileImage.toString());\n\n            try {\n                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uriProfileImage);\n\n                doctorImage.setImageBitmap(bitmap);\n            } catch (IOException e) {\n                e.printStackTrace();\n            }\n        }\n    }\n\n    //For getting Image extension\n    public String getExtension(Uri imageUri) {\n        ContentResolver contentResolver = getContentResolver();\n        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();\n        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(imageUri));\n    }\n\n    //Method for uploading image to firebase storage\n    public void uploadImageToFirebaseStorage() {\n        if (uriProfileImage != null) {\n\n            //Doctor's Profile Images directory\n            StorageReference reference = storageReference.child(System.currentTimeMillis()+\".\"+getExtension(uriProfileImage));\n\n            Log.d(TAG, \"uploadImageToFirebaseStorage: method called\");\n            //Visible the progress ber while the image is uploading\n            imageProgressBar.setVisibility(View.VISIBLE);\n\n            //Task for uploading images to firebase directory\n            reference.putFile(uriProfileImage)\n                    .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {\n                        @Override\n                        public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {\n                            saveUserInformation();\n                        }\n                    })\n                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {\n                        @Override\n                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {\n                            Log.d(TAG, \"onComplete: image uploaded to firebase storage\");\n\n                            //The progress bar is set to GONE when the uploading task is done\n                            imageProgressBar.setVisibility(View.GONE);\n\n                            Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();\n                            while (!uriTask.isSuccessful());\n\n                            userDetails.setDoctorImageUrl(uriTask.getResult().toString());\n\n                            Log.d(TAG, \"onSuccess: doctorImageUrl \"+userDetails.getDoctorImageUrl());\n                        }\n                    })\n                    .addOnFailureListener(new OnFailureListener() {\n                        @Override\n                        public void onFailure(@NonNull Exception e) {\n                            Log.d(TAG, \"onFailure: Image upload failed\");\n                            imageProgressBar.setVisibility(View.GONE);\n\n                            loadingDialog.dismiss();\n\n                            Toast.makeText(SignUpActivityForDoctor.this, \"Image upload Failed\", Toast.LENGTH_SHORT).show();\n                        }\n                    });\n        }\n    }\n\n    public void saveUserInformation() {\n        FirebaseUser user = mAuth.getCurrentUser();\n\n        Log.d(TAG, \"saveUserInformation: entering to profile build\");\n        if (user != null) {\n            UserProfileChangeRequest profile = new UserProfileChangeRequest.Builder()\n                    .setDisplayName(userDetails.getFullName())\n                    .setPhotoUri(Uri.parse(userDetails.getDoctorImageUrl()))\n                    .build();\n            Log.d(TAG, \"saveUserInformation: profile built\");\n\n            user.updateProfile(profile)\n                    .addOnCompleteListener(new OnCompleteListener<Void>() {\n                        @Override\n                        public void onComplete(@NonNull Task<Void> task) {\n                            if (task.isSuccessful()) {\n                                Log.d(TAG, \"onComplete: Everythings OK\");\n                                Toast.makeText(SignUpActivityForDoctor.this, \"Profile Updated\", Toast.LENGTH_SHORT).show();\n\n                                //Doctor Info saving method\n                                saveDoctorInto();\n                            }\n                        }\n                    })\n                    .addOnSuccessListener(new OnSuccessListener<Void>() {\n                        @Override\n                        public void onSuccess(Void aVoid) {\n\n                            Log.d(TAG, \"onSuccess: Going to Doctor's Dash Board\");\n                            //Intenting to doctor's dash board\n\n                            loadingDialog.dismiss();\n\n                            finish();\n\n                            Intent intent = new Intent(SignUpActivityForDoctor.this, DoctorDashBoardActivity.class);\n                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);\n                            startActivity(intent);\n\n                            // TODO: 10-Apr-20 have to implement email verification methods\n                            // TODO: 10-Apr-20 have add other authentication services like Google & Facebook\n                        }\n                    })\n                    .addOnFailureListener(new OnFailureListener() {\n                        @Override\n                        public void onFailure(@NonNull Exception e) {\n                            loadingDialog.dismiss();\n                        }\n                    });\n        }\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/hasib/carebear/doctor/authentication/SignUpActivityForDoctor.java	(revision b128a2011a3061882ab4ed4f564b565aa4610b48)
++++ app/src/main/java/com/hasib/carebear/doctor/authentication/SignUpActivityForDoctor.java	(date 1623660168304)
+@@ -9,7 +9,6 @@
+ import android.util.Log;
+ import android.util.Patterns;
+ import android.view.LayoutInflater;
+-import android.view.MenuItem;
+ import android.view.View;
+ import android.webkit.MimeTypeMap;
+ import android.widget.Button;
+@@ -45,7 +44,7 @@
+ import com.google.firebase.storage.UploadTask;
+ import com.hasib.carebear.R;
+ import com.hasib.carebear.doctor.DoctorDashBoardActivity;
+-import com.hasib.carebear.doctor.container.UserDetails;
++import com.hasib.carebear.doctor.container.Doctor;
+ 
+ import java.io.IOException;
+ 
+@@ -70,7 +69,7 @@
+     private Button signUpButton;
+ 
+     //Info container class
+-    private UserDetails userDetails;
++    private Doctor doctor;
+ 
+     //Firebase Authenticator
+     private FirebaseAuth mAuth;
+@@ -101,7 +100,7 @@
+         initViews();
+ 
+         //info container class
+-        userDetails = new UserDetails();
++        doctor = new Doctor();
+ 
+         //Firebase Authenticator
+         mAuth = FirebaseAuth.getInstance();
+@@ -186,7 +185,11 @@
+             break;
+ 
+             case R.id.signInTextView : {
+-                startActivity(new Intent(SignUpActivityForDoctor.this, SignInActivityForDoctor.class));
++                finish();
++
++                Intent intent = new Intent(SignUpActivityForDoctor.this, SignInActivityForDoctor.class);
++                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
++                startActivity(intent);
+             }
+             break;
+         }
+@@ -197,62 +200,62 @@
+ 
+         Log.d(TAG, "getInformationFromUser: getting user data");
+ 
+-        userDetails.setFullName(nameText.getText().toString());
+-        userDetails.setMobile(mobileNoText.getText().toString());
+-        userDetails.setSpecialist(specialistText.getText().toString());
++        doctor.setFullName(nameText.getText().toString());
++        doctor.setMobile(mobileNoText.getText().toString());
++        doctor.setSpecialist(specialistText.getText().toString());
+         for(int i=0; i<checkBoxLayout.getChildCount(); i++) {
+             if (((CheckBox) checkBoxLayout.getChildAt(i)).isChecked()) {
+-                userDetails.setCheckBoxInfo(((CheckBox) checkBoxLayout.getChildAt(i)).getText().toString());
++                doctor.setCheckBoxInfo(((CheckBox) checkBoxLayout.getChildAt(i)).getText().toString());
+             }
+         }
+         Log.d(TAG, "getInformationFromUser: getting user data 2");
+-        userDetails.setRegistrationInfo(registrationNoText.getText().toString());
+-        userDetails.setCommonChamberInfo(commonChamberText.getText().toString());
+-        userDetails.setEmail(emailText.getText().toString());
+-        userDetails.setPassword(passwordText.getText().toString());
++        doctor.setRegistrationInfo(registrationNoText.getText().toString());
++        doctor.setCommonChamberInfo(commonChamberText.getText().toString());
++        doctor.setEmail(emailText.getText().toString());
++        doctor.setPassword(passwordText.getText().toString());
+ 
+-        if (userDetails.getFullName().isEmpty()) {
++        if (doctor.getFullName().isEmpty()) {
+             nameTextLayout.setError("Name required");
+             nameText.requestFocus();
+             check = false;
+         }
+-        if (!userDetails.getFullName().isEmpty()) {
++        if (!doctor.getFullName().isEmpty()) {
+             nameTextLayout.setError(null);
+         }
+ 
+-        if (userDetails.getMobile().isEmpty()) {
++        if (doctor.getMobile().isEmpty()) {
+             mobileNoTextLayout.setError("Mobile Number Required");
+             mobileNoText.requestFocus();
+             check = false;
+         }
+-        if (!userDetails.getMobile().isEmpty()) {
++        if (!doctor.getMobile().isEmpty()) {
+             mobileNoTextLayout.setError(null);
+         }
+ 
+-        if (userDetails.getMobile().length() != 11) {
++        if (doctor.getMobile().length() != 11) {
+             mobileNoTextLayout.setError("Number must be 11 digits");
+             mobileNoText.requestFocus();
+             check = false;
+         }
+-        if (userDetails.getMobile().length() == 11) {
++        if (doctor.getMobile().length() == 11) {
+             mobileNoTextLayout.setError(null);
+         }
+ 
+-        if (userDetails.getSpecialist().isEmpty()) {
++        if (doctor.getSpecialist().isEmpty()) {
+             specialistTextLayout.setError("Name required");
+             nameText.requestFocus();
+             check = false;
+         }
+-        if (!userDetails.getSpecialist().isEmpty()) {
++        if (!doctor.getSpecialist().isEmpty()) {
+             specialistTextLayout.setError(null);
+         }
+ 
+-        if (userDetails.getRegistrationInfo().isEmpty()) {
++        if (doctor.getRegistrationInfo().isEmpty()) {
+             registrationNoTextLayout.setError("Registration Number Required");
+             registrationNoText.requestFocus();
+             check = false;
+         }
+-        if (!userDetails.getRegistrationInfo().isEmpty()) {
++        if (!doctor.getRegistrationInfo().isEmpty()) {
+             registrationNoTextLayout.setError(null);
+         }
+ 
+@@ -265,53 +268,60 @@
+             ((CheckBox) checkBoxLayout.getChildAt(0)).setError(null);
+         }
+ 
+-        if(userDetails.getEmail().isEmpty()) {
++        if(doctor.getEmail().isEmpty()) {
+             emailTextLayout.setError("Enter an Email Address");
+             emailText.requestFocus();
+             check = false;
+         }
+-        if(!userDetails.getEmail().isEmpty()) {
++        if(!doctor.getEmail().isEmpty()) {
+             emailTextLayout.setError(null);
+         }
+ 
+-        if (userDetails.getPassword().isEmpty()) {
++        if (doctor.getPassword().isEmpty()) {
+             passwordTextLayout.setError("Enter a password");
+             passwordText.requestFocus();
+             check = false;
+         }
+-        if (!userDetails.getPassword().isEmpty()) {
++        if (!doctor.getPassword().isEmpty()) {
+             passwordTextLayout.setError(null);
+         }
+ 
+-        if (check) return true;
+-        else return false;
++        return check;
+     }
+ 
+     //Email & Password Registration
+     private void userRegister() {
+         //Checking email validity
+-        if (!Patterns.EMAIL_ADDRESS.matcher(userDetails.getEmail()).matches()) {
++        if (!Patterns.EMAIL_ADDRESS.matcher(doctor.getEmail()).matches()) {
+             emailTextLayout.setError("Enter a valid email address");
+             emailText.requestFocus();
++            loadingDialog.dismiss();
+             return;
+         }
+-        if (Patterns.EMAIL_ADDRESS.matcher(userDetails.getEmail()).matches()) {
++        if (Patterns.EMAIL_ADDRESS.matcher(doctor.getEmail()).matches()) {
+             emailTextLayout.setError(null);
+         }
+ 
+         //checking the validity of password
+-        if (userDetails.getPassword().length() < 8) {
++        if (doctor.getPassword().length() < 8) {
+             passwordTextLayout.setError("Minimum length of a password should be 8");
+             passwordText.requestFocus();
++            loadingDialog.dismiss();
+             return;
+         }
+-        if (userDetails.getPassword().length() == 8) {
++        if (doctor.getPassword().length() == 8) {
+             passwordTextLayout.setError(null);
+         }
+ 
++        if (uriProfileImage == null) {
++            Toast.makeText(this, "Please add recent photo of you", Toast.LENGTH_SHORT).show();
++            loadingDialog.dismiss();
++            return;
++        }
++
+         Log.d(TAG, "userRegister: on firebase authenticator");
+         //Firebase authenticate
+-        mAuth.createUserWithEmailAndPassword(userDetails.getEmail(), userDetails.getPassword())
++        mAuth.createUserWithEmailAndPassword(doctor.getEmail(), doctor.getPassword())
+                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                     @Override
+                     public void onComplete(@NonNull Task<AuthResult> task) {
+@@ -353,11 +363,11 @@
+ 
+     private void saveDoctorInto() {
+         String key = mAuth.getCurrentUser().getUid();
+-        userDetails.setId(key);
++        doctor.setId(key);
+ 
+         databaseReference
+                 .child(key)
+-                .setValue(userDetails)
++                .setValue(doctor)
+                 .addOnSuccessListener(new OnSuccessListener<Void>() {
+                     @Override
+                     public void onSuccess(Void aVoid) {
+@@ -436,9 +446,9 @@
+                             Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                             while (!uriTask.isSuccessful());
+ 
+-                            userDetails.setDoctorImageUrl(uriTask.getResult().toString());
++                            doctor.setDoctorImageUrl(uriTask.getResult().toString());
+ 
+-                            Log.d(TAG, "onSuccess: doctorImageUrl "+userDetails.getDoctorImageUrl());
++                            Log.d(TAG, "onSuccess: doctorImageUrl "+ doctor.getDoctorImageUrl());
+                         }
+                     })
+                     .addOnFailureListener(new OnFailureListener() {
+@@ -452,6 +462,8 @@
+                             Toast.makeText(SignUpActivityForDoctor.this, "Image upload Failed", Toast.LENGTH_SHORT).show();
+                         }
+                     });
++        } else {
++            Toast.makeText(this, "Please add recent photo of you", Toast.LENGTH_SHORT).show();
+         }
+     }
+ 
+@@ -461,8 +473,8 @@
+         Log.d(TAG, "saveUserInformation: entering to profile build");
+         if (user != null) {
+             UserProfileChangeRequest profile = new UserProfileChangeRequest.Builder()
+-                    .setDisplayName(userDetails.getFullName())
+-                    .setPhotoUri(Uri.parse(userDetails.getDoctorImageUrl()))
++                    .setDisplayName(doctor.getFullName())
++                    .setPhotoUri(Uri.parse(doctor.getDoctorImageUrl()))
+                     .build();
+             Log.d(TAG, "saveUserInformation: profile built");
+ 
+Index: app/src/main/res/layout/activity_sign_in_for_doctor.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\n<RelativeLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\n    xmlns:tools=\"http://schemas.android.com/tools\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"match_parent\"\n    tools:context=\".doctor.authentication.SignInActivityForDoctor\">\n\n    <LinearLayout\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"wrap_content\"\n        android:layout_alignParentTop=\"true\"\n        android:layout_alignParentBottom=\"true\"\n        android:layout_marginTop=\"0dp\"\n        android:layout_marginBottom=\"0dp\"\n        android:orientation=\"vertical\">\n\n\n        <FrameLayout\n            android:layout_width=\"match_parent\"\n            android:layout_height=\"273dp\"\n            android:background=\"@drawable/blue_bg\">\n\n            <com.airbnb.lottie.LottieAnimationView\n                android:layout_gravity=\"center\"\n                android:layout_width=\"150dp\"\n                android:layout_height=\"150dp\"\n                android:scrollbarSize=\"40dp\"\n                app:lottie_autoPlay=\"true\"\n                app:lottie_fileName=\"doctor.json\"\n                app:lottie_loop=\"true\" />\n\n        </FrameLayout>\n\n\n        <LinearLayout\n            android:layout_width=\"match_parent\"\n            android:layout_height=\"match_parent\"\n            android:gravity=\"top|center\"\n            android:orientation=\"vertical\">\n\n            <com.google.android.material.textfield.TextInputLayout\n                style=\"@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox\"\n                android:id=\"@+id/usernameTextLayout\"\n                android:layout_width=\"match_parent\"\n                android:layout_height=\"wrap_content\"\n                app:boxBackgroundColor=\"#ffffffff\"\n                android:layout_marginTop=\"12.7dp\"\n                android:layout_marginLeft=\"55dp\"\n                android:layout_marginRight=\"55dp\"\n                app:endIconMode=\"clear_text\"\n                app:errorEnabled=\"true\">\n\n                <com.google.android.material.textfield.TextInputEditText\n                    android:layout_width=\"match_parent\"\n                    android:layout_height=\"wrap_content\"\n                    android:inputType=\"textEmailAddress\"\n                    android:singleLine=\"true\"\n                    android:hint=\"Email\"\n                    android:id=\"@+id/usernameText\"\n                    />\n\n            </com.google.android.material.textfield.TextInputLayout>\n\n            <com.google.android.material.textfield.TextInputLayout\n                android:id=\"@+id/passwordTextLayout\"\n                style=\"@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox\"\n                android:layout_width=\"match_parent\"\n                android:layout_height=\"wrap_content\"\n                app:boxBackgroundColor=\"#ffffffff\"\n                android:layout_marginLeft=\"55dp\"\n                android:layout_marginRight=\"55dp\"\n                app:endIconMode=\"password_toggle\"\n                app:errorEnabled=\"true\">\n\n                <com.google.android.material.textfield.TextInputEditText\n                    android:layout_width=\"match_parent\"\n                    android:layout_height=\"wrap_content\"\n                    android:inputType=\"numberPassword\"\n                    android:singleLine=\"true\"\n                    android:hint=\"Password\"\n                    android:id=\"@+id/passwordText\"\n                    />\n\n            </com.google.android.material.textfield.TextInputLayout>\n\n            <com.google.android.material.button.MaterialButton\n                android:layout_width=\"match_parent\"\n                android:layout_height=\"wrap_content\"\n                android:layout_gravity=\"center\"\n                android:layout_marginLeft=\"70dp\"\n                android:layout_marginTop=\"5dp\"\n                android:layout_marginRight=\"70dp\"\n                android:backgroundTint=\"#1566e0\"\n                android:gravity=\"center\"\n                android:paddingTop=\"14dp\"\n                android:paddingBottom=\"14dp\"\n                android:text=\"Log In\"\n                android:textColor=\"#ffffff\"\n                android:id=\"@+id/signInButtonForDoctorId\"\n                android:textSize=\"12sp\" />\n\n            <com.google.android.material.textview.MaterialTextView\n                android:id=\"@+id/signUpButtonForDoctorId\"\n                android:layout_width=\"wrap_content\"\n                android:layout_height=\"wrap_content\"\n                android:layout_gravity=\"center\"\n                android:layout_marginTop=\"12dp\"\n                android:text=\"Haven't an Account ? Sign Up\"\n                android:background=\"?android:selectableItemBackground\"\n                android:clickable=\"true\"\n                android:textColor=\"#1566e0\"\n                android:textSize=\"15sp\" />\n            <ProgressBar\n                android:layout_width=\"wrap_content\"\n                android:layout_height=\"wrap_content\"\n                android:layout_marginTop=\"15dp\"\n                android:id=\"@+id/progressBarIn\"\n                android:visibility=\"invisible\"\n                android:layout_gravity=\"center\"/>\n\n        </LinearLayout>\n\n    </LinearLayout>\n    <ImageButton\n        android:id=\"@+id/backToMain\"\n        android:layout_width=\"30dp\"\n        android:layout_height=\"30dp\"\n        android:layout_gravity=\"center\"\n        android:layout_marginStart=\"10dp\"\n        android:layout_alignParentTop=\"true\"\n        android:layout_alignParentStart=\"true\"\n        android:layout_marginTop=\"10dp\"\n        android:scaleType=\"fitXY\"\n        android:background=\"@drawable/image_back_34dp\"\n        android:focusable=\"true\"\n        android:clickable=\"true\"\n        android:foreground=\"?android:attr/selectableItemBackground\"/>\n\n</RelativeLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/activity_sign_in_for_doctor.xml	(revision b128a2011a3061882ab4ed4f564b565aa4610b48)
++++ app/src/main/res/layout/activity_sign_in_for_doctor.xml	(date 1623660168521)
+@@ -76,7 +76,7 @@
+                 <com.google.android.material.textfield.TextInputEditText
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+-                    android:inputType="numberPassword"
++                    android:inputType="textPassword"
+                     android:singleLine="true"
+                     android:hint="Password"
+                     android:id="@+id/passwordText"
+Index: .idea/render.experimental.xml
+===================================================================
+--- .idea/render.experimental.xml	(revision b128a2011a3061882ab4ed4f564b565aa4610b48)
++++ .idea/render.experimental.xml	(revision b128a2011a3061882ab4ed4f564b565aa4610b48)
+@@ -1,6 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="RenderSettings">
+-    <option name="showDecorations" value="true" />
+-  </component>
+-</project>
+\ No newline at end of file
+Index: .idea/codeStyles/Project.xml
+===================================================================
+--- .idea/codeStyles/Project.xml	(revision b128a2011a3061882ab4ed4f564b565aa4610b48)
++++ .idea/codeStyles/Project.xml	(revision b128a2011a3061882ab4ed4f564b565aa4610b48)
+@@ -1,116 +0,0 @@
+-<component name="ProjectCodeStyleConfiguration">
+-  <code_scheme name="Project" version="173">
+-    <codeStyleSettings language="XML">
+-      <indentOptions>
+-        <option name="CONTINUATION_INDENT_SIZE" value="4" />
+-      </indentOptions>
+-      <arrangement>
+-        <rules>
+-          <section>
+-            <rule>
+-              <match>
+-                <AND>
+-                  <NAME>xmlns:android</NAME>
+-                  <XML_ATTRIBUTE />
+-                  <XML_NAMESPACE>^$</XML_NAMESPACE>
+-                </AND>
+-              </match>
+-            </rule>
+-          </section>
+-          <section>
+-            <rule>
+-              <match>
+-                <AND>
+-                  <NAME>xmlns:.*</NAME>
+-                  <XML_ATTRIBUTE />
+-                  <XML_NAMESPACE>^$</XML_NAMESPACE>
+-                </AND>
+-              </match>
+-              <order>BY_NAME</order>
+-            </rule>
+-          </section>
+-          <section>
+-            <rule>
+-              <match>
+-                <AND>
+-                  <NAME>.*:id</NAME>
+-                  <XML_ATTRIBUTE />
+-                  <XML_NAMESPACE>http://schemas.android.com/apk/res/android</XML_NAMESPACE>
+-                </AND>
+-              </match>
+-            </rule>
+-          </section>
+-          <section>
+-            <rule>
+-              <match>
+-                <AND>
+-                  <NAME>.*:name</NAME>
+-                  <XML_ATTRIBUTE />
+-                  <XML_NAMESPACE>http://schemas.android.com/apk/res/android</XML_NAMESPACE>
+-                </AND>
+-              </match>
+-            </rule>
+-          </section>
+-          <section>
+-            <rule>
+-              <match>
+-                <AND>
+-                  <NAME>name</NAME>
+-                  <XML_ATTRIBUTE />
+-                  <XML_NAMESPACE>^$</XML_NAMESPACE>
+-                </AND>
+-              </match>
+-            </rule>
+-          </section>
+-          <section>
+-            <rule>
+-              <match>
+-                <AND>
+-                  <NAME>style</NAME>
+-                  <XML_ATTRIBUTE />
+-                  <XML_NAMESPACE>^$</XML_NAMESPACE>
+-                </AND>
+-              </match>
+-            </rule>
+-          </section>
+-          <section>
+-            <rule>
+-              <match>
+-                <AND>
+-                  <NAME>.*</NAME>
+-                  <XML_ATTRIBUTE />
+-                  <XML_NAMESPACE>^$</XML_NAMESPACE>
+-                </AND>
+-              </match>
+-              <order>BY_NAME</order>
+-            </rule>
+-          </section>
+-          <section>
+-            <rule>
+-              <match>
+-                <AND>
+-                  <NAME>.*</NAME>
+-                  <XML_ATTRIBUTE />
+-                  <XML_NAMESPACE>http://schemas.android.com/apk/res/android</XML_NAMESPACE>
+-                </AND>
+-              </match>
+-              <order>ANDROID_ATTRIBUTE_ORDER</order>
+-            </rule>
+-          </section>
+-          <section>
+-            <rule>
+-              <match>
+-                <AND>
+-                  <NAME>.*</NAME>
+-                  <XML_ATTRIBUTE />
+-                  <XML_NAMESPACE>.*</XML_NAMESPACE>
+-                </AND>
+-              </match>
+-              <order>BY_NAME</order>
+-            </rule>
+-          </section>
+-        </rules>
+-      </arrangement>
+-    </codeStyleSettings>
+-  </code_scheme>
+-</component>
+\ No newline at end of file
+Index: app/src/main/java/com/hasib/carebear/patient/container/PatientUserDetails.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.hasib.carebear.patient.container;\n\nimport android.widget.CheckBox;\n\npublic class PatientUserDetails {\n    private String name,mobileNum,address,email,password;\n    private Boolean sex;\n\n    public PatientUserDetails() {\n    }\n\n    public PatientUserDetails(String name, String mobileNum, String address, Boolean sex) {\n        this.name = name;\n        this.mobileNum = mobileNum;\n        this.address = address;\n        this.sex = sex;\n    }\n\n    public void setName(String name) {\n        this.name = name;\n    }\n\n    public void setMobileNum(String mobileNum) {\n        this.mobileNum = mobileNum;\n    }\n\n    public void setAddress(String address) {\n        this.address = address;\n    }\n\n    public void setSex(Boolean sex) {\n        this.sex = sex;\n    }\n\n    public void setEmail(String email) {\n        this.email = email;\n    }\n\n    public void setPassword(String password) {\n        this.password = password;\n    }\n\n    public String getName() {\n        return name;\n    }\n\n    public String getMobileNum() {\n        return mobileNum;\n    }\n\n    public String getAddress() {\n        return address;\n    }\n\n    public Boolean getSex() {\n        return sex;\n    }\n\n    public String getEmail() {\n        return email;\n    }\n\n    public String getPassword() {\n        return password;\n    }\n}\n
+===================================================================
+--- app/src/main/java/com/hasib/carebear/patient/container/PatientUserDetails.java	(revision b128a2011a3061882ab4ed4f564b565aa4610b48)
++++ app/src/main/java/com/hasib/carebear/patient/container/Patient.java	(date 1623660168661)
+@@ -2,14 +2,14 @@
+ 
+ import android.widget.CheckBox;
+ 
+-public class PatientUserDetails {
++public class Patient {
+     private String name,mobileNum,address,email,password;
+     private Boolean sex;
+ 
+-    public PatientUserDetails() {
++    public Patient() {
+     }
+ 
+-    public PatientUserDetails(String name, String mobileNum, String address, Boolean sex) {
++    public Patient(String name, String mobileNum, String address, Boolean sex) {
+         this.name = name;
+         this.mobileNum = mobileNum;
+         this.address = address;
+Index: app/src/main/java/com/hasib/carebear/doctor/container/UserDetails.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.hasib.carebear.doctor.container;\n\nimport android.os.Parcel;\nimport android.os.Parcelable;\n\nimport androidx.annotation.NonNull;\n\npublic class UserDetails implements Parcelable {\n    private String id;\n    private String fullName;\n    private String email;\n    private String mobile;\n    private String password;\n    private String specialist;\n    private String checkBoxInfo = \"\";\n    private String registrationInfo;\n    private String presentAddressInfo;\n    private String medicalInfo;\n    private String doctorImageUrl;\n\n    public UserDetails() {}\n\n    public UserDetails(Parcel parcel) {\n        id = parcel.readString();\n        fullName = parcel.readString();\n        email = parcel.readString();\n        mobile = parcel.readString();\n        password = parcel.readString();\n        specialist = parcel.readString();\n        checkBoxInfo = parcel.readString();\n        registrationInfo = parcel.readString();\n        presentAddressInfo = parcel.readString();\n        medicalInfo = parcel.readString();\n        doctorImageUrl = parcel.readString();\n    }\n\n    public UserDetails(String id, String fullName, String email, String mobile, String password, String specialist, String checkBoxInfo, String registrationInfo, String presentAddressInfo, String medicalInfo, String doctorImageUrl) {\n        this.id = id;\n        this.fullName = fullName;\n        this.email = email;\n        this.mobile = mobile;\n        this.password = password;\n        this.specialist = specialist;\n        this.checkBoxInfo = checkBoxInfo;\n        this.registrationInfo = registrationInfo;\n        this.presentAddressInfo = presentAddressInfo;\n        this.medicalInfo = medicalInfo;\n        this.doctorImageUrl = doctorImageUrl;\n    }\n\n    public String getId() {\n        return id;\n    }\n\n    public void setId(String id) {\n        this.id = id;\n    }\n\n    public String getFullName() {\n        return fullName;\n    }\n\n    public void setFullName(String fullName) {\n        this.fullName = fullName;\n    }\n\n    public String getEmail() {\n        return email;\n    }\n\n    public void setEmail(String email) {\n        this.email = email;\n    }\n\n    public String getPassword() {\n        return password;\n    }\n\n    public void setPassword(String password) {\n        this.password = password;\n    }\n\n    public String getMobile() {\n        return mobile;\n    }\n\n    public void setMobile(String mobile) {\n        this.mobile = mobile;\n    }\n\n    public String getSpecialist() {\n        return specialist;\n    }\n\n    public void setCheckBoxInfoEmpty() { this.checkBoxInfo = \"\"; }\n\n    public void setSpecialist(String specialist) {\n        this.specialist = specialist;\n    }\n\n    public String getCheckBoxInfo() {\n        return checkBoxInfo;\n    }\n\n    public void setCheckBoxInfo(String checkBoxInfo) {\n        this.checkBoxInfo += checkBoxInfo+\", \";\n    }\n\n    public void setCheckBoxInfoNull() {\n        this.checkBoxInfo = \"\";\n    }\n\n    public String getRegistrationInfo() {\n        return registrationInfo;\n    }\n\n    public void setRegistrationInfo(String registrationInfo) {\n        this.registrationInfo = registrationInfo;\n    }\n\n    public String getPresentAddressInfo() {\n        return presentAddressInfo;\n    }\n\n    public void setPresentAddressInfo(String presentAddressInfo) {\n        this.presentAddressInfo = presentAddressInfo;\n    }\n\n    public String getMedicalInfo() {\n        return medicalInfo;\n    }\n\n    public void setMedicalInfo(String medicalInfo) {\n        this.medicalInfo = medicalInfo;\n    }\n\n    public String getDoctorImageUrl() {\n        return doctorImageUrl;\n    }\n\n    public void setDoctorImageUrl(String doctorImageUrl) {\n        this.doctorImageUrl = doctorImageUrl;\n    }\n\n    @NonNull\n    @Override\n    public String toString() {\n        return (\"id \"+getId()+\"\\n\"+\n                \"Name \"+getFullName()+\"\\n\"+\n                \"Email \"+getEmail()+\"\\n\"+\n                \"Mobile \"+getMobile()+\"\\n\"+\n                \"Password \"+getPassword()+\"\\n\"+\n                \"Specialist \"+getSpecialist()+\"\\n\"+\n                \"CheckBox \"+getCheckBoxInfo()+\"\\n\"+\n                \"Registration \"+getRegistrationInfo()+\"\\n\"+\n                \"Present Address \"+getPresentAddressInfo()+\"\\n\"+\n                \"Common Chamber \"+getMedicalInfo()+\"\\n\"+\n                \"Image Uri \"+getDoctorImageUrl()+\"\\n\");\n    }\n\n    @Override\n    public void writeToParcel(Parcel dest, int flags) {\n        dest.writeString(id);\n        dest.writeString(fullName);\n        dest.writeString(email);\n        dest.writeString(mobile);\n        dest.writeString(password);\n        dest.writeString(specialist);\n        dest.writeString(checkBoxInfo);\n        dest.writeString(registrationInfo);\n        dest.writeString(presentAddressInfo);\n        dest.writeString(medicalInfo);\n        dest.writeString(doctorImageUrl);\n    }\n\n    public static final Parcelable.Creator<UserDetails> CREATOR = new Parcelable.Creator<UserDetails>() {\n        @Override\n        public UserDetails createFromParcel(Parcel source) {\n            return new UserDetails(source);\n        }\n\n        @Override\n        public UserDetails[] newArray(int size) {\n            return new UserDetails[size];\n        }\n    };\n\n    @Override\n    public int describeContents() {\n        return hashCode();\n    }\n\n    public void setCommonChamberInfo(String toString) {\n    }\n}\n
+===================================================================
+--- app/src/main/java/com/hasib/carebear/doctor/container/UserDetails.java	(revision b128a2011a3061882ab4ed4f564b565aa4610b48)
++++ app/src/main/java/com/hasib/carebear/doctor/container/Doctor.java	(date 1623660168755)
+@@ -5,7 +5,7 @@
+ 
+ import androidx.annotation.NonNull;
+ 
+-public class UserDetails implements Parcelable {
++public class Doctor implements Parcelable {
+     private String id;
+     private String fullName;
+     private String email;
+@@ -16,11 +16,11 @@
+     private String registrationInfo;
+     private String presentAddressInfo;
+     private String medicalInfo;
+-    private String doctorImageUrl;
++    private String doctorImageUrl = "";
+ 
+-    public UserDetails() {}
++    public Doctor() {}
+ 
+-    public UserDetails(Parcel parcel) {
++    public Doctor(Parcel parcel) {
+         id = parcel.readString();
+         fullName = parcel.readString();
+         email = parcel.readString();
+@@ -34,7 +34,7 @@
+         doctorImageUrl = parcel.readString();
+     }
+ 
+-    public UserDetails(String id, String fullName, String email, String mobile, String password, String specialist, String checkBoxInfo, String registrationInfo, String presentAddressInfo, String medicalInfo, String doctorImageUrl) {
++    public Doctor(String id, String fullName, String email, String mobile, String password, String specialist, String checkBoxInfo, String registrationInfo, String presentAddressInfo, String medicalInfo, String doctorImageUrl) {
+         this.id = id;
+         this.fullName = fullName;
+         this.email = email;
+@@ -173,15 +173,15 @@
+         dest.writeString(doctorImageUrl);
+     }
+ 
+-    public static final Parcelable.Creator<UserDetails> CREATOR = new Parcelable.Creator<UserDetails>() {
++    public static final Parcelable.Creator<Doctor> CREATOR = new Parcelable.Creator<Doctor>() {
+         @Override
+-        public UserDetails createFromParcel(Parcel source) {
+-            return new UserDetails(source);
++        public Doctor createFromParcel(Parcel source) {
++            return new Doctor(source);
+         }
+ 
+         @Override
+-        public UserDetails[] newArray(int size) {
+-            return new UserDetails[size];
++        public Doctor[] newArray(int size) {
++            return new Doctor[size];
+         }
+     };
+ 
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_1_7\" default=\"true\" project-jdk-name=\"1.8\" project-jdk-type=\"JavaSDK\">\n    <output url=\"file://$PROJECT_DIR$/build/classes\" />\n  </component>\n  <component name=\"ProjectType\">\n    <option name=\"id\" value=\"Android\" />\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/misc.xml	(revision b128a2011a3061882ab4ed4f564b565aa4610b48)
++++ .idea/misc.xml	(date 1623660184271)
+@@ -1,6 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_7" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
++  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+     <output url="file://$PROJECT_DIR$/build/classes" />
+   </component>
+   <component name="ProjectType">
+diff --git .idea/copyright/profiles_settings.xml .idea/copyright/profiles_settings.xml
+new file mode 100755

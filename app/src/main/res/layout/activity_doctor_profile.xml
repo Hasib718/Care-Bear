@@ -1,192 +1,396 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/doctor_profile_background"
+    tools:context=".doctor.DoctorProfileActivity"
+    android:background="@color/Snow"
     android:orientation="vertical">
 
-
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
             <ImageView
-                android:id="@+id/imageViewId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp"
-                android:contentDescription="TODO" />
-
-            <TextView
-                android:id="@+id/nameTextViewId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp"
-                android:textColor="@android:color/primary_text_light"
-                android:textSize="25sp"
-                android:textStyle="bold" />
+                android:layout_width="match_parent"
+                android:layout_height="270dp"
+                android:layout_alignParentTop="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/analysis" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal">
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="25dp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginTop="130dp"
+                android:orientation="vertical">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/imageViewId"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_marginTop="45dp"
+                    app:civ_border_color="#FF000000"
+                    app:civ_border_width="2dp" />
 
                 <TextView
+                    android:id="@+id/nameTextViewId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="8dp"
-                    android:text="Degrees:"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                    android:textSize="16sp" />
+                    android:layout_marginTop="10dp"
+                    android:text="Abdul Wadud Shakib"
+                    android:textColor="#0D0C10"
+                    android:textSize="21sp"
+                    android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/degreeId"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                    android:textSize="16sp" />
+                    android:layout_marginTop="3dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="8dp"
+                        android:text="Specialist:"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/specialistId"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:text="BMDC Reg No:"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/bmdcRegNoId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                        android:textSize="15sp" />
+
+                </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="3dp"
-                android:orientation="horizontal">
+                android:layout_width="match_parent"
+                android:layout_height="230dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="415dp"
+                android:orientation="vertical"
+                android:weightSum="2">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="8dp"
-                    android:text="Specialist:"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/specialistId"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                    android:textSize="16sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="5dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="5dp"
+                    android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:text="BMDC Reg No:"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+                    android:gravity="center">
 
-                <TextView
-                    android:id="@+id/bmdcRegNoId"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="90dp"
+                        android:layout_height="90dp"
+                        android:layout_marginRight="20dp"
+                        app:cardElevation="7dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="MBBS"
+                                android:textColor="#120E0E"
+                                android:textSize="17sp" />
+
+                            <ImageView
+                                android:id="@+id/degreeImage1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:src="@drawable/right" />
+
+                        </LinearLayout>
+
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="90dp"
+                        android:layout_height="90dp"
+                        android:layout_marginRight="20dp"
+                        app:cardElevation="7dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="FCPS"
+                                android:textColor="#120E0E"
+                                android:textSize="17sp" />
+
+                            <ImageView
+                                android:id="@+id/degreeImage2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:src="@drawable/wrong" />
+
+                        </LinearLayout>
+
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="90dp"
+                        android:layout_height="90dp"
+                        app:cardElevation="7dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="FRCS"
+                                android:textColor="#120E0E"
+                                android:textSize="17sp" />
+
+                            <ImageView
+                                android:id="@+id/degreeImage3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:src="@drawable/wrong" />
+
+                        </LinearLayout>
+
+                    </androidx.cardview.widget.CardView>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+                    android:gravity="center">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="90dp"
+                        android:layout_height="90dp"
+                        android:layout_marginRight="20dp"
+                        app:cardElevation="7dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="MD/MS"
+                                android:textColor="#120E0E"
+                                android:textSize="17sp" />
+
+                            <ImageView
+                                android:id="@+id/degreeImage4"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:src="@drawable/wrong" />
+
+                        </LinearLayout>
+
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="90dp"
+                        android:layout_height="90dp"
+                        app:cardElevation="7dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="MPhil"
+                                android:textColor="#120E0E"
+                                android:textSize="17sp" />
+
+                            <ImageView
+                                android:id="@+id/degreeImage5"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:src="@drawable/wrong" />
+
+                        </LinearLayout>
+
+                    </androidx.cardview.widget.CardView>
+
+                </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="360dp"
                 android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
                 android:layout_gravity="center"
-                android:layout_marginTop="5dp"
-                android:orientation="horizontal">
+                android:layout_marginTop="651dp"
+                android:orientation="vertical">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="8dp"
-                    android:text="Mobile No:"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+                    android:layout_marginBottom="10dp"
+                    android:orientation="horizontal"
+                    android:paddingLeft="25dp">
 
-                <TextView
-                    android:id="@+id/mobileText"
-                    android:layout_width="wrap_content"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:text="Associate Medical: "
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:id="@+id/presentAddressId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                        android:textSize="17sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+                    android:orientation="horizontal"
+                    android:paddingLeft="25dp">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/ic_email_black_24dp" />
+
+                    <TextView
+                        android:id="@+id/emailId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:paddingLeft="20dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal"
+                    android:paddingLeft="25dp">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/ic_phone_black_24dp" />
+
+                    <TextView
+                        android:id="@+id/mobileText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:paddingLeft="20dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                        android:textSize="16sp" />
+                </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="5dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="5dp"
-                    android:text="Email:"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
-
-                <TextView
-                    android:id="@+id/emailId"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="5dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="5dp"
-                    android:text="Present Address:"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
-
-                <TextView
-                    android:id="@+id/presentAddressId"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="40dp"
-                android:gravity="center"
-                android:text="If you want to edit your profile\nClick the edit Button"
-                android:textSize="14sp" />
-
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/editButtonId"
-                android:layout_width="59dp"
-                android:layout_height="32dp"
+                android:layout_width="200dp"
+                android:layout_height="40dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="110dp"
+                android:layout_marginTop="780dp"
+                android:layout_marginRight="110dp"
+                android:layout_marginBottom="15dp"
+                android:backgroundTint="@color/grey_60"
+                android:clickable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:gravity="center"
+                android:text="Edit Your Profile"
+                android:textColor="#ffffff" />
+
+            <ImageButton
+                android:id="@+id/backToDashBoard"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
                 android:layout_gravity="center"
-                android:padding="2dp"
-                android:text="Edit"
-                android:textAllCaps="false" />
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/image_back_34dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:scaleType="fitXY" />
 
-        </LinearLayout>
-    </ScrollView>
+        </RelativeLayout>
 
-</LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

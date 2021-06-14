@@ -4,22 +4,44 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".patient.DoctorSearch"
-    android:orientation="vertical">
+    android:clickable="true"
+    android:orientation="vertical"
+    tools:context=".patient.DoctorSearch">
 
     <SearchView
+        android:id="@+id/idDoctorSearchBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/idDoctorSearchBar"
-        android:padding="10dp"
-        android:layout_margin="5dp"
-        ></SearchView>
+        android:queryHint="Search Doctor Name"
+        android:iconifiedByDefault="false"
+        android:searchIcon="@null"
+        android:searchHintIcon="@null"
+        android:layout_margin="10dp"
+        android:background="#CDEAE9E7"
+        android:focusable="auto"
+        android:elevation="5dp"
+        android:imeOptions="actionSearch|flagNoExtractUi"/>
+
+<!--    <SearchView-->
+<!--        android:id="@+id/idDoctorSearchBar"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:imeOptions="actionSearch|flagNoExtractUi"-->
+<!--        android:layout_margin="10dp"-->
+<!--        android:background="#CDEAE9E7"-->
+<!--        android:clickable="false"-->
+<!--        android:focusable="auto"-->
+<!--        android:padding="0dp"-->
+<!--        android:queryHint="Search Doctor Name" />-->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/idDoctorSearchRecView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        >
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp">
+
     </androidx.recyclerview.widget.RecyclerView>
 
 </LinearLayout>

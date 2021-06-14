@@ -1,0 +1,893 @@
+Index: app/src/main/java/com/hasib/carebear/patient/authentication/SignUpActivityForPatient.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.hasib.carebear.patient.authentication;\n\nimport androidx.annotation.NonNull;\nimport androidx.appcompat.app.ActionBarDrawerToggle;\nimport androidx.appcompat.app.AppCompatActivity;\nimport androidx.drawerlayout.widget.DrawerLayout;\n\nimport android.content.Intent;\nimport android.os.Bundle;\nimport android.util.Log;\nimport android.util.Patterns;\nimport android.view.MenuItem;\nimport android.view.View;\nimport android.widget.Button;\nimport android.widget.CheckBox;\nimport android.widget.EditText;\nimport android.widget.ImageButton;\nimport android.widget.TextView;\nimport android.widget.Toast;\n\nimport com.google.android.gms.tasks.OnCompleteListener;\nimport com.google.android.gms.tasks.OnFailureListener;\nimport com.google.android.gms.tasks.OnSuccessListener;\nimport com.google.android.gms.tasks.Task;\nimport com.google.android.material.navigation.NavigationView;\nimport com.google.android.material.textfield.TextInputLayout;\nimport com.google.firebase.FirebaseApp;\nimport com.google.firebase.FirebaseOptions;\nimport com.google.firebase.auth.AuthResult;\nimport com.google.firebase.auth.FirebaseAuth;\nimport com.google.firebase.auth.FirebaseAuthUserCollisionException;\nimport com.google.firebase.database.DatabaseReference;\nimport com.google.firebase.database.FirebaseDatabase;\nimport com.hasib.carebear.R;\nimport com.hasib.carebear.patient.PatientMapActivity;\nimport com.hasib.carebear.patient.container.PatientUserDetails;\nimport com.hasib.carebear.support.CareBear;\n\npublic class SignUpActivityForPatient extends AppCompatActivity implements View.OnClickListener {\n\n    private static final String TAG = \"SignUpActivityForPatient\";\n\n    private Button signUpButton;\n    private TextView signInText;\n    private EditText namePatient, presentAddressPatient, mobileNoPatient, emailPatient,\n            passwordPatient;\n    private TextInputLayout namePatientLayout, presentAddressPatientLayout, mobileNoPatientLayout,\n            emailPatientLayout, passwordPatientLayout;\n    private CheckBox maleCheckBox, femaleCheckBox;\n    private PatientUserDetails patientUserDetails;\n    private ImageButton imageButton;\n\n    //Please Declare Firebase Code\n    private FirebaseAuth mAuth;\n    private DatabaseReference databaseReference;\n\n    @Override\n    protected void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n        setContentView(R.layout.activity_sign_up_for_patient);\n        this.setTitle(\"Sign Up For Patient\");\n\n        getSupportActionBar().hide();\n\n        //Finding EditText for Patient\n\n        //For EditText\n        namePatient = findViewById(R.id.patientFullNameId);\n        namePatientLayout = findViewById(R.id.patientFullNameLayout);\n\n        presentAddressPatient = findViewById(R.id.patientPresentAddressId);\n        presentAddressPatientLayout = findViewById(R.id.patientPresentAddressLayout);\n\n        mobileNoPatient = findViewById(R.id.patientMobileNoTextId);\n        mobileNoPatientLayout = findViewById(R.id.patientMobileNoTextLayout);\n\n        emailPatient = findViewById(R.id.idPatientEmail);\n        emailPatientLayout = findViewById(R.id.idPatientEmailLayout);\n\n        passwordPatient = findViewById(R.id.idPatientPassword);\n        passwordPatientLayout = findViewById(R.id.idPatientPasswordLayout);\n\n\n        //For Button\n        signUpButton = findViewById(R.id.signUpButtonForPatientId);\n        signInText = findViewById(R.id.signInTextForPatientId);\n        imageButton = findViewById(R.id.backToMainFromPatientSignUp);\n\n        //For CheckBox\n        maleCheckBox = findViewById(R.id.idCheckMale);\n        femaleCheckBox = findViewById(R.id.idCheckFemale);\n\n        //Firebase\n        mAuth = FirebaseAuth.getInstance(CareBear.getPatientFirebaseApp());\n        databaseReference = FirebaseDatabase.getInstance(CareBear.getPatientFirebaseApp()).getReference(\"patient_profile_info\");\n\n        signInText.setOnClickListener(this);\n        signUpButton.setOnClickListener(this);\n        imageButton.setOnClickListener(this);\n\n        patientUserDetails = new PatientUserDetails();\n    }\n\n    @Override\n    public void onClick(View v) {\n        switch (v.getId()) {\n\n            case R.id.signInTextForPatientId:\n                Intent intent = new Intent(SignUpActivityForPatient.this, SignInActivityForPatient.class);\n                startActivity(intent);\n                break;\n\n            case R.id.signUpButtonForPatientId:\n                if(!getPatientInfo()) {\n                return;\n                }\n                patientRegister();\n                break;\n\n            case R.id.backToMainFromPatientSignUp:\n                onBackPressed();\n                break;\n        }\n    }\n\n    private void savePatientInfo() {\n        String key = mAuth.getCurrentUser().getUid();\n        databaseReference.child(key).setValue(patientUserDetails)\n                .addOnSuccessListener(new OnSuccessListener<Void>() {\n                    @Override\n                    public void onSuccess(Void aVoid) {\n                        finish();\n\n                        Intent intent = new Intent(SignUpActivityForPatient.this, PatientMapActivity.class);\n                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);\n                        startActivity(intent);\n                    }\n                })\n                .addOnFailureListener(new OnFailureListener() {\n                    @Override\n                    public void onFailure(@NonNull Exception e) {\n                        Log.d(TAG, \"onFailure: on data save failed\");\n                    }\n                });\n\n    }\n\n    private boolean getPatientInfo() {\n        patientUserDetails.setName(namePatient.getText().toString());\n        patientUserDetails.setAddress(presentAddressPatient.getText().toString());\n        patientUserDetails.setMobileNum(mobileNoPatient.getText().toString());\n        patientUserDetails.setEmail(emailPatient.getText().toString());\n        patientUserDetails.setPassword(passwordPatient.getText().toString());\n\n        if (maleCheckBox.isChecked())patientUserDetails.setSex(true);\n        else patientUserDetails.setSex(false);\n\n        if (patientUserDetails.getName().isEmpty()) {\n            namePatientLayout.setError(\"Name required\");\n            namePatient.requestFocus();\n            return false;\n        }\n        if (!patientUserDetails.getName().isEmpty()) {\n            namePatientLayout.setError(null);\n        }\n        if(maleCheckBox.isChecked() && femaleCheckBox.isChecked()) {\n            maleCheckBox.setError(\"You can choose only one\");\n            maleCheckBox.requestFocus();\n            return false;\n        }\n        if(patientUserDetails.getSex()!=false && patientUserDetails.getSex()!=true){\n            Toast.makeText(getApplicationContext(),\"Must choose Male or Female\",Toast.LENGTH_SHORT).show();\n        }\n        if (patientUserDetails.getMobileNum().isEmpty()) {\n            mobileNoPatientLayout.setError(\"Please Enter Your Mobile NO\");\n            mobileNoPatient.requestFocus();\n            return false;\n        }\n        if (!patientUserDetails.getMobileNum().isEmpty()) {\n            mobileNoPatientLayout.setError(null);\n        }\n        if (patientUserDetails.getMobileNum().length()<11 ) {\n            mobileNoPatientLayout.setError(\"11 digit mobile number required\");\n            mobileNoPatient.requestFocus();\n            return false;\n        }\n        if (!(patientUserDetails.getMobileNum().length()<11) ) {\n            mobileNoPatientLayout.setError(null);\n        }\n        if (patientUserDetails.getAddress().isEmpty()) {\n            presentAddressPatientLayout.setError(\"Address required\");\n            presentAddressPatient.requestFocus();\n            return false;\n        }\n        if (!patientUserDetails.getAddress().isEmpty()) {\n            presentAddressPatientLayout.setError(null);\n        }\n        if (patientUserDetails.getEmail().isEmpty()) {\n            presentAddressPatientLayout.setError(\"Email required\");\n            presentAddressPatient.requestFocus();\n            return false;\n        }\n        if (!patientUserDetails.getEmail().isEmpty()) {\n            presentAddressPatientLayout.setError(null);\n        }\n        if (patientUserDetails.getPassword().isEmpty()) {\n            presentAddressPatientLayout.setError(\"Password required\");\n            presentAddressPatient.requestFocus();\n            return false;\n        }\n        if (!patientUserDetails.getPassword().isEmpty()) {\n            presentAddressPatient.setError(null);\n        }\n\n        return true;\n    }\n\n\n    private void patientRegister() {\n        String email = emailPatient.getText().toString().trim();\n        String password = passwordPatient.getText().toString().trim();\n\n        if(email.isEmpty()){\n            emailPatientLayout.setError(\"Enter an Email Address\");\n            emailPatient.requestFocus();\n            return;\n        }\n        if(!email.isEmpty()){\n            emailPatientLayout.setError(null);\n        }\n\n        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){\n            emailPatientLayout.setError(\"Enter a valid email\");\n            emailPatient.requestFocus();\n            return;\n        }\n        if(Patterns.EMAIL_ADDRESS.matcher(email).matches()){\n            emailPatientLayout.setError(null);\n        }\n\n        if(password.isEmpty()){\n            passwordPatientLayout.setError(\"Enter Password\");\n            passwordPatient.requestFocus();\n            return;\n        }\n        if(!password.isEmpty()){\n            passwordPatientLayout.setError(null);\n        }\n\n        if(password.length()<6){\n            passwordPatientLayout.setError(\"Minimum Length 6 Chars\");\n            passwordPatient.requestFocus();\n            return;\n        }\n        if(!(password.length()<6)){\n            passwordPatient.setError(null);\n        }\n\n        mAuth.createUserWithEmailAndPassword(email,password)\n                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {\n            @Override\n            public void onComplete(@NonNull Task<AuthResult> task) {\n\n                if (task.isSuccessful()) {\n                    Toast.makeText(getApplicationContext(), \"Account Created\",Toast.LENGTH_SHORT).show();\n                    finish();\n                } else {\n                    if(task.getException() instanceof FirebaseAuthUserCollisionException) {\n                        Toast.makeText(getApplicationContext(), \"Email is Already Registered\", Toast.LENGTH_SHORT).show();\n                    }\n                    else{\n                        Toast.makeText(getApplicationContext(), \"Error: \" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();\n                    }\n                }\n\n\n            }\n        }).addOnSuccessListener(new OnSuccessListener<AuthResult>() {\n                    @Override\n                    public void onSuccess(AuthResult authResult) {\n                        savePatientInfo();\n                    }\n                });\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/hasib/carebear/patient/authentication/SignUpActivityForPatient.java	(revision f3eb597d256d447a472dce565d1d1e7495703972)
++++ app/src/main/java/com/hasib/carebear/patient/authentication/SignUpActivityForPatient.java	(date 1623650001284)
+@@ -1,15 +1,12 @@
+ package com.hasib.carebear.patient.authentication;
+ 
+ import androidx.annotation.NonNull;
+-import androidx.appcompat.app.ActionBarDrawerToggle;
+ import androidx.appcompat.app.AppCompatActivity;
+-import androidx.drawerlayout.widget.DrawerLayout;
+ 
+ import android.content.Intent;
+ import android.os.Bundle;
+ import android.util.Log;
+ import android.util.Patterns;
+-import android.view.MenuItem;
+ import android.view.View;
+ import android.widget.Button;
+ import android.widget.CheckBox;
+@@ -22,10 +19,7 @@
+ import com.google.android.gms.tasks.OnFailureListener;
+ import com.google.android.gms.tasks.OnSuccessListener;
+ import com.google.android.gms.tasks.Task;
+-import com.google.android.material.navigation.NavigationView;
+ import com.google.android.material.textfield.TextInputLayout;
+-import com.google.firebase.FirebaseApp;
+-import com.google.firebase.FirebaseOptions;
+ import com.google.firebase.auth.AuthResult;
+ import com.google.firebase.auth.FirebaseAuth;
+ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+@@ -33,7 +27,7 @@
+ import com.google.firebase.database.FirebaseDatabase;
+ import com.hasib.carebear.R;
+ import com.hasib.carebear.patient.PatientMapActivity;
+-import com.hasib.carebear.patient.container.PatientUserDetails;
++import com.hasib.carebear.patient.container.Patient;
+ import com.hasib.carebear.support.CareBear;
+ 
+ public class SignUpActivityForPatient extends AppCompatActivity implements View.OnClickListener {
+@@ -47,7 +41,7 @@
+     private TextInputLayout namePatientLayout, presentAddressPatientLayout, mobileNoPatientLayout,
+             emailPatientLayout, passwordPatientLayout;
+     private CheckBox maleCheckBox, femaleCheckBox;
+-    private PatientUserDetails patientUserDetails;
++    private Patient patient;
+     private ImageButton imageButton;
+ 
+     //Please Declare Firebase Code
+@@ -98,7 +92,7 @@
+         signUpButton.setOnClickListener(this);
+         imageButton.setOnClickListener(this);
+ 
+-        patientUserDetails = new PatientUserDetails();
++        patient = new Patient();
+     }
+ 
+     @Override
+@@ -125,7 +119,7 @@
+ 
+     private void savePatientInfo() {
+         String key = mAuth.getCurrentUser().getUid();
+-        databaseReference.child(key).setValue(patientUserDetails)
++        databaseReference.child(key).setValue(patient)
+                 .addOnSuccessListener(new OnSuccessListener<Void>() {
+                     @Override
+                     public void onSuccess(Void aVoid) {
+@@ -146,21 +140,21 @@
+     }
+ 
+     private boolean getPatientInfo() {
+-        patientUserDetails.setName(namePatient.getText().toString());
+-        patientUserDetails.setAddress(presentAddressPatient.getText().toString());
+-        patientUserDetails.setMobileNum(mobileNoPatient.getText().toString());
+-        patientUserDetails.setEmail(emailPatient.getText().toString());
+-        patientUserDetails.setPassword(passwordPatient.getText().toString());
++        patient.setName(namePatient.getText().toString());
++        patient.setAddress(presentAddressPatient.getText().toString());
++        patient.setMobileNum(mobileNoPatient.getText().toString());
++        patient.setEmail(emailPatient.getText().toString());
++        patient.setPassword(passwordPatient.getText().toString());
+ 
+-        if (maleCheckBox.isChecked())patientUserDetails.setSex(true);
+-        else patientUserDetails.setSex(false);
++        if (maleCheckBox.isChecked()) patient.setSex(true);
++        else patient.setSex(false);
+ 
+-        if (patientUserDetails.getName().isEmpty()) {
++        if (patient.getName().isEmpty()) {
+             namePatientLayout.setError("Name required");
+             namePatient.requestFocus();
+             return false;
+         }
+-        if (!patientUserDetails.getName().isEmpty()) {
++        if (!patient.getName().isEmpty()) {
+             namePatientLayout.setError(null);
+         }
+         if(maleCheckBox.isChecked() && femaleCheckBox.isChecked()) {
+@@ -168,47 +162,47 @@
+             maleCheckBox.requestFocus();
+             return false;
+         }
+-        if(patientUserDetails.getSex()!=false && patientUserDetails.getSex()!=true){
++        if(patient.getSex()!=false && patient.getSex()!=true){
+             Toast.makeText(getApplicationContext(),"Must choose Male or Female",Toast.LENGTH_SHORT).show();
+         }
+-        if (patientUserDetails.getMobileNum().isEmpty()) {
++        if (patient.getMobileNum().isEmpty()) {
+             mobileNoPatientLayout.setError("Please Enter Your Mobile NO");
+             mobileNoPatient.requestFocus();
+             return false;
+         }
+-        if (!patientUserDetails.getMobileNum().isEmpty()) {
++        if (!patient.getMobileNum().isEmpty()) {
+             mobileNoPatientLayout.setError(null);
+         }
+-        if (patientUserDetails.getMobileNum().length()<11 ) {
++        if (patient.getMobileNum().length()<11 ) {
+             mobileNoPatientLayout.setError("11 digit mobile number required");
+             mobileNoPatient.requestFocus();
+             return false;
+         }
+-        if (!(patientUserDetails.getMobileNum().length()<11) ) {
++        if (!(patient.getMobileNum().length()<11) ) {
+             mobileNoPatientLayout.setError(null);
+         }
+-        if (patientUserDetails.getAddress().isEmpty()) {
++        if (patient.getAddress().isEmpty()) {
+             presentAddressPatientLayout.setError("Address required");
+             presentAddressPatient.requestFocus();
+             return false;
+         }
+-        if (!patientUserDetails.getAddress().isEmpty()) {
++        if (!patient.getAddress().isEmpty()) {
+             presentAddressPatientLayout.setError(null);
+         }
+-        if (patientUserDetails.getEmail().isEmpty()) {
++        if (patient.getEmail().isEmpty()) {
+             presentAddressPatientLayout.setError("Email required");
+             presentAddressPatient.requestFocus();
+             return false;
+         }
+-        if (!patientUserDetails.getEmail().isEmpty()) {
++        if (!patient.getEmail().isEmpty()) {
+             presentAddressPatientLayout.setError(null);
+         }
+-        if (patientUserDetails.getPassword().isEmpty()) {
++        if (patient.getPassword().isEmpty()) {
+             presentAddressPatientLayout.setError("Password required");
+             presentAddressPatient.requestFocus();
+             return false;
+         }
+-        if (!patientUserDetails.getPassword().isEmpty()) {
++        if (!patient.getPassword().isEmpty()) {
+             presentAddressPatient.setError(null);
+         }
+ 
+Index: gradle/wrapper/gradle-wrapper.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>#Mon Mar 16 20:29:05 BDT 2020\ndistributionBase=GRADLE_USER_HOME\ndistributionPath=wrapper/dists\nzipStoreBase=GRADLE_USER_HOME\nzipStorePath=wrapper/dists\ndistributionUrl=https\\://services.gradle.org/distributions/gradle-5.6.4-all.zip\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- gradle/wrapper/gradle-wrapper.properties	(revision f3eb597d256d447a472dce565d1d1e7495703972)
++++ gradle/wrapper/gradle-wrapper.properties	(date 1604662717162)
+@@ -1,6 +1,6 @@
+-#Mon Mar 16 20:29:05 BDT 2020
++#Fri Nov 06 17:38:37 BDT 2020
+ distributionBase=GRADLE_USER_HOME
+ distributionPath=wrapper/dists
+ zipStoreBase=GRADLE_USER_HOME
+ zipStorePath=wrapper/dists
+-distributionUrl=https\://services.gradle.org/distributions/gradle-5.6.4-all.zip
++distributionUrl=https\://services.gradle.org/distributions/gradle-6.5-bin.zip
+Index: .idea/gradle.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"GradleMigrationSettings\" migrationVersion=\"1\" />\n  <component name=\"GradleSettings\">\n    <option name=\"linkedExternalProjectsSettings\">\n      <GradleProjectSettings>\n        <option name=\"testRunner\" value=\"PLATFORM\" />\n        <option name=\"distributionType\" value=\"DEFAULT_WRAPPED\" />\n        <option name=\"externalProjectPath\" value=\"$PROJECT_DIR$\" />\n        <option name=\"modules\">\n          <set>\n            <option value=\"$PROJECT_DIR$\" />\n            <option value=\"$PROJECT_DIR$/app\" />\n          </set>\n        </option>\n        <option name=\"resolveModulePerSourceSet\" value=\"false\" />\n      </GradleProjectSettings>\n    </option>\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/gradle.xml	(revision f3eb597d256d447a472dce565d1d1e7495703972)
++++ .idea/gradle.xml	(date 1610175488763)
+@@ -14,6 +14,7 @@
+           </set>
+         </option>
+         <option name="resolveModulePerSourceSet" value="false" />
++        <option name="useQualifiedModuleNames" value="true" />
+       </GradleProjectSettings>
+     </option>
+   </component>
+Index: build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>// Top-level build file where you can add configuration options common to all sub-projects/modules.\n\nbuildscript {\n    \n    repositories {\n        google()\n        jcenter()\n        mavenCentral()\n    }\n    dependencies {\n        classpath 'com.android.tools.build:gradle:3.6.3'\n        classpath 'com.google.gms:google-services:4.3.3'\n\n\n        // NOTE: Do not place your application dependencies here; they belong\n        // in the individual module build.gradle files\n    }\n}\n\nallprojects {\n    repositories {\n        google()\n        jcenter()\n        mavenCentral()\n    }\n}\n\ntask clean(type: Delete) {\n    delete rootProject.buildDir\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- build.gradle	(revision f3eb597d256d447a472dce565d1d1e7495703972)
++++ build.gradle	(date 1609588602479)
+@@ -8,7 +8,7 @@
+         mavenCentral()
+     }
+     dependencies {
+-        classpath 'com.android.tools.build:gradle:3.6.3'
++        classpath 'com.android.tools.build:gradle:4.1.1'
+         classpath 'com.google.gms:google-services:4.3.3'
+ 
+ 
+Index: app/src/main/java/com/hasib/carebear/doctor/authentication/SignInActivityForDoctor.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.hasib.carebear.doctor.authentication;\n\nimport androidx.annotation.NonNull;\nimport androidx.appcompat.app.AppCompatActivity;\n\nimport android.content.Intent;\nimport android.os.Bundle;\nimport android.util.Log;\nimport android.util.Patterns;\nimport android.view.View;\nimport android.widget.Button;\nimport android.widget.EditText;\nimport android.widget.ImageButton;\nimport android.widget.ProgressBar;\nimport android.widget.TextView;\nimport android.widget.Toast;\n\nimport com.google.android.gms.tasks.OnCompleteListener;\nimport com.google.android.gms.tasks.OnFailureListener;\nimport com.google.android.gms.tasks.Task;\nimport com.google.android.material.textfield.TextInputLayout;\nimport com.google.firebase.auth.AuthResult;\nimport com.google.firebase.auth.FirebaseAuth;\nimport com.hasib.carebear.R;\nimport com.hasib.carebear.doctor.DoctorDashBoardActivity;\nimport com.hasib.carebear.doctor.container.UserDetails;\n\npublic class SignInActivityForDoctor extends AppCompatActivity implements View.OnClickListener {\n    private static final String TAG = \"SignInActivityForDoctor\";\n\n    private TextInputLayout emailTextLayout, passwordTextLayout;\n    private EditText emailText, passwordText;\n    private TextView signUpText;\n    private ImageButton imageButton;\n    private Button signInButton;\n    private UserDetails userDetails;\n    private FirebaseAuth mAuth;\n    private ProgressBar progressBar;\n\n    @Override\n    protected void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n        setContentView(R.layout.activity_sign_in_for_doctor);\n        getSupportActionBar().hide();\n\n        emailTextLayout = findViewById(R.id.usernameTextLayout);\n        passwordTextLayout = findViewById(R.id.passwordTextLayout);\n        emailText = findViewById(R.id.usernameText);\n        passwordText = findViewById(R.id.passwordText);\n        signUpText = findViewById(R.id.signUpButtonForDoctorId);\n        imageButton = findViewById(R.id.backToMain);\n        signInButton = findViewById(R.id.signInButtonForDoctorId);\n        progressBar = findViewById(R.id.progressBarIn);\n\n        //Firebase\n        mAuth = FirebaseAuth.getInstance();\n\n        //Info container class\n        userDetails = new UserDetails();\n\n        signInButton.setOnClickListener(this);\n        signUpText.setOnClickListener(this);\n        imageButton.setOnClickListener(this);\n    }\n\n    @Override\n    protected void onStart() {\n        super.onStart();\n\n        if (mAuth.getCurrentUser() != null) {\n            Log.d(TAG, \"onStart: current user: \"+mAuth.getCurrentUser().getEmail());\n\n            finish();\n\n            Intent intent = new Intent(SignInActivityForDoctor.this, DoctorDashBoardActivity.class);\n            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);\n            startActivity(intent);\n        }\n    }\n\n    @Override\n    public void onClick(View v) {\n        userDetails.setEmail(emailText.getText().toString());\n        userDetails.setPassword(passwordText.getText().toString());\n\n        if (v.getId() == R.id.signUpButtonForDoctorId) {\n            Log.d(TAG, \"onClick: Sign Up Button clicked\");\n\n            //Intenting to Sign Up Activity\n            Intent intent = new Intent(SignInActivityForDoctor.this, SignUpActivityForDoctor.class);\n            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);\n            startActivity(intent);\n        }\n        if (v.getId() == R.id.signInButtonForDoctorId) {\n            Log.d(TAG, \"onClick: Sign In Button Clicked\");\n\n            userLogin(userDetails);\n        }\n\n        if(v.getId() == R.id.backToMain) {\n            onBackPressed();\n        }\n    }\n\n    private void userLogin(UserDetails userDetails) {\n        //Checking email validity\n        if(userDetails.getEmail().isEmpty()) {\n            emailTextLayout.setError(\"Enter an Email Address\");\n            emailText.requestFocus();\n            return;\n        }\n        if(!userDetails.getEmail().isEmpty()) {\n            emailTextLayout.setError(null);\n        }\n        if (!Patterns.EMAIL_ADDRESS.matcher(userDetails.getEmail()).matches()) {\n            emailTextLayout.setError(\"Enter a valid email address\");\n            emailText.requestFocus();\n            return;\n        }\n        if (Patterns.EMAIL_ADDRESS.matcher(userDetails.getEmail()).matches()) {\n            emailTextLayout.setError(null);\n        }\n\n        //checking the validity of password\n        if (userDetails.getPassword().isEmpty()) {\n            passwordTextLayout.setError(\"Enter a password\");\n            passwordText.requestFocus();\n            return;\n        }\n        if (!userDetails.getPassword().isEmpty()) {\n            passwordTextLayout.setError(null);\n        }\n        if (userDetails.getPassword().length() < 8) {\n            passwordTextLayout.setError(\"Minimum length of a password should be 8\");\n            passwordText.requestFocus();\n            return;\n        }\n        if ( !(userDetails.getPassword().length() < 8) ) {\n            passwordTextLayout.setError(null);\n        }\n\n        //making progressBar visible\n        progressBar.setVisibility(View.VISIBLE);\n\n        //Sign in using Firebase\n        mAuth.signInWithEmailAndPassword(userDetails.getEmail(), userDetails.getPassword())\n                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {\n                    @Override\n                    public void onComplete(@NonNull Task<AuthResult> task) {\n                        if (task.isSuccessful()) {\n                            Log.d(TAG, \"onComplete: Log in successful\");\n\n                            progressBar.setVisibility(View.GONE);\n\n                            finish();\n\n                            //Intenting layout...................\n                            Intent intent = new Intent(SignInActivityForDoctor.this, DoctorDashBoardActivity.class);\n                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);\n                            startActivity(intent);\n                        }\n                    }\n                })\n                .addOnFailureListener(new OnFailureListener() {\n                    @Override\n                    public void onFailure(@NonNull Exception e) {\n                        Log.d(TAG, \"onComplete: log in unsuccessful\" + e.getMessage());\n\n                        progressBar.setVisibility(View.GONE);\n                        Toast.makeText(SignInActivityForDoctor.this, \"Invaid Login \"+e.getMessage(),\n                                Toast.LENGTH_LONG).show();\n                    }\n                });\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/hasib/carebear/doctor/authentication/SignInActivityForDoctor.java	(revision f3eb597d256d447a472dce565d1d1e7495703972)
++++ app/src/main/java/com/hasib/carebear/doctor/authentication/SignInActivityForDoctor.java	(date 1623650001601)
+@@ -23,7 +23,7 @@
+ import com.google.firebase.auth.FirebaseAuth;
+ import com.hasib.carebear.R;
+ import com.hasib.carebear.doctor.DoctorDashBoardActivity;
+-import com.hasib.carebear.doctor.container.UserDetails;
++import com.hasib.carebear.doctor.container.Doctor;
+ 
+ public class SignInActivityForDoctor extends AppCompatActivity implements View.OnClickListener {
+     private static final String TAG = "SignInActivityForDoctor";
+@@ -33,7 +33,7 @@
+     private TextView signUpText;
+     private ImageButton imageButton;
+     private Button signInButton;
+-    private UserDetails userDetails;
++    private Doctor doctor;
+     private FirebaseAuth mAuth;
+     private ProgressBar progressBar;
+ 
+@@ -56,7 +56,7 @@
+         mAuth = FirebaseAuth.getInstance();
+ 
+         //Info container class
+-        userDetails = new UserDetails();
++        doctor = new Doctor();
+ 
+         signInButton.setOnClickListener(this);
+         signUpText.setOnClickListener(this);
+@@ -80,8 +80,8 @@
+ 
+     @Override
+     public void onClick(View v) {
+-        userDetails.setEmail(emailText.getText().toString());
+-        userDetails.setPassword(passwordText.getText().toString());
++        doctor.setEmail(emailText.getText().toString());
++        doctor.setPassword(passwordText.getText().toString());
+ 
+         if (v.getId() == R.id.signUpButtonForDoctorId) {
+             Log.d(TAG, "onClick: Sign Up Button clicked");
+@@ -94,7 +94,7 @@
+         if (v.getId() == R.id.signInButtonForDoctorId) {
+             Log.d(TAG, "onClick: Sign In Button Clicked");
+ 
+-            userLogin(userDetails);
++            userLogin(doctor);
+         }
+ 
+         if(v.getId() == R.id.backToMain) {
+@@ -102,40 +102,40 @@
+         }
+     }
+ 
+-    private void userLogin(UserDetails userDetails) {
++    private void userLogin(Doctor doctor) {
+         //Checking email validity
+-        if(userDetails.getEmail().isEmpty()) {
++        if(doctor.getEmail().isEmpty()) {
+             emailTextLayout.setError("Enter an Email Address");
+             emailText.requestFocus();
+             return;
+         }
+-        if(!userDetails.getEmail().isEmpty()) {
++        if(!doctor.getEmail().isEmpty()) {
+             emailTextLayout.setError(null);
+         }
+-        if (!Patterns.EMAIL_ADDRESS.matcher(userDetails.getEmail()).matches()) {
++        if (!Patterns.EMAIL_ADDRESS.matcher(doctor.getEmail()).matches()) {
+             emailTextLayout.setError("Enter a valid email address");
+             emailText.requestFocus();
+             return;
+         }
+-        if (Patterns.EMAIL_ADDRESS.matcher(userDetails.getEmail()).matches()) {
++        if (Patterns.EMAIL_ADDRESS.matcher(doctor.getEmail()).matches()) {
+             emailTextLayout.setError(null);
+         }
+ 
+         //checking the validity of password
+-        if (userDetails.getPassword().isEmpty()) {
++        if (doctor.getPassword().isEmpty()) {
+             passwordTextLayout.setError("Enter a password");
+             passwordText.requestFocus();
+             return;
+         }
+-        if (!userDetails.getPassword().isEmpty()) {
++        if (!doctor.getPassword().isEmpty()) {
+             passwordTextLayout.setError(null);
+         }
+-        if (userDetails.getPassword().length() < 8) {
++        if (doctor.getPassword().length() < 8) {
+             passwordTextLayout.setError("Minimum length of a password should be 8");
+             passwordText.requestFocus();
+             return;
+         }
+-        if ( !(userDetails.getPassword().length() < 8) ) {
++        if ( !(doctor.getPassword().length() < 8) ) {
+             passwordTextLayout.setError(null);
+         }
+ 
+@@ -143,7 +143,7 @@
+         progressBar.setVisibility(View.VISIBLE);
+ 
+         //Sign in using Firebase
+-        mAuth.signInWithEmailAndPassword(userDetails.getEmail(), userDetails.getPassword())
++        mAuth.signInWithEmailAndPassword(doctor.getEmail(), doctor.getPassword())
+                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                     @Override
+                     public void onComplete(@NonNull Task<AuthResult> task) {
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_1_7\" default=\"true\" project-jdk-name=\"1.8\" project-jdk-type=\"JavaSDK\">\n    <output url=\"file://$PROJECT_DIR$/build/classes\" />\n  </component>\n  <component name=\"ProjectType\">\n    <option name=\"id\" value=\"Android\" />\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/misc.xml	(revision f3eb597d256d447a472dce565d1d1e7495703972)
++++ .idea/misc.xml	(date 1621625088353)
+@@ -1,6 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_7" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
++  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+     <output url="file://$PROJECT_DIR$/build/classes" />
+   </component>
+   <component name="ProjectType">
+Index: .idea/compiler.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"CompilerConfiguration\">\n    <bytecodeTargetLevel target=\"12\" />\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/compiler.xml	(revision f3eb597d256d447a472dce565d1d1e7495703972)
++++ .idea/compiler.xml	(date 1621625088397)
+@@ -1,6 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+   <component name="CompilerConfiguration">
+-    <bytecodeTargetLevel target="12" />
++    <bytecodeTargetLevel target="11" />
+   </component>
+ </project>
+\ No newline at end of file
+Index: app/src/main/java/com/hasib/carebear/MainActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.hasib.carebear;\n\nimport androidx.appcompat.app.AlertDialog;\nimport androidx.appcompat.app.AppCompatActivity;\nimport androidx.cardview.widget.CardView;\nimport androidx.core.app.ActivityCompat;\n\nimport android.Manifest;\nimport android.content.DialogInterface;\nimport android.content.Intent;\nimport android.content.pm.PackageManager;\nimport android.net.Uri;\nimport android.os.Bundle;\nimport android.util.Log;\nimport android.view.LayoutInflater;\nimport android.view.View;\n\nimport com.google.android.material.snackbar.Snackbar;\nimport com.hasib.carebear.doctor.authentication.SignInActivityForDoctor;\nimport com.hasib.carebear.patient.authentication.SignInActivityForPatient;\nimport com.karumi.dexter.Dexter;\nimport com.karumi.dexter.MultiplePermissionsReport;\nimport com.karumi.dexter.PermissionToken;\nimport com.karumi.dexter.listener.PermissionRequest;\nimport com.karumi.dexter.listener.multi.MultiplePermissionsListener;\nimport com.karumi.dexter.listener.multi.SnackbarOnAnyDeniedMultiplePermissionsListener;\n\nimport java.util.List;\n\npublic class MainActivity extends AppCompatActivity implements View.OnClickListener {\n    private static final String TAG = \"MainActivity\";\n\n    private CardView signUpoRInButtonForDoctor, signUpoRInButtonForPatient;\n    private CardView emergencyButton, about;\n\n    @Override\n    protected void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n        setContentView(R.layout.activity_main);\n\n        Dexter.withContext(MainActivity.this)\n                .withPermissions(\n                        Manifest.permission.READ_EXTERNAL_STORAGE,\n                        Manifest.permission.INTERNET,\n                        Manifest.permission.ACCESS_FINE_LOCATION,\n                        Manifest.permission.ACCESS_COARSE_LOCATION\n                )\n                .withListener(new MultiplePermissionsListener() {\n                    @Override\n                    public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {\n                        LayoutInflater inflater = getLayoutInflater();\n                        final View view = inflater.inflate(R.layout.layout_permission, null);\n\n                        if (multiplePermissionsReport.isAnyPermissionPermanentlyDenied()) {\n                            MultiplePermissionsListener snackbarMultiplePermissionsListener =\n                                    SnackbarOnAnyDeniedMultiplePermissionsListener.Builder\n                                            .with(view, \"Camera and audio access is needed to take pictures of your dog\")\n                                            .withOpenSettingsButton(\"Settings\")\n                                            .withCallback(new Snackbar.Callback() {\n                                                @Override\n                                                public void onShown(Snackbar snackbar) {\n                                                    // Event handler for when the given Snackbar is visible\n                                                }\n\n                                                @Override\n                                                public void onDismissed(Snackbar snackbar, int event) {\n                                                    // Event handler for when the given Snackbar has been dismissed\n                                                }\n                                            })\n                                            .build();\n\n                        }\n                    }\n\n                    @Override\n                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {\n                        permissionToken.continuePermissionRequest();\n                    }\n                });\n\n\n        signUpoRInButtonForDoctor = findViewById(R.id.signInOrUpButtonForDoctorId);\n        signUpoRInButtonForPatient = findViewById(R.id.signInOrUpButtonForPatientId);\n        emergencyButton = findViewById(R.id.emergencyButtonId);\n        about = findViewById(R.id.aboutus);\n\n        getSupportActionBar().hide();\n\n        //Set in onClickListener\n        signUpoRInButtonForPatient.setOnClickListener(this);\n        signUpoRInButtonForDoctor.setOnClickListener(this);\n        emergencyButton.setOnClickListener(this);\n        about.setOnClickListener(this);\n\n        checkPermissions();\n    }\n\n    @Override\n    public void onClick(View v) {\n        switch (v.getId()) {\n            case R.id.signInOrUpButtonForDoctorId: {\n                checkPermissions();\n\n                Intent intent1 = new Intent(MainActivity.this, SignInActivityForDoctor.class);\n                startActivity(intent1);\n            }\n            break;\n\n            case R.id.signInOrUpButtonForPatientId: {\n                Log.d(TAG, \"onClick: tapped\");\n                Intent intent2 = new Intent(MainActivity.this, SignInActivityForPatient.class);\n                startActivity(intent2);\n            }\n            break;\n\n            case R.id.emergencyButtonId: {\n                startActivity(new Intent(Intent.ACTION_DIAL,Uri.parse(\"tel:999\")));\n            }\n            break;\n\n            case R.id.aboutus: {\n\n            }\n            break;\n        }\n    }\n\n    @Override\n    public void onBackPressed() {\n        AlertDialog.Builder alertDialogBuilder;\n        alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);\n\n        alertDialogBuilder.setIcon(R.drawable.bear16px);\n        alertDialogBuilder.setTitle(R.string.alertTitle);\n        alertDialogBuilder.setMessage(R.string.alertMassage);\n        alertDialogBuilder.setCancelable(false);\n        alertDialogBuilder.setPositiveButton(\"Yes\", new DialogInterface.OnClickListener() {\n            @Override\n            public void onClick(DialogInterface dialog, int which) {\n                finish();\n            }\n        });\n        alertDialogBuilder.setNegativeButton(\"No\", new DialogInterface.OnClickListener() {\n            @Override\n            public void onClick(DialogInterface dialog, int which) {\n                dialog.cancel();\n            }\n        });\n\n        AlertDialog alertDialog = alertDialogBuilder.create();\n        alertDialog.show();\n    }\n\n    private void checkPermissions() {\n    }\n\n}\n\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/hasib/carebear/MainActivity.java	(revision f3eb597d256d447a472dce565d1d1e7495703972)
++++ app/src/main/java/com/hasib/carebear/MainActivity.java	(date 1613034052761)
+@@ -4,6 +4,7 @@
+ import androidx.appcompat.app.AppCompatActivity;
+ import androidx.cardview.widget.CardView;
+ import androidx.core.app.ActivityCompat;
++import androidx.core.content.ContextCompat;
+ 
+ import android.Manifest;
+ import android.content.DialogInterface;
+@@ -38,45 +39,7 @@
+         super.onCreate(savedInstanceState);
+         setContentView(R.layout.activity_main);
+ 
+-        Dexter.withContext(MainActivity.this)
+-                .withPermissions(
+-                        Manifest.permission.READ_EXTERNAL_STORAGE,
+-                        Manifest.permission.INTERNET,
+-                        Manifest.permission.ACCESS_FINE_LOCATION,
+-                        Manifest.permission.ACCESS_COARSE_LOCATION
+-                )
+-                .withListener(new MultiplePermissionsListener() {
+-                    @Override
+-                    public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
+-                        LayoutInflater inflater = getLayoutInflater();
+-                        final View view = inflater.inflate(R.layout.layout_permission, null);
+-
+-                        if (multiplePermissionsReport.isAnyPermissionPermanentlyDenied()) {
+-                            MultiplePermissionsListener snackbarMultiplePermissionsListener =
+-                                    SnackbarOnAnyDeniedMultiplePermissionsListener.Builder
+-                                            .with(view, "Camera and audio access is needed to take pictures of your dog")
+-                                            .withOpenSettingsButton("Settings")
+-                                            .withCallback(new Snackbar.Callback() {
+-                                                @Override
+-                                                public void onShown(Snackbar snackbar) {
+-                                                    // Event handler for when the given Snackbar is visible
+-                                                }
+-
+-                                                @Override
+-                                                public void onDismissed(Snackbar snackbar, int event) {
+-                                                    // Event handler for when the given Snackbar has been dismissed
+-                                                }
+-                                            })
+-                                            .build();
+-
+-                        }
+-                    }
+-
+-                    @Override
+-                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
+-                        permissionToken.continuePermissionRequest();
+-                    }
+-                });
++        ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+ 
+ 
+         signUpoRInButtonForDoctor = findViewById(R.id.signInOrUpButtonForDoctorId);
+Index: .idea/copyright/profiles_settings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/copyright/profiles_settings.xml	(date 1609587609776)
++++ .idea/copyright/profiles_settings.xml	(date 1609587609776)
+@@ -0,0 +1,11 @@
++<component name="CopyrightManager">
++  <settings>
++    <module2copyright>
++      <element module="Project Files" copyright="Hasib" />
++    </module2copyright>
++    <LanguageOptions name="JAVA">
++      <option name="fileTypeOverride" value="3" />
++      <option name="fileLocation" value="3" />
++    </LanguageOptions>
++  </settings>
++</component>
+\ No newline at end of file
+Index: app/src/main/java/com/hasib/carebear/doctor/fragment/DoctorProfileEditActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.hasib.carebear.doctor.fragment;\n\nimport androidx.annotation.NonNull;\nimport androidx.annotation.Nullable;\nimport androidx.appcompat.app.AlertDialog;\nimport androidx.appcompat.app.AppCompatActivity;\n\nimport android.content.ContentResolver;\nimport android.content.Intent;\nimport android.graphics.Bitmap;\nimport android.net.Uri;\nimport android.os.Bundle;\nimport android.provider.MediaStore;\nimport android.util.Log;\nimport android.util.Patterns;\nimport android.view.LayoutInflater;\nimport android.view.MenuItem;\nimport android.view.View;\nimport android.webkit.MimeTypeMap;\nimport android.widget.Button;\nimport android.widget.CheckBox;\nimport android.widget.EditText;\nimport android.widget.ImageView;\nimport android.widget.LinearLayout;\nimport android.widget.ProgressBar;\nimport android.widget.Toast;\n\nimport com.bumptech.glide.Glide;\nimport com.google.android.gms.tasks.OnCompleteListener;\nimport com.google.android.gms.tasks.OnFailureListener;\nimport com.google.android.gms.tasks.OnSuccessListener;\nimport com.google.android.gms.tasks.Task;\nimport com.google.android.material.textview.MaterialTextView;\nimport com.google.firebase.auth.FirebaseAuth;\nimport com.google.firebase.auth.FirebaseUser;\nimport com.google.firebase.auth.UserProfileChangeRequest;\nimport com.google.firebase.database.DatabaseReference;\nimport com.google.firebase.database.FirebaseDatabase;\nimport com.google.firebase.storage.FirebaseStorage;\nimport com.google.firebase.storage.OnProgressListener;\nimport com.google.firebase.storage.StorageReference;\nimport com.google.firebase.storage.UploadTask;\n\nimport com.hasib.carebear.R;\nimport com.hasib.carebear.doctor.container.UserDetails;\n\nimport java.io.IOException;\n\npublic class DoctorProfileEditActivity extends AppCompatActivity implements View.OnClickListener {\n\n    private static final String TAG = \"DoctorProfileEditActivity\";\n    private static final int CHOOSE_IMAGE_REQUEST = 1001;\n    //declaring editText....\n    private EditText doctorNameEditText, specialistEditText, bmdcRegNoEditText, presentAddressEditText,\n            commonChamberEditText, passwordEditText, mobileNoEditText, emailEditText;\n    private LinearLayout checkBoxLinearLayout;\n    private ImageView doctorImageView;\n    private CheckBox checkMBBS, checkFCPS, checkMPhil, checkMDorMS;\n    private ProgressBar imageProgressBar;\n    private Button updateButton;\n\n    private UserDetails currentUserDetails;\n\n    private FirebaseAuth mAuth;\n\n    private AlertDialog builder;\n\n    @Override\n    protected void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n        setContentView(R.layout.activity_doctor_profile_edit);\n        this.setTitle(\"Edit your Profile\");\n\n        //Enable back button on Menu Bar\n        getSupportActionBar().setDisplayHomeAsUpEnabled(true);\n        getSupportActionBar().setDisplayShowHomeEnabled(true);\n\n        initViews();\n\n        //Firebase Authenticator\n        mAuth = FirebaseAuth.getInstance();\n\n        //Firebase Realtime Database reference\n\n        Intent intent = getIntent();\n        currentUserDetails = intent.getParcelableExtra(\"user\");\n\n        settingValuesIntoViews();\n\n        doctorImageView.setOnClickListener(this);\n        updateButton.setOnClickListener(this);\n    }\n\n    @Override\n    public void onClick(View v) {\n        switch (v.getId()) {\n            case R.id.doctorImageViewId :\n                showImageChooser();\n                break;\n            case R.id.updateButtonId :\n                updateData();\n                break;\n        }\n    }\n\n    //This Function is needed for back button.. Without this function\n    //back button wouldn't work properly..\n    @Override\n    public boolean onOptionsItemSelected(@NonNull MenuItem item) {\n        if (item.getItemId() == android.R.id.home) {\n            finish();\n        }\n        return super.onOptionsItemSelected(item);\n    }\n\n    private void initLoadingDialog(String message) {\n        LayoutInflater inflater = getLayoutInflater();\n        final View view = inflater.inflate(R.layout.dialog_progress, null);\n\n        MaterialTextView textView = view.findViewById(R.id.loadingText);\n        textView.setText(message);\n        builder = new AlertDialog.Builder(DoctorProfileEditActivity.this)\n                .setTitle(\"Please Wait\")\n                .setCancelable(false)\n                .setView(view)\n                .create();\n        builder.show();\n    }\n\n    private void initViews() {\n        //initializing editText by finding Id....\n        doctorNameEditText = findViewById(R.id.doctorNameEditTextId);\n        specialistEditText = findViewById(R.id.specialistEditTextId);\n        bmdcRegNoEditText = findViewById(R.id.regNoOfBMDCEditTextId);\n        presentAddressEditText = findViewById(R.id.presentAddressEditTextId);\n        commonChamberEditText = findViewById(R.id.commonChamberEditTextId);\n        mobileNoEditText = findViewById(R.id.mobileNoEditTextId);\n        emailEditText = findViewById(R.id.emailEditTextId);\n        passwordEditText = findViewById(R.id.passwordEditTextId);\n\n        doctorImageView = findViewById(R.id.doctorImageViewId);\n        imageProgressBar = findViewById(R.id.loadingProgressBar);\n\n        checkBoxLinearLayout = findViewById(R.id.checkBoxLayout);\n        checkMBBS = findViewById(R.id.checkMBBSId);\n        checkFCPS = findViewById(R.id.checkFCPSId);\n        checkMPhil = findViewById(R.id.checkMPhilId);\n        checkMDorMS = findViewById(R.id.checkMDId);\n\n        updateButton = findViewById(R.id.updateButtonId);\n    }\n\n    private void settingValuesIntoViews() {\n        doctorNameEditText.setText(currentUserDetails.getFullName());\n        specialistEditText.setText(currentUserDetails.getSpecialist());\n        bmdcRegNoEditText.setText(currentUserDetails.getRegistrationInfo());\n        presentAddressEditText.setText(currentUserDetails.getPresentAddressInfo());\n        commonChamberEditText.setText(currentUserDetails.getMedicalInfo());\n        mobileNoEditText.setText(currentUserDetails.getMobile());\n        emailEditText.setText(currentUserDetails.getEmail());\n        passwordEditText.setText(currentUserDetails.getPassword());\n\n        Glide.with(DoctorProfileEditActivity.this)\n                .load(currentUserDetails.getDoctorImageUrl())\n                .override(600, 600)\n                .into(doctorImageView);\n\n        String str = currentUserDetails.getCheckBoxInfo();\n        if (str.matches(\"(.*)MBBS(.*)\")) {\n            checkMBBS.setChecked(true);\n        }\n        if (str.matches(\"(.*)FCPS(.*)\")) {\n            checkFCPS.setChecked(true);\n        }\n        if (str.matches(\"(.*)MD/MS(.*)\")) {\n            checkMDorMS.setChecked(true);\n        }\n        if (str.matches(\"(.*)MPhil(.*)\")) {\n            checkMPhil.setChecked(true);\n        }\n    }\n\n    //Method for selecting and adding image\n    public void showImageChooser() {\n        Intent intent = new Intent();\n        intent.setType(\"image/*\");\n        intent.setAction(Intent.ACTION_GET_CONTENT);\n        startActivityForResult(Intent.createChooser(intent, \"Select Profile Image\"), CHOOSE_IMAGE_REQUEST);\n    }\n\n    //Image selecting activity\n    @Override\n    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {\n        super.onActivityResult(requestCode, resultCode, data);\n\n        if (requestCode == CHOOSE_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {\n            Log.d(TAG, \"onActivityResult: \"+data.getData().toString());\n\n            try {\n                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());\n\n                doctorImageView.setImageBitmap(bitmap);\n                uploadImageToFirebaseStorage(data.getData());\n            } catch (IOException e) {\n                e.printStackTrace();\n            }\n        }\n    }\n\n    //For getting Image extension\n    public String getExtension(Uri imageUri) {\n        ContentResolver contentResolver = getContentResolver();\n        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();\n        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(imageUri));\n    }\n\n    //Method for uploading image to firebase storage\n    public void uploadImageToFirebaseStorage(Uri uriProfileImage) {\n        if (uriProfileImage != null) {\n            initLoadingDialog(\"Uploading you image.....\");\n\n            //Doctor's Profile Images directory\n            StorageReference reference = FirebaseStorage\n                    .getInstance()\n                    .getReference(\"doctors_profile_images\")\n                    .child(System.currentTimeMillis()+\".\"+getExtension(uriProfileImage));\n\n            Log.d(TAG, \"uploadImageToFirebaseStorage: method called\");\n            //Visible the progress ber while the image is uploading\n//            imageProgressBar.setVisibility(View.VISIBLE);\n\n            //Task for uploading images to firebase directory\n            reference.putFile(uriProfileImage)\n                    .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {\n                        @Override\n                        public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {\n                        }\n                    })\n                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {\n                        @Override\n                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {\n                            Log.d(TAG, \"onComplete: image uploaded to firebase storage\");\n\n                            //The progress bar is set to GONE when the uploading task is done\n//                            imageProgressBar.setVisibility(View.GONE);\n\n                            Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();\n                            while (!uriTask.isSuccessful());\n\n                            deletePreviousImage(uriTask.getResult().toString());\n\n                            Log.d(TAG, \"onSuccess: doctorImageUrl \"+uriTask.getResult().toString());\n                        }\n                    })\n                    .addOnFailureListener(new OnFailureListener() {\n                        @Override\n                        public void onFailure(@NonNull Exception e) {\n                            Log.d(TAG, \"onFailure: Image upload failed\");\n//                            imageProgressBar.setVisibility(View.GONE);\n\n                            Toast.makeText(DoctorProfileEditActivity.this, \"Image upload Failed\", Toast.LENGTH_SHORT).show();\n                        }\n                    })\n                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {\n                        @Override\n                        public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {\n                            Uri sessionUri = taskSnapshot.getUploadSessionUri();\n                        }\n                    });\n        }\n    }\n\n    private void deletePreviousImage(final String newUploadedImageUri) {\n        StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(currentUserDetails.getDoctorImageUrl());\n        Log.d(TAG, \"deletePreviousImage: prev uri \"+currentUserDetails.getDoctorImageUrl());\n\n        storageReference.delete()\n                .addOnSuccessListener(new OnSuccessListener<Void>() {\n                    @Override\n                    public void onSuccess(Void aVoid) {\n                        Log.d(TAG, \"onSuccess: previous image deleted successfully\");\n                        Log.d(TAG, \"onSuccess: new uri \"+newUploadedImageUri);\n                        currentUserDetails.setDoctorImageUrl(newUploadedImageUri);\n                        builder.dismiss();\n                        Toast.makeText(DoctorProfileEditActivity.this, \"Image uploaded successfully\", Toast.LENGTH_LONG).show();\n\n                    }\n                })\n                .addOnFailureListener(new OnFailureListener() {\n                    @Override\n                    public void onFailure(@NonNull Exception e) {\n                        Log.d(TAG, \"onFailure: Previous image deletion failed\");\n                        builder.dismiss();\n                        Toast.makeText(DoctorProfileEditActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();\n                    }\n                });\n    }\n\n    private void updateData() {\n        initLoadingDialog(\"Updating your data......\");\n        FirebaseUser user = mAuth.getCurrentUser();\n\n        if(!collectEditedData()) {\n            builder.dismiss();\n            return;\n        }\n\n        Log.d(TAG, \"updateData: entering to profile builder\");\n        if (collectEditedData() && user != null) {\n            UserProfileChangeRequest profile = new UserProfileChangeRequest.Builder()\n                    .setDisplayName(currentUserDetails.getFullName())\n                    .setPhotoUri(Uri.parse(currentUserDetails.getDoctorImageUrl()))\n                    .build();\n\n            Log.d(TAG, \"updateData: profile build\");\n            user.updateProfile(profile)\n                    .addOnCompleteListener(new OnCompleteListener<Void>() {\n                        @Override\n                        public void onComplete(@NonNull Task<Void> task) {\n                            if (task.isSuccessful()) {\n                                Log.d(TAG, \"onComplete: Everything is ok\");\n\n                                updateUserDataBaseInfo();\n                            }\n                        }\n                    })\n                    .addOnSuccessListener(new OnSuccessListener<Void>() {\n                        @Override\n                        public void onSuccess(Void aVoid) {\n\n                            builder.dismiss();\n\n                            finish();\n                            startActivity(new Intent(DoctorProfileEditActivity.this, DoctorProfileActivity.class));\n                        }\n                    });\n        }\n    }\n\n    private void updateUserDataBaseInfo(){\n        DatabaseReference databaseReference = FirebaseDatabase\n                .getInstance()\n                .getReference(\"doctors_profile_info\")\n                .child(currentUserDetails.getId());\n\n        databaseReference.keepSynced(true);\n        databaseReference\n                .setValue(currentUserDetails)\n                .addOnSuccessListener(new OnSuccessListener<Void>() {\n                    @Override\n                    public void onSuccess(Void aVoid) {\n                        Log.d(TAG, \"onSuccess: Doctor's profile updated successfully\");\n                    }\n                })\n                .addOnFailureListener(new OnFailureListener() {\n                    @Override\n                    public void onFailure(@NonNull Exception e) {\n                        Log.d(TAG, \"onFailure: Doctor's profile updated failed\");\n                    }\n                });\n    }\n\n    private boolean collectEditedData() {\n        Log.d(TAG, \"getInformationFromUser: getting user data\");\n\n        currentUserDetails.setFullName(doctorNameEditText.getText().toString());\n        currentUserDetails.setMobile(mobileNoEditText.getText().toString());\n        currentUserDetails.setSpecialist(specialistEditText.getText().toString());\n\n        currentUserDetails.setCheckBoxInfoEmpty();\n        for(int i=0; i<checkBoxLinearLayout.getChildCount(); i++) {\n            if (((CheckBox) checkBoxLinearLayout.getChildAt(i)).isChecked()) {\n                currentUserDetails.setCheckBoxInfo(((CheckBox) checkBoxLinearLayout.getChildAt(i)).getText().toString());\n            }\n        }\n        Log.d(TAG, \"getInformationFromUser: getting user data 2\");\n        currentUserDetails.setRegistrationInfo(bmdcRegNoEditText.getText().toString());\n        currentUserDetails.setPresentAddressInfo(presentAddressEditText.getText().toString());\n        currentUserDetails.setMedicalInfo(commonChamberEditText.getText().toString());\n        currentUserDetails.setEmail(emailEditText.getText().toString());\n        currentUserDetails.setPassword(passwordEditText.getText().toString());\n\n        if (currentUserDetails.getFullName().isEmpty()) {\n            doctorNameEditText.setError(\"Name required\");\n            doctorNameEditText.requestFocus();\n            return false;\n        }\n        /**\n         * Will be added these verification after implementing email verification and forget password facilities\n         * // TODO: 22-Apr-20 Have to implement forget password and email, mobile number verification\n         */\n        if(currentUserDetails.getEmail().isEmpty()) {\n            emailEditText.setError(\"Enter an Email Address\");\n            emailEditText.requestFocus();\n            return false;\n        }\n        //Checking email validity\n        if (!Patterns.EMAIL_ADDRESS.matcher(currentUserDetails.getEmail()).matches()) {\n            emailEditText.setError(\"Enter a valid email address\");\n            emailEditText.requestFocus();\n            return false;\n        }\n\n        //checking the validity of password\n        if (currentUserDetails.getPassword().length() < 8) {\n            passwordEditText.setError(\"Minimum length of a password should be 8\");\n            passwordEditText.requestFocus();\n            return false;\n        }\n\n        if (currentUserDetails.getPassword().isEmpty()) {\n            passwordEditText.setError(\"Enter a password\");\n            passwordEditText.requestFocus();\n            return false;\n        }\n        if (currentUserDetails.getMobile().isEmpty()) {\n            mobileNoEditText.setError(\"Mobile Number Required\");\n            mobileNoEditText.requestFocus();\n            return false;\n        }\n        if (currentUserDetails.getMobile().length() != 11) {\n            mobileNoEditText.setError(\"Number must be 11 digits\");\n            mobileNoEditText.requestFocus();\n            return false;\n        }\n        if (currentUserDetails.getRegistrationInfo().isEmpty()) {\n            bmdcRegNoEditText.setError(\"Registration Number Required\");\n            bmdcRegNoEditText.requestFocus();\n            return false;\n        }\n        if (!((CheckBox) checkBoxLinearLayout.getChildAt(0)).isChecked()) {\n            ((CheckBox) checkBoxLinearLayout.getChildAt(0)).setError(\"Minimum MBBS Degree Required\");\n            checkBoxLinearLayout.getChildAt(0).requestFocus();\n            return false;\n        }\n        return true;\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/hasib/carebear/doctor/fragment/DoctorProfileEditActivity.java	(revision f3eb597d256d447a472dce565d1d1e7495703972)
++++ app/src/main/java/com/hasib/carebear/doctor/fragment/DoctorProfileEditActivity.java	(date 1623650002062)
+@@ -42,7 +42,7 @@
+ import com.google.firebase.storage.UploadTask;
+ 
+ import com.hasib.carebear.R;
+-import com.hasib.carebear.doctor.container.UserDetails;
++import com.hasib.carebear.doctor.container.Doctor;
+ 
+ import java.io.IOException;
+ 
+@@ -59,7 +59,7 @@
+     private ProgressBar imageProgressBar;
+     private Button updateButton;
+ 
+-    private UserDetails currentUserDetails;
++    private Doctor currentDoctor;
+ 
+     private FirebaseAuth mAuth;
+ 
+@@ -83,7 +83,7 @@
+         //Firebase Realtime Database reference
+ 
+         Intent intent = getIntent();
+-        currentUserDetails = intent.getParcelableExtra("user");
++        currentDoctor = intent.getParcelableExtra("user");
+ 
+         settingValuesIntoViews();
+ 
+@@ -151,21 +151,21 @@
+     }
+ 
+     private void settingValuesIntoViews() {
+-        doctorNameEditText.setText(currentUserDetails.getFullName());
+-        specialistEditText.setText(currentUserDetails.getSpecialist());
+-        bmdcRegNoEditText.setText(currentUserDetails.getRegistrationInfo());
+-        presentAddressEditText.setText(currentUserDetails.getPresentAddressInfo());
+-        commonChamberEditText.setText(currentUserDetails.getMedicalInfo());
+-        mobileNoEditText.setText(currentUserDetails.getMobile());
+-        emailEditText.setText(currentUserDetails.getEmail());
+-        passwordEditText.setText(currentUserDetails.getPassword());
++        doctorNameEditText.setText(currentDoctor.getFullName());
++        specialistEditText.setText(currentDoctor.getSpecialist());
++        bmdcRegNoEditText.setText(currentDoctor.getRegistrationInfo());
++        presentAddressEditText.setText(currentDoctor.getPresentAddressInfo());
++        commonChamberEditText.setText(currentDoctor.getMedicalInfo());
++        mobileNoEditText.setText(currentDoctor.getMobile());
++        emailEditText.setText(currentDoctor.getEmail());
++        passwordEditText.setText(currentDoctor.getPassword());
+ 
+         Glide.with(DoctorProfileEditActivity.this)
+-                .load(currentUserDetails.getDoctorImageUrl())
++                .load(currentDoctor.getDoctorImageUrl())
+                 .override(600, 600)
+                 .into(doctorImageView);
+ 
+-        String str = currentUserDetails.getCheckBoxInfo();
++        String str = currentDoctor.getCheckBoxInfo();
+         if (str.matches("(.*)MBBS(.*)")) {
+             checkMBBS.setChecked(true);
+         }
+@@ -271,8 +271,8 @@
+     }
+ 
+     private void deletePreviousImage(final String newUploadedImageUri) {
+-        StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(currentUserDetails.getDoctorImageUrl());
+-        Log.d(TAG, "deletePreviousImage: prev uri "+currentUserDetails.getDoctorImageUrl());
++        StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(currentDoctor.getDoctorImageUrl());
++        Log.d(TAG, "deletePreviousImage: prev uri "+ currentDoctor.getDoctorImageUrl());
+ 
+         storageReference.delete()
+                 .addOnSuccessListener(new OnSuccessListener<Void>() {
+@@ -280,7 +280,7 @@
+                     public void onSuccess(Void aVoid) {
+                         Log.d(TAG, "onSuccess: previous image deleted successfully");
+                         Log.d(TAG, "onSuccess: new uri "+newUploadedImageUri);
+-                        currentUserDetails.setDoctorImageUrl(newUploadedImageUri);
++                        currentDoctor.setDoctorImageUrl(newUploadedImageUri);
+                         builder.dismiss();
+                         Toast.makeText(DoctorProfileEditActivity.this, "Image uploaded successfully", Toast.LENGTH_LONG).show();
+ 
+@@ -308,8 +308,8 @@
+         Log.d(TAG, "updateData: entering to profile builder");
+         if (collectEditedData() && user != null) {
+             UserProfileChangeRequest profile = new UserProfileChangeRequest.Builder()
+-                    .setDisplayName(currentUserDetails.getFullName())
+-                    .setPhotoUri(Uri.parse(currentUserDetails.getDoctorImageUrl()))
++                    .setDisplayName(currentDoctor.getFullName())
++                    .setPhotoUri(Uri.parse(currentDoctor.getDoctorImageUrl()))
+                     .build();
+ 
+             Log.d(TAG, "updateData: profile build");
+@@ -341,11 +341,11 @@
+         DatabaseReference databaseReference = FirebaseDatabase
+                 .getInstance()
+                 .getReference("doctors_profile_info")
+-                .child(currentUserDetails.getId());
++                .child(currentDoctor.getId());
+ 
+         databaseReference.keepSynced(true);
+         databaseReference
+-                .setValue(currentUserDetails)
++                .setValue(currentDoctor)
+                 .addOnSuccessListener(new OnSuccessListener<Void>() {
+                     @Override
+                     public void onSuccess(Void aVoid) {
+@@ -363,24 +363,24 @@
+     private boolean collectEditedData() {
+         Log.d(TAG, "getInformationFromUser: getting user data");
+ 
+-        currentUserDetails.setFullName(doctorNameEditText.getText().toString());
+-        currentUserDetails.setMobile(mobileNoEditText.getText().toString());
+-        currentUserDetails.setSpecialist(specialistEditText.getText().toString());
++        currentDoctor.setFullName(doctorNameEditText.getText().toString());
++        currentDoctor.setMobile(mobileNoEditText.getText().toString());
++        currentDoctor.setSpecialist(specialistEditText.getText().toString());
+ 
+-        currentUserDetails.setCheckBoxInfoEmpty();
++        currentDoctor.setCheckBoxInfoEmpty();
+         for(int i=0; i<checkBoxLinearLayout.getChildCount(); i++) {
+             if (((CheckBox) checkBoxLinearLayout.getChildAt(i)).isChecked()) {
+-                currentUserDetails.setCheckBoxInfo(((CheckBox) checkBoxLinearLayout.getChildAt(i)).getText().toString());
++                currentDoctor.setCheckBoxInfo(((CheckBox) checkBoxLinearLayout.getChildAt(i)).getText().toString());
+             }
+         }
+         Log.d(TAG, "getInformationFromUser: getting user data 2");
+-        currentUserDetails.setRegistrationInfo(bmdcRegNoEditText.getText().toString());
+-        currentUserDetails.setPresentAddressInfo(presentAddressEditText.getText().toString());
+-        currentUserDetails.setMedicalInfo(commonChamberEditText.getText().toString());
+-        currentUserDetails.setEmail(emailEditText.getText().toString());
+-        currentUserDetails.setPassword(passwordEditText.getText().toString());
++        currentDoctor.setRegistrationInfo(bmdcRegNoEditText.getText().toString());
++        currentDoctor.setPresentAddressInfo(presentAddressEditText.getText().toString());
++        currentDoctor.setMedicalInfo(commonChamberEditText.getText().toString());
++        currentDoctor.setEmail(emailEditText.getText().toString());
++        currentDoctor.setPassword(passwordEditText.getText().toString());
+ 
+-        if (currentUserDetails.getFullName().isEmpty()) {
++        if (currentDoctor.getFullName().isEmpty()) {
+             doctorNameEditText.setError("Name required");
+             doctorNameEditText.requestFocus();
+             return false;
+@@ -389,41 +389,41 @@
+          * Will be added these verification after implementing email verification and forget password facilities
+          * // TODO: 22-Apr-20 Have to implement forget password and email, mobile number verification
+          */
+-        if(currentUserDetails.getEmail().isEmpty()) {
++        if(currentDoctor.getEmail().isEmpty()) {
+             emailEditText.setError("Enter an Email Address");
+             emailEditText.requestFocus();
+             return false;
+         }
+         //Checking email validity
+-        if (!Patterns.EMAIL_ADDRESS.matcher(currentUserDetails.getEmail()).matches()) {
++        if (!Patterns.EMAIL_ADDRESS.matcher(currentDoctor.getEmail()).matches()) {
+             emailEditText.setError("Enter a valid email address");
+             emailEditText.requestFocus();
+             return false;
+         }
+ 
+         //checking the validity of password
+-        if (currentUserDetails.getPassword().length() < 8) {
++        if (currentDoctor.getPassword().length() < 8) {
+             passwordEditText.setError("Minimum length of a password should be 8");
+             passwordEditText.requestFocus();
+             return false;
+         }
+ 
+-        if (currentUserDetails.getPassword().isEmpty()) {
++        if (currentDoctor.getPassword().isEmpty()) {
+             passwordEditText.setError("Enter a password");
+             passwordEditText.requestFocus();
+             return false;
+         }
+-        if (currentUserDetails.getMobile().isEmpty()) {
++        if (currentDoctor.getMobile().isEmpty()) {
+             mobileNoEditText.setError("Mobile Number Required");
+             mobileNoEditText.requestFocus();
+             return false;
+         }
+-        if (currentUserDetails.getMobile().length() != 11) {
++        if (currentDoctor.getMobile().length() != 11) {
+             mobileNoEditText.setError("Number must be 11 digits");
+             mobileNoEditText.requestFocus();
+             return false;
+         }
+-        if (currentUserDetails.getRegistrationInfo().isEmpty()) {
++        if (currentDoctor.getRegistrationInfo().isEmpty()) {
+             bmdcRegNoEditText.setError("Registration Number Required");
+             bmdcRegNoEditText.requestFocus();
+             return false;
+Index: .idea/vcs.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"VcsDirectoryMappings\">\n    <mapping directory=\"$PROJECT_DIR$\" vcs=\"Git\" />\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/vcs.xml	(revision f3eb597d256d447a472dce565d1d1e7495703972)
++++ .idea/vcs.xml	(date 1609587651878)
+@@ -1,6 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+   <component name="VcsDirectoryMappings">
+-    <mapping directory="$PROJECT_DIR$" vcs="Git" />
++    <mapping directory="" vcs="Git" />
+   </component>
+ </project>
+\ No newline at end of file
+Index: app/src/main/res/layout/activity_sign_in_for_patient.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\n<RelativeLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\n    xmlns:tools=\"http://schemas.android.com/tools\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"match_parent\"\n    android:background=\"#1566e0\"\n    android:orientation=\"vertical\"\n    tools:context=\".patient.authentication.SignInActivityForPatient\">\n\n\n    <LinearLayout\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"match_parent\"\n        android:orientation=\"vertical\">\n\n        <LinearLayout\n            android:layout_width=\"match_parent\"\n            android:layout_height=\"wrap_content\"\n            android:gravity=\"center\">\n\n            <com.airbnb.lottie.LottieAnimationView\n                android:layout_marginTop=\"20dp\"\n                android:layout_gravity=\"center\"\n                android:layout_width=\"150dp\"\n                android:layout_height=\"150dp\"\n                android:scrollbarSize=\"40dp\"\n                app:lottie_autoPlay=\"true\"\n                app:lottie_fileName=\"patient2.json\"\n                app:lottie_loop=\"true\" />\n\n        </LinearLayout>\n\n\n        <FrameLayout\n            android:layout_width=\"match_parent\"\n            android:layout_height=\"wrap_content\"\n            >\n\n\n            <FrameLayout\n                android:layout_width=\"match_parent\"\n                android:layout_height=\"wrap_content\">\n\n\n                <LinearLayout\n                    android:layout_width=\"296dp\"\n                    android:layout_height=\"300.3dp\"\n                    android:layout_marginLeft=\"30.3dp\"\n                    android:layout_marginBottom=\"35dp\"\n                    android:background=\"@drawable/white_rounded_corner\"\n                    android:orientation=\"vertical\"\n                    android:paddingLeft=\"16dp\">\n\n                    <TextView\n                        android:layout_width=\"wrap_content\"\n                        android:layout_height=\"wrap_content\"\n                        android:layout_marginTop=\"21.5dp\"\n                        android:gravity=\"center_horizontal\"\n                        android:text=\"Patient Log In\"\n                        android:textColor=\"#333232\"\n                        android:textSize=\"23.3sp\" />\n\n                    <com.google.android.material.textfield.TextInputLayout\n                        android:id=\"@+id/usernameTextPatientLayout\"\n                        android:layout_width=\"match_parent\"\n                        android:layout_height=\"wrap_content\"\n                        app:boxBackgroundColor=\"#ffffffff\"\n                        android:layout_marginRight=\"20dp\"\n                        android:layout_marginTop=\"20.3dp\"\n                        app:endIconMode=\"clear_text\"\n                        app:errorEnabled=\"true\">\n\n                        <com.google.android.material.textfield.TextInputEditText\n                            android:layout_width=\"match_parent\"\n                            android:layout_height=\"wrap_content\"\n                            android:inputType=\"textEmailAddress\"\n                            android:singleLine=\"true\"\n                            android:hint=\"Email\"\n                            android:id=\"@+id/usernameTextPatientId\"\n                            />\n                    </com.google.android.material.textfield.TextInputLayout>\n\n                    <com.google.android.material.textfield.TextInputLayout\n                        android:id=\"@+id/passwordTextPatientLayout\"\n                        android:layout_width=\"match_parent\"\n                        android:layout_height=\"wrap_content\"\n                        app:boxBackgroundColor=\"#ffffffff\"\n                        android:layout_marginBottom=\"5dp\"\n                        android:layout_marginRight=\"20dp\"\n                        android:layout_marginTop=\"15dp\"\n                        app:endIconMode=\"password_toggle\"\n                        app:errorEnabled=\"true\">\n\n                        <com.google.android.material.textfield.TextInputEditText\n                            android:layout_width=\"match_parent\"\n                            android:layout_height=\"wrap_content\"\n                            android:inputType=\"numberPassword\"\n                            android:singleLine=\"true\"\n                            android:hint=\"Password\"\n                            android:id=\"@+id/passwordTextPatientId\"\n                            />\n                    </com.google.android.material.textfield.TextInputLayout>\n\n\n                </LinearLayout>\n\n\n            </FrameLayout>\n\n\n            <View\n                android:layout_width=\"7dp\"\n                android:layout_height=\"33dp\"\n                android:layout_marginLeft=\"27dp\"\n                android:layout_marginTop=\"21.7dp\"\n                android:background=\"@drawable/rounded_corner\" />\n\n\n            <ImageView\n                android:id=\"@+id/signInButtonForPatientId\"\n                android:layout_width=\"55dp\"\n                android:layout_height=\"55dp\"\n                android:layout_gravity=\"bottom|center\"\n                android:layout_marginLeft=\"80dp\"\n                android:src=\"@drawable/circle_arrow\"\n                android:focusable=\"true\"\n                android:clickable=\"true\"\n                android:foreground=\"?android:attr/selectableItemBackground\"/>\n\n\n        </FrameLayout>\n    </LinearLayout>\n\n\n    <LinearLayout\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"wrap_content\"\n        android:layout_alignParentBottom=\"true\"\n        android:orientation=\"vertical\">\n\n\n        <LinearLayout\n            android:layout_width=\"match_parent\"\n            android:layout_height=\"wrap_content\"\n            android:layout_marginBottom=\"14dp\"\n            android:gravity=\"center\"\n            android:orientation=\"vertical\">\n\n            <LinearLayout\n                android:layout_width=\"wrap_content\"\n                android:layout_height=\"wrap_content\">\n\n                <ProgressBar\n                    android:layout_width=\"wrap_content\"\n                    android:layout_height=\"wrap_content\"\n                    android:id=\"@+id/progressBarIn\"\n                    android:layout_marginBottom=\"5dp\"\n                    android:visibility=\"invisible\"\n                    android:layout_gravity=\"center\"/>\n\n            </LinearLayout>\n\n            <LinearLayout\n                android:layout_width=\"wrap_content\"\n                android:layout_height=\"wrap_content\">\n\n                <TextView\n                    android:layout_width=\"wrap_content\"\n                    android:layout_height=\"wrap_content\"\n                    android:gravity=\"center_horizontal\"\n                    android:text=\"New User?\"\n                    android:textColor=\"#FFFFFF\"\n                    android:textSize=\"13.3sp\" />\n\n                <TextView\n                    android:id=\"@+id/signUpTextForPatientId\"\n                    android:layout_width=\"wrap_content\"\n                    android:layout_height=\"wrap_content\"\n                    android:layout_marginLeft=\"5dp\"\n                    android:gravity=\"center_horizontal\"\n                    android:text=\"Sign Up\"\n                    android:textColor=\"#FFFFFF\"\n                    android:textSize=\"13.3sp\"\n                    android:focusable=\"true\"\n                    android:clickable=\"true\"\n                    android:foreground=\"?android:attr/selectableItemBackground\"/>\n\n            </LinearLayout>\n\n        </LinearLayout>\n\n\n    </LinearLayout>\n\n    <ImageButton\n        android:id=\"@+id/backToMainFromPatient\"\n        android:layout_width=\"30dp\"\n        android:layout_height=\"30dp\"\n        android:layout_gravity=\"center\"\n        android:layout_marginStart=\"10dp\"\n        android:layout_alignParentTop=\"true\"\n        android:layout_alignParentStart=\"true\"\n        android:layout_marginTop=\"10dp\"\n        android:scaleType=\"fitXY\"\n        android:background=\"@drawable/image_back_34dp\"\n        android:focusable=\"true\"\n        android:clickable=\"true\"\n        android:foreground=\"?android:attr/selectableItemBackground\"/>\n\n\n</RelativeLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/activity_sign_in_for_patient.xml	(revision f3eb597d256d447a472dce565d1d1e7495703972)
++++ app/src/main/res/layout/activity_sign_in_for_patient.xml	(date 1590686940963)
+@@ -95,7 +95,7 @@
+                         <com.google.android.material.textfield.TextInputEditText
+                             android:layout_width="match_parent"
+                             android:layout_height="wrap_content"
+-                            android:inputType="numberPassword"
++                            android:inputType="textPassword"
+                             android:singleLine="true"
+                             android:hint="Password"
+                             android:id="@+id/passwordTextPatientId"
+Index: app/build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>apply plugin: 'com.android.application'\napply plugin: 'com.google.gms.google-services'\n\nandroid {\n    compileSdkVersion 29\n    buildToolsVersion \"29.0.3\"\n\n    defaultConfig {\n        applicationId \"com.hasib.carebear\"\n        minSdkVersion 26\n        targetSdkVersion 29\n        versionCode 1\n        versionName \"1.0\"\n\n        testInstrumentationRunner \"androidx.test.runner.AndroidJUnitRunner\"\n    }\n\n    buildTypes {\n        release {\n            minifyEnabled false\n            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'\n        }\n    }\n\n    dataBinding{\n        enabled true\n    }\n}\n\ndependencies {\n    implementation fileTree(dir: 'libs', include: ['*.jar'])\n\n    def nav_version = \"2.3.0-alpha04\"\n\n    implementation 'com.airbnb.android:lottie:3.4.0'\n    implementation 'de.hdodenhof:circleimageview:3.1.0'\n    implementation 'androidx.appcompat:appcompat:1.1.0'\n    implementation 'androidx.legacy:legacy-support-v4:1.0.0'\n    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'\n    implementation 'androidx.navigation:navigation-fragment:2.2.1'\n    implementation 'androidx.navigation:navigation-ui:2.2.1'\n    implementation 'com.google.firebase:firebase-database:19.2.1'\n    testImplementation 'junit:junit:4.12'\n    androidTestImplementation 'androidx.test.ext:junit:1.1.1'\n    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'\n    implementation 'com.google.android.material:material:1.1.0'\n    implementation 'org.jetbrains:annotations-java5:15.0'\n\n    //utility Design --- rey5137\n    //implementation 'com.github.rey5137:material:1.3.0'\n\n    //Material Design\n    implementation 'com.google.android.material:material:1.2.0-alpha06'\n\n    //Rounded Image View\n    implementation 'com.makeramen:roundedimageview:2.3.0'\n\n    //Navigation Component\n    implementation \"androidx.navigation:navigation-fragment:$nav_version\"\n    implementation \"androidx.navigation:navigation-ui:$nav_version\"\n\n    //Google services & map\n    implementation 'com.google.android.libraries.places:places:2.2.0'\n    implementation 'com.google.maps.android:android-maps-utils:1.0.2'\n    implementation 'com.google.android.gms:play-services-location:17.0.0'\n    implementation 'com.google.android.gms:play-services-maps:17.0.0'\n    implementation 'com.google.android.gms:play-services-auth:18.0.0'\n\n    //Firebase\n    implementation 'com.google.firebase:firebase-auth:19.3.0'\n    implementation 'com.google.firebase:firebase-storage:19.1.1'\n    implementation 'com.google.firebase:firebase-analytics:17.3.0'\n\n    //Glide\n    implementation 'com.github.bumptech.glide:glide:4.11.0'\n    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'\n\n    //Picasso\n    implementation 'com.squareup.picasso:picasso:2.71828'\n\n    //Request Permission\n    implementation 'com.karumi:dexter:6.1.0'\n\n    //GeoFire for nearby location\n    implementation 'com.firebase:geofire-android:3.0.0'\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/build.gradle	(revision f3eb597d256d447a472dce565d1d1e7495703972)
++++ app/build.gradle	(date 1609587278487)
+@@ -30,46 +30,46 @@
+ dependencies {
+     implementation fileTree(dir: 'libs', include: ['*.jar'])
+ 
+-    def nav_version = "2.3.0-alpha04"
++    def nav_version = '2.3.1'
+ 
+-    implementation 'com.airbnb.android:lottie:3.4.0'
++    implementation 'com.airbnb.android:lottie:3.6.0'
+     implementation 'de.hdodenhof:circleimageview:3.1.0'
+-    implementation 'androidx.appcompat:appcompat:1.1.0'
++    implementation 'androidx.appcompat:appcompat:1.2.0'
+     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+-    implementation 'androidx.navigation:navigation-fragment:2.2.1'
+-    implementation 'androidx.navigation:navigation-ui:2.2.1'
+-    implementation 'com.google.firebase:firebase-database:19.2.1'
+-    testImplementation 'junit:junit:4.12'
+-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+-    implementation 'com.google.android.material:material:1.1.0'
+-    implementation 'org.jetbrains:annotations-java5:15.0'
++    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
++    implementation 'androidx.navigation:navigation-fragment:2.3.2'
++    implementation 'androidx.navigation:navigation-ui:2.3.2'
++    implementation 'com.google.firebase:firebase-database:19.6.0'
++    testImplementation 'junit:junit:4.13.1'
++    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
++    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
++    implementation 'com.google.android.material:material:1.2.1'
++    implementation 'org.jetbrains:annotations-java5:20.1.0'
+ 
+     //utility Design --- rey5137
+     //implementation 'com.github.rey5137:material:1.3.0'
+ 
+     //Material Design
+-    implementation 'com.google.android.material:material:1.2.0-alpha06'
++    implementation 'com.google.android.material:material:1.3.0-beta01'
+ 
+     //Rounded Image View
+     implementation 'com.makeramen:roundedimageview:2.3.0'
+ 
+     //Navigation Component
+-    implementation "androidx.navigation:navigation-fragment:$nav_version"
+-    implementation "androidx.navigation:navigation-ui:$nav_version"
++    implementation "androidx.navigation:navigation-fragment:2.3.2"
++    implementation "androidx.navigation:navigation-ui:2.3.2"
+ 
+     //Google services & map
+-    implementation 'com.google.android.libraries.places:places:2.2.0'
+-    implementation 'com.google.maps.android:android-maps-utils:1.0.2'
+-    implementation 'com.google.android.gms:play-services-location:17.0.0'
++    implementation 'com.google.android.libraries.places:places:2.4.0'
++    implementation 'com.google.maps.android:android-maps-utils:2.2.0'
++    implementation 'com.google.android.gms:play-services-location:17.1.0'
+     implementation 'com.google.android.gms:play-services-maps:17.0.0'
+-    implementation 'com.google.android.gms:play-services-auth:18.0.0'
++    implementation 'com.google.android.gms:play-services-auth:19.0.0'
+ 
+     //Firebase
+-    implementation 'com.google.firebase:firebase-auth:19.3.0'
+-    implementation 'com.google.firebase:firebase-storage:19.1.1'
+-    implementation 'com.google.firebase:firebase-analytics:17.3.0'
++    implementation 'com.google.firebase:firebase-auth:20.0.1'
++    implementation 'com.google.firebase:firebase-storage:19.2.1'
++    implementation 'com.google.firebase:firebase-analytics:18.0.0'
+ 
+     //Glide
+     implementation 'com.github.bumptech.glide:glide:4.11.0'
+@@ -79,7 +79,7 @@
+     implementation 'com.squareup.picasso:picasso:2.71828'
+ 
+     //Request Permission
+-    implementation 'com.karumi:dexter:6.1.0'
++    implementation 'com.karumi:dexter:6.2.2'
+ 
+     //GeoFire for nearby location
+     implementation 'com.firebase:geofire-android:3.0.0'
+Index: app/src/main/java/com/hasib/carebear/doctor/fragment/DoctorProfileActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.hasib.carebear.doctor.fragment;\n\nimport androidx.annotation.NonNull;\nimport androidx.appcompat.app.AlertDialog;\nimport androidx.appcompat.app.AppCompatActivity;\n\nimport android.content.Context;\nimport android.content.DialogInterface;\nimport android.content.Intent;\nimport android.net.ConnectivityManager;\nimport android.net.Network;\nimport android.net.NetworkInfo;\nimport android.os.Bundle;\nimport android.view.MenuItem;\nimport android.view.View;\nimport android.widget.Button;\nimport android.widget.ImageButton;\nimport android.widget.ImageView;\nimport android.widget.TextView;\n\nimport com.bumptech.glide.Glide;\nimport com.bumptech.glide.load.engine.DiskCacheStrategy;\nimport com.google.firebase.auth.FirebaseAuth;\nimport com.google.firebase.database.DataSnapshot;\nimport com.google.firebase.database.DatabaseError;\nimport com.google.firebase.database.DatabaseReference;\nimport com.google.firebase.database.FirebaseDatabase;\nimport com.google.firebase.database.ValueEventListener;\nimport com.hasib.carebear.R;\nimport com.hasib.carebear.doctor.container.UserDetails;\n\npublic class DoctorProfileActivity extends AppCompatActivity {\n\n    private static final String TAG = \"DoctorProfileActivity\";\n\n    private ImageView profileImage, dMBBS, dFCPS, dFRCS, dMDMS, dMPhil;\n    private TextView profileName, specialist, registration, mobile, email, presentAddress;\n    private Button editButton;\n\n    private FirebaseAuth mAuth;\n    private DatabaseReference databaseReference;\n\n    private UserDetails userDetailsForPassing;\n\n    private AlertDialog builder;\n\n    private ImageButton imageButton;\n\n    @Override\n    protected void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n        setContentView(R.layout.activity_doctor_profile);\n        this.setTitle(\"Profile Of Doctor\");\n        getSupportActionBar().hide();\n\n        initViews();\n\n        mAuth = FirebaseAuth.getInstance();\n        databaseReference = FirebaseDatabase.getInstance().getReference(\"doctors_profile_info\");\n        databaseReference.keepSynced(true);\n\n\n        editButton.setOnClickListener(new View.OnClickListener() {\n            @Override\n            public void onClick(View v) {\n                if (checkConnection()) {\n                    Intent intent = new Intent(DoctorProfileActivity.this, DoctorProfileEditActivity.class);\n                    intent.putExtra(\"user\", userDetailsForPassing);\n                    startActivity(intent);\n                } else {\n                    new AlertDialog.Builder(DoctorProfileActivity.this)\n                            .setTitle(\"Caution\")\n                            .setCancelable(true)\n                            .setMessage(\"You must have a internet connection to update you profile.\")\n                            .setPositiveButton(\"OK\", new DialogInterface.OnClickListener() {\n                                @Override\n                                public void onClick(DialogInterface dialog, int which) {\n\n                                }\n                            })\n                            .create()\n                            .show();\n                }\n            }\n        });\n\n        imageButton.setOnClickListener(new View.OnClickListener() {\n            @Override\n            public void onClick(View v) {\n                onBackPressed();\n            }\n        });\n    }\n\n    private boolean checkConnection() {\n        ConnectivityManager manager = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);\n\n        NetworkInfo activeNetwork = manager.getActiveNetworkInfo();\n        if (activeNetwork !=null) {\n            switch (activeNetwork.getType()) {\n                case ConnectivityManager.TYPE_WIFI:\n                    return true;\n                case ConnectivityManager.TYPE_MOBILE: {\n                    return true;\n                }\n                default:\n                    return false;\n            }\n        }\n        return false;\n    }\n\n    @Override\n    protected void onStart() {\n        super.onStart();\n\n        builder = new AlertDialog.Builder(this)\n                .setTitle(\"Please Wait\")\n                .setCancelable(false)\n                .setView(R.layout.dialog_progress)\n                .create();\n\n        builder.show();\n\n        new Thread(new Runnable() {\n            @Override\n            public void run() {\n                initInfo();\n            }\n        }).start();\n\n    }\n\n    private void initViews() {\n        editButton = findViewById(R.id.editButtonId);\n        profileImage = findViewById(R.id.imageViewId);\n        profileName = findViewById(R.id.nameTextViewId);\n        specialist = findViewById(R.id.specialistId);\n        registration = findViewById(R.id.bmdcRegNoId);\n        mobile = findViewById(R.id.mobileText);\n        email = findViewById(R.id.emailId);\n        presentAddress = findViewById(R.id.presentAddressId);\n        imageButton = findViewById(R.id.backToDashBoard);\n\n        dMBBS = findViewById(R.id.degreeImage1);\n        dFCPS = findViewById(R.id.degreeImage2);\n        dFRCS = findViewById(R.id.degreeImage3);\n        dMDMS = findViewById(R.id.degreeImage4);\n        dMPhil = findViewById(R.id.degreeImage5);\n    }\n\n    private void initInfo() {\n        databaseReference.addValueEventListener(new ValueEventListener() {\n            @Override\n            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {\n                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {\n                    UserDetails userDetails = snapshot.getValue(UserDetails.class);\n\n                    if (mAuth.getCurrentUser().getEmail().equals(userDetails.getEmail())) {\n                        userDetailsForPassing = userDetails;\n\n                        Glide.with(DoctorProfileActivity.this)\n                                .load(userDetails.getDoctorImageUrl())\n                                .diskCacheStrategy(DiskCacheStrategy.DATA)\n                                .override(600, 600)\n                                .into(profileImage);\n\n                        profileName.setText(userDetails.getFullName());\n                        specialist.setText(userDetails.getSpecialist());\n                        registration.setText(userDetails.getRegistrationInfo());\n                        mobile.setText(userDetails.getMobile());\n                        email.setText(userDetails.getEmail());\n                        presentAddress.setText(userDetails.getPresentAddressInfo());\n\n                        String str = userDetails.getCheckBoxInfo();\n                        if (str.matches(\"(.*)MBBS(.*)\")) {\n                            dMBBS.setImageDrawable(getDrawable(R.drawable.right));\n                        }\n                        if (str.matches(\"(.*)FCPS(.*)\")) {\n                            dFCPS.setImageDrawable(getDrawable(R.drawable.right));\n                        }\n                        if (str.matches(\"(.*)FRCS(.*)\")) {\n                            dFRCS.setImageDrawable(getDrawable(R.drawable.right));\n                        }\n                        if (str.matches(\"(.*)MD/MS(.*)\")) {\n                            dMDMS.setImageDrawable(getDrawable(R.drawable.right));\n                        }\n                        if (str.matches(\"(.*)MPhil(.*)\")) {\n                            dMPhil.setImageDrawable(getDrawable(R.drawable.right));\n                        }\n\n                        builder.dismiss();\n                        break;\n                    }\n                }\n            }\n\n            @Override\n            public void onCancelled(@NonNull DatabaseError databaseError) {\n                onBackPressed();\n            }\n        });\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/hasib/carebear/doctor/fragment/DoctorProfileActivity.java	(revision f3eb597d256d447a472dce565d1d1e7495703972)
++++ app/src/main/java/com/hasib/carebear/doctor/fragment/DoctorProfileActivity.java	(date 1623650001947)
+@@ -8,10 +8,8 @@
+ import android.content.DialogInterface;
+ import android.content.Intent;
+ import android.net.ConnectivityManager;
+-import android.net.Network;
+ import android.net.NetworkInfo;
+ import android.os.Bundle;
+-import android.view.MenuItem;
+ import android.view.View;
+ import android.widget.Button;
+ import android.widget.ImageButton;
+@@ -27,7 +25,7 @@
+ import com.google.firebase.database.FirebaseDatabase;
+ import com.google.firebase.database.ValueEventListener;
+ import com.hasib.carebear.R;
+-import com.hasib.carebear.doctor.container.UserDetails;
++import com.hasib.carebear.doctor.container.Doctor;
+ 
+ public class DoctorProfileActivity extends AppCompatActivity {
+ 
+@@ -40,7 +38,7 @@
+     private FirebaseAuth mAuth;
+     private DatabaseReference databaseReference;
+ 
+-    private UserDetails userDetailsForPassing;
++    private Doctor doctorForPassing;
+ 
+     private AlertDialog builder;
+ 
+@@ -65,7 +63,7 @@
+             public void onClick(View v) {
+                 if (checkConnection()) {
+                     Intent intent = new Intent(DoctorProfileActivity.this, DoctorProfileEditActivity.class);
+-                    intent.putExtra("user", userDetailsForPassing);
++                    intent.putExtra("user", doctorForPassing);
+                     startActivity(intent);
+                 } else {
+                     new AlertDialog.Builder(DoctorProfileActivity.this)
+@@ -154,25 +152,25 @@
+             @Override
+             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+-                    UserDetails userDetails = snapshot.getValue(UserDetails.class);
++                    Doctor doctor = snapshot.getValue(Doctor.class);
+ 
+-                    if (mAuth.getCurrentUser().getEmail().equals(userDetails.getEmail())) {
+-                        userDetailsForPassing = userDetails;
++                    if (mAuth.getCurrentUser().getEmail().equals(doctor.getEmail())) {
++                        doctorForPassing = doctor;
+ 
+                         Glide.with(DoctorProfileActivity.this)
+-                                .load(userDetails.getDoctorImageUrl())
++                                .load(doctor.getDoctorImageUrl())
+                                 .diskCacheStrategy(DiskCacheStrategy.DATA)
+                                 .override(600, 600)
+                                 .into(profileImage);
+ 
+-                        profileName.setText(userDetails.getFullName());
+-                        specialist.setText(userDetails.getSpecialist());
+-                        registration.setText(userDetails.getRegistrationInfo());
+-                        mobile.setText(userDetails.getMobile());
+-                        email.setText(userDetails.getEmail());
+-                        presentAddress.setText(userDetails.getPresentAddressInfo());
++                        profileName.setText(doctor.getFullName());
++                        specialist.setText(doctor.getSpecialist());
++                        registration.setText(doctor.getRegistrationInfo());
++                        mobile.setText(doctor.getMobile());
++                        email.setText(doctor.getEmail());
++                        presentAddress.setText(doctor.getPresentAddressInfo());
+ 
+-                        String str = userDetails.getCheckBoxInfo();
++                        String str = doctor.getCheckBoxInfo();
+                         if (str.matches("(.*)MBBS(.*)")) {
+                             dMBBS.setImageDrawable(getDrawable(R.drawable.right));
+                         }
+Index: app/src/main/java/com/hasib/carebear/doctor/listener/ProfileDetailsListener.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.hasib.carebear.doctor.listener;\n\nimport com.hasib.carebear.doctor.container.UserDetails;\n\npublic interface ProfileDetailsListener {\n    void shareUserProfileData(UserDetails userDetails);\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/hasib/carebear/doctor/listener/ProfileDetailsListener.java	(revision f3eb597d256d447a472dce565d1d1e7495703972)
++++ app/src/main/java/com/hasib/carebear/doctor/listener/ProfileDetailsListener.java	(date 1623650001425)
+@@ -1,7 +1,7 @@
+ package com.hasib.carebear.doctor.listener;
+ 
+-import com.hasib.carebear.doctor.container.UserDetails;
++import com.hasib.carebear.doctor.container.Doctor;
+ 
+ public interface ProfileDetailsListener {
+-    void shareUserProfileData(UserDetails userDetails);
++    void shareUserProfileData(Doctor doctor);
+ }
+Index: .idea/runConfigurations.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"RunConfigurationProducerService\">\n    <option name=\"ignoredProducers\">\n      <set>\n        <option value=\"org.jetbrains.plugins.gradle.execution.test.runner.AllInPackageGradleConfigurationProducer\" />\n        <option value=\"org.jetbrains.plugins.gradle.execution.test.runner.TestClassGradleConfigurationProducer\" />\n        <option value=\"org.jetbrains.plugins.gradle.execution.test.runner.TestMethodGradleConfigurationProducer\" />\n      </set>\n    </option>\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/runConfigurations.xml	(revision f3eb597d256d447a472dce565d1d1e7495703972)
++++ .idea/runConfigurations.xml	(date 1621624970683)
+@@ -3,9 +3,7 @@
+   <component name="RunConfigurationProducerService">
+     <option name="ignoredProducers">
+       <set>
+-        <option value="org.jetbrains.plugins.gradle.execution.test.runner.AllInPackageGradleConfigurationProducer" />
+-        <option value="org.jetbrains.plugins.gradle.execution.test.runner.TestClassGradleConfigurationProducer" />
+-        <option value="org.jetbrains.plugins.gradle.execution.test.runner.TestMethodGradleConfigurationProducer" />
++        <option value="com.android.tools.idea.compose.preview.runconfiguration.ComposePreviewRunConfigurationProducer" />
+       </set>
+     </option>
+   </component>

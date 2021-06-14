@@ -43,7 +43,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.hasib.carebear.R;
 import com.hasib.carebear.patient.PatientMapActivity;
-import com.hasib.carebear.patient.container.PatientUserDetails;
+import com.hasib.carebear.patient.container.Patient;
 import com.hasib.carebear.support.CareBear;
 import com.squareup.picasso.Picasso;
 
@@ -60,7 +60,7 @@ public class SignUpActivityForPatient extends AppCompatActivity implements View.
     private TextInputLayout namePatientLayout, presentAddressPatientLayout, mobileNoPatientLayout,
             emailPatientLayout, passwordPatientLayout;
     private CheckBox maleCheckBox, femaleCheckBox;
-    private PatientUserDetails patientUserDetails;
+    private Patient patientUserDetails;
     private ImageButton imageButton;
     private ImageView patientProfileImage;
     private Uri patientImageUri;
@@ -71,6 +71,7 @@ public class SignUpActivityForPatient extends AppCompatActivity implements View.
     private FirebaseAuth mAuth;
     private DatabaseReference databaseReference;
     private StorageReference storageReference;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,7 +119,7 @@ public class SignUpActivityForPatient extends AppCompatActivity implements View.
         signUpButton.setOnClickListener(this);
         imageButton.setOnClickListener(this);
 
-        patientUserDetails = new PatientUserDetails();
+        patientUserDetails = new Patient();
     }
 
     @Override

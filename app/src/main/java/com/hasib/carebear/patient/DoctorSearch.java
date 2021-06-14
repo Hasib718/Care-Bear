@@ -5,13 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.SearchView;
 
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -19,20 +15,18 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.hasib.carebear.R;
-import com.hasib.carebear.doctor.container.UserDetails;
+import com.hasib.carebear.doctor.container.Doctor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
 
 public class DoctorSearch extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private DoctorSearchAdapter adapter;
-    private List<UserDetails> doctorList;
+    private List<Doctor> doctorList;
     private SearchView searchView;
     private String searchViewStr;
-
 
     DatabaseReference databaseReference;
 
@@ -41,13 +35,13 @@ public class DoctorSearch extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctor_search);
 
-        recyclerView=(RecyclerView)findViewById(R.id.idDoctorSearchRecView);
+        recyclerView= findViewById(R.id.idDoctorSearchRecView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         doctorList = new ArrayList<>();
         adapter = new DoctorSearchAdapter(this,doctorList);
         recyclerView.setAdapter(adapter);
-        searchView = (SearchView)findViewById(R.id.idDoctorSearchBar);
+        searchView = findViewById(R.id.idDoctorSearchBar);
 
 
         databaseReference = FirebaseDatabase.getInstance().getReference("doctors_profile_info");
@@ -81,8 +75,8 @@ public class DoctorSearch extends AppCompatActivity {
             doctorList.clear();
             if(dataSnapshot.exists()){
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    UserDetails userDetails = snapshot.getValue(UserDetails.class);
-                    doctorList.add(userDetails);
+                    Doctor doctor = snapshot.getValue(Doctor.class);
+                    doctorList.add(doctor);
                 }
                 adapter.notifyDataSetChanged();
             }

@@ -15,6 +15,7 @@
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <application
         android:name=".support.CareBear"
@@ -24,7 +25,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".patient.DoctorSearch"></activity>
+        <activity android:name=".patient.Doctor_Profile" android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".patient.DoctorSearch"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".patient.PatientMapActivity" />
 
         <meta-data
@@ -32,7 +36,7 @@
             android:value="@string/Map_API_Key" />
 
         <activity
-            android:name=".doctor.fragment.DoctorProfileActivity"
+            android:name=".doctor.DoctorProfileActivity"
             android:parentActivityName=".doctor.DoctorDashBoardActivity" />
         <activity android:name=".doctor.DoctorDashBoardActivity" />
         <activity android:name=".patient.authentication.SignUpActivityForPatient" />
@@ -43,7 +47,7 @@
         <activity android:name=".doctor.authentication.SignInActivityForDoctor" />
         <activity android:name=".MainActivity" />
         <activity android:name=".support.FeedBackActivity" />
-        <activity android:name=".doctor.fragment.DoctorProfileEditActivity" />
+        <activity android:name=".doctor.DoctorProfileEditActivity" />
         <activity android:name=".SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
