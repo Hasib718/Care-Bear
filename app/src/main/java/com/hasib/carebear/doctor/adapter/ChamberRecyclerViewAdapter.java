@@ -19,17 +19,25 @@ import com.hasib.carebear.support.DayPicker;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ChamberViewHolder> {
+public class ChamberRecyclerViewAdapter extends RecyclerView.Adapter<ChamberRecyclerViewAdapter.ChamberViewHolder> {
     private static final String TAG = "RecyclerViewAdapter";
 
     private List<Chamber> aChamberList = new ArrayList<>();
-    private Context aContext;
+    private final Context aContext;
+
+    private String comingClass = "";
 
     private ChamberEventListener listener;
 
-    public RecyclerViewAdapter(Context aContext, List<Chamber> aChamberList) {
+    public ChamberRecyclerViewAdapter(Context aContext, List<Chamber> aChamberList) {
         this.aChamberList = aChamberList;
         this.aContext = aContext;
+    }
+
+    public ChamberRecyclerViewAdapter(Context aContext, List<Chamber> aChamberList, String comingClass) {
+        this.aChamberList = aChamberList;
+        this.aContext = aContext;
+        this.comingClass = comingClass;
     }
 
     @NonNull
@@ -60,19 +68,21 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.cCamberInfoLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: "+aChamberList.get(position).getChamberName());
-
-//                Toast.makeText(aContext, aChamberList.get(position).getChamberName(), Toast.LENGTH_SHORT).show();
-
-                listener.onChamberClick(chamber, position);
+                Log.d(TAG, "onClick: " + aChamberList.get(position).getChamberName());
+                if (comingClass.isEmpty()) {
+                    listener.onChamberClick(chamber, position);
+                }
             }
         });
 
         holder.cCamberInfoLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Log.d(TAG, "onLongClick: "+position);
-                listener.onChamberLongClick(chamber, position);
+                Log.d(TAG, "onLongClick: " + position);
+                if (comingClass.isEmpty()) {
+                    listener.onChamberLongClick(chamber, position);
+                    return true;
+                }
                 return false;
             }
         });

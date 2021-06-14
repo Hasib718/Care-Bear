@@ -373,11 +373,13 @@
             tools:ignore="RtlSymmetry" />
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/chamberRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingStart="14dp"
             tools:ignore="RtlSymmetry"
-            android:paddingEnd="14dp"/>
+            android:paddingEnd="14dp"
+            tools:listitem="@layout/layout_chamber_info" />
 
     </LinearLayout>
 
