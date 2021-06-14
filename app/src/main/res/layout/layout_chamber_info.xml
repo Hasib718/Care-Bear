@@ -7,103 +7,144 @@
     android:id="@+id/chamber_info_id"
     android:orientation="horizontal">
 
-    <com.google.android.material.card.MaterialCardView
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
-        app:cardBackgroundColor="#4CAF50"
-        app:cardCornerRadius="8dp"
+        android:focusable="true"
+        app:cardBackgroundColor="#7586E4"
         app:cardElevation="10dp"
-        app:cardPreventCornerOverlap="true"
-        app:rippleColor="@color/grey_3">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:id="@+id/camber_layout"
-        android:layout_margin="10dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/chamber_name_id"
-            android:text="Name"
-            android:textStyle="bold"
-            android:textSize="22sp"
-            android:textColor="@color/Black"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="5dp"
-            android:weightSum="2">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:id="@+id/chamber_fee_id"
-                android:text="Fees"
-                android:textSize="17sp"
-                android:textColor="@color/Black"/>
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:id="@+id/chamber_time_id"
-                android:text="Time"
-                android:textSize="17sp"
-                android:textColor="@color/Black" />
-
-        </LinearLayout>
-
+        android:foreground="?android:attr/selectableItemBackground"
+        app:cardCornerRadius="8dp">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginBottom="5dp">
+            android:id="@+id/camber_layout"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/chamber_name_id"
+                android:text="Name"
+                android:textStyle="bold"
+                android:textSize="25sp"
+                android:padding="5dp"
+                android:textColor="@color/Black"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="2"
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Fees: "
+                        android:textSize="17sp"
+                        android:paddingTop="5dp"
+                        android:paddingLeft="5dp"
+                        android:paddingBottom="5dp"
+                        android:textStyle="bold"
+                        android:textColor="@color/Black"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/chamber_fee_id"
+                        android:text="Fees"
+                        android:textSize="17sp"
+                        android:paddingTop="5dp"
+                        android:paddingLeft="0dp"
+                        android:paddingBottom="5dp"
+                        android:textColor="@color/Black"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Time: "
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        android:paddingTop="5dp"
+                        android:paddingLeft="5dp"
+                        android:paddingBottom="5dp"
+                        android:textColor="@color/Black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/chamber_time_id"
+                        android:text="Time"
+                        android:textSize="17sp"
+                        android:paddingTop="5dp"
+                        android:paddingLeft="0dp"
+                        android:paddingBottom="5dp"
+                        android:textColor="@color/Black" />
+                </LinearLayout>
+
+            </LinearLayout>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Address:"
-                android:textStyle="bold"
                 android:textSize="17sp"
+                android:paddingTop="5dp"
+                android:paddingLeft="5dp"
+                android:paddingBottom="0dp"
+                android:textStyle="bold"
                 android:textColor="@color/Black"/>
-
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/chamber_address_id"
                 android:text="Address"
                 android:textSize="17sp"
+                android:paddingTop="0dp"
+                android:paddingLeft="5dp"
+                android:paddingBottom="5dp"
                 android:textColor="@color/Black"/>
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/daypicker_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="10dp">
-
-            <include
-                android:id="@+id/daypicker"
-                layout="@layout/day_picker_unclickable"
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:text="Days when You'll be available"
+                android:textSize="17sp"
+                android:paddingTop="5dp"
+                android:paddingLeft="5dp"
+                android:paddingBottom="5dp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textColor="@color/Black"/>
 
+            <LinearLayout
+                android:id="@+id/daypicker_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:orientation="vertical">
+
+                <include
+                    android:id="@+id/daypicker"
+                    layout="@layout/day_picker_unclickable"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+            </LinearLayout>
         </LinearLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@color/Black"
-            android:layout_marginTop="5dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"/>
-    </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
+    </androidx.cardview.widget.CardView>
+
 </LinearLayout>

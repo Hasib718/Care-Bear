@@ -40,6 +40,7 @@
         app:lottie_fileName="heartbeat.json"
         app:lottie_loop="true" />
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="457dp"

@@ -15,7 +15,7 @@
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <application
         android:name=".support.CareBear"
@@ -25,17 +25,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".patient.PatientMapActivity"></activity>
+        <activity android:name=".patient.Doctor_Profile" android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".patient.DoctorSearch"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".patient.PatientMapActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/Map_API_Key" />
+
         <activity
             android:name=".doctor.fragment.DoctorProfileActivity"
             android:parentActivityName=".doctor.DoctorDashBoardActivity" />
         <activity android:name=".doctor.DoctorDashBoardActivity" />
-        <activity android:name=".patient.authentication.SignUpActivityForPatient" >
-        </activity>
+        <activity android:name=".patient.authentication.SignUpActivityForPatient" />
         <activity android:name=".patient.authentication.SignInActivityForPatient" />
         <activity
             android:name=".doctor.authentication.SignUpActivityForDoctor"

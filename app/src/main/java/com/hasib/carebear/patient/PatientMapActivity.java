@@ -3,6 +3,7 @@ package com.hasib.carebear.patient;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -10,6 +11,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -20,6 +22,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
@@ -64,6 +67,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.hasib.carebear.MainActivity;
 import com.hasib.carebear.R;
+import com.hasib.carebear.doctor.authentication.SignInActivityForDoctor;
+import com.hasib.carebear.doctor.authentication.SignUpActivityForDoctor;
 import com.hasib.carebear.doctor.container.Chamber;
 import com.hasib.carebear.patient.authentication.SignInActivityForPatient;
 import com.hasib.carebear.support.CareBear;
@@ -88,8 +93,6 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
 
     private static final String TAG = "PatientMapActivity";
     private static final int REQUEST_CHECK_SETTINGS = 8001;
-
-    private FloatingActionButton chamberSearchButton, deviceLocation;
 
     private GoogleMap mMap;
     private LocationRequest locationRequest;
@@ -123,7 +126,10 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
     private TextView chamberNameShow, doctorNameShow, doctorDegreeShow, doctorMedicalShow, chamberAddressShow, chamberFeeShow, chamberOpenDaysShow;
     private ImageView doctorImageShow;
 
+    private FloatingActionButton searchButton;
+
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_patient_map);
@@ -152,7 +158,15 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
         //Firebase authentication
         mAuth = FirebaseAuth.getInstance(CareBear.getPatientFirebaseApp());
 
+
         initBottomSheet();
+
+//        searchButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//            }
+//        });
 
         Dexter.withContext(this)
                 .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -182,7 +196,6 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
                     }
                 }).check();
 
-        chamberSearchButton = findViewById(R.id.chamberSearchButton);
 
         //calling method of getting device current location
         final LocationManager manager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
@@ -191,6 +204,10 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
             @Override
             public void onClick(View v) {
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                Intent intent = new Intent(PatientMapActivity.this, DoctorSearch.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
             }
         });
 
@@ -199,7 +216,7 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
             public void onClick(View v) {
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
-                if(!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                     buildAlertMessageNoGps();
                 } else {
                     gettingCurrentLocationButton();
@@ -223,13 +240,24 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
         LinearLayout llBottomSheet = findViewById(R.id.bottom_sheet);
 
         // init the bottom sheet behavior
-      bottomSheetBehavior = BottomSheetBehavior.from(llBottomSheet);
+        bottomSheetBehavior = BottomSheetBehavior.from(llBottomSheet);
 
         // change the state of the bottom sheet
-         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+//        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+
+        llBottomSheet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(bottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                }else {
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                }
+            }
+        });
 
         // set callback for changes
-      bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 // TODO: 01-May-20 have to add back button for bottom sheet 
@@ -377,13 +405,13 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
 
             @Override
             public void onGeoQueryReady() {
-                Log.d(TAG, "onGeoQueryReady: "+queryMarker.toString());
+                Log.d(TAG, "onGeoQueryReady: " + queryMarker.toString());
                 mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                     @Override
                     public boolean onMarkerClick(Marker marker) {
-                        Log.d(TAG, "onMarkerClick: "+queryMarker.get(marker));
+                        Log.d(TAG, "onMarkerClick: " + queryMarker.get(marker));
 
-                       bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
                         FirebaseDatabase
                                 .getInstance()
@@ -411,7 +439,7 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
                                         StringBuilder stringBuilder = new StringBuilder();
                                         for (Map.Entry<String, Boolean> data : chamber.getChamberOpenDays().entrySet()) {
                                             if (data.getValue().equals(Boolean.TRUE)) {
-                                                stringBuilder.append(data.getKey()+",  "+chamber.getChamberTime()+"\n");
+                                                stringBuilder.append(data.getKey() + ",  " + chamber.getChamberTime() + "\n");
                                             }
                                         }
                                         chamberOpenDaysShow.setText(stringBuilder);
@@ -452,10 +480,10 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
                     settingGeoFire(currentLocation);
 
                     currentLocationMarker = mMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(locationResult.getLastLocation().getLatitude(),
-                            locationResult.getLastLocation().getLongitude()))
-                    .title(LatLong.geoCoding(PatientMapActivity.this, locationResult.getLastLocation().getLatitude(),
-                            locationResult.getLastLocation().getLongitude())));
+                            .position(new LatLng(locationResult.getLastLocation().getLatitude(),
+                                    locationResult.getLastLocation().getLongitude()))
+                            .title(LatLong.geoCoding(PatientMapActivity.this, locationResult.getLastLocation().getLatitude(),
+                                    locationResult.getLastLocation().getLongitude())));
 
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocationMarker.getPosition(), 15.0f));
                 }
@@ -477,15 +505,28 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
         mMap = Tools.configActivityMaps(googleMap);
 
         if (fusedLocationProviderClient != null) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
             fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
         }
     }
 
     @Override
     protected void onStop() {
-        geoQuery.removeGeoQueryEventListener(listener);
-        fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+        if(geoQuery != null && fusedLocationProviderClient !=null) {
+            geoQuery.removeGeoQueryEventListener(listener);
+            fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+        }
         super.onStop();
+
     }
 
     @Override
@@ -623,6 +664,9 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
                         break;
                 }
             }
-        });    }
+        });
+    }
+
+
 
 }
