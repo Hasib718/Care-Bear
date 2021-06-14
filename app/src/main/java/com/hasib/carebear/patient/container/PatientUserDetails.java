@@ -5,6 +5,9 @@ import android.widget.CheckBox;
 public class PatientUserDetails {
     private String name,mobileNum,address,email,password;
     private Boolean sex;
+    private String imageName;
+    private String imageUrl;
+
 
     public PatientUserDetails() {
     }
@@ -14,6 +17,14 @@ public class PatientUserDetails {
         this.mobileNum = mobileNum;
         this.address = address;
         this.sex = sex;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public void setName(String name) {
@@ -40,6 +51,15 @@ public class PatientUserDetails {
         this.password = password;
     }
 
+
+    public String getImageName() {
+        return imageName;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
     public String getName() {
         return name;
     }
@@ -63,4 +83,5 @@ public class PatientUserDetails {
     public String getPassword() {
         return password;
     }
+
 }
