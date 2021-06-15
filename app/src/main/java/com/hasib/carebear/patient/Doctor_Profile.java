@@ -56,7 +56,10 @@ public class Doctor_Profile extends AppCompatActivity {
     }
 
     private void initViews() {
-        adapter = new ChamberRecyclerViewAdapter(this, chambers, Doctor_Profile.class.getSimpleName());
+        adapter = new ChamberRecyclerViewAdapter(this)
+                .setChamberList(chambers)
+                .setComingClass(Doctor_Profile.class.getSimpleName())
+                .setDoctor(doctor);
         binding.chamberRecyclerView.setAdapter(adapter);
         binding.chamberRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
