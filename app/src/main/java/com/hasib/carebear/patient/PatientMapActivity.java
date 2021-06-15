@@ -201,9 +201,7 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
             public void onClick(View v) {
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                 Intent intent = new Intent(PatientMapActivity.this, DoctorSearch.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
-                finish();
             }
         });
 
@@ -273,7 +271,9 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
         chamberOpenDaysShow = findViewById(R.id.chamberOpenDaysShow);
         doctorImageShow = findViewById(R.id.doctorImageShow);
         recyclerView = findViewById(R.id.otherChambersShowRecyclerView);
-        adapter = new ChamberRecyclerViewAdapter(this, chambers, PatientMapActivity.class.getSimpleName());
+        adapter = new ChamberRecyclerViewAdapter(this)
+                .setChamberList(chambers)
+                .setComingClass(PatientMapActivity.class.getSimpleName());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
