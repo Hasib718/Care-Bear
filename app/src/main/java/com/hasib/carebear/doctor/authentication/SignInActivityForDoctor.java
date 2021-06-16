@@ -23,7 +23,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.hasib.carebear.R;
 import com.hasib.carebear.doctor.DoctorDashBoardActivity;
-import com.hasib.carebear.doctor.container.UserDetails;
+import com.hasib.carebear.doctor.container.Doctor;
 
 public class SignInActivityForDoctor extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "SignInActivityForDoctor";
@@ -33,7 +33,7 @@ public class SignInActivityForDoctor extends AppCompatActivity implements View.O
     private TextView signUpText;
     private ImageButton imageButton;
     private Button signInButton;
-    private UserDetails userDetails;
+    private Doctor doctor;
     private FirebaseAuth mAuth;
     private ProgressBar progressBar;
 
@@ -56,7 +56,7 @@ public class SignInActivityForDoctor extends AppCompatActivity implements View.O
         mAuth = FirebaseAuth.getInstance();
 
         //Info container class
-        userDetails = new UserDetails();
+        doctor = new Doctor();
 
         signInButton.setOnClickListener(this);
         signUpText.setOnClickListener(this);
@@ -80,8 +80,8 @@ public class SignInActivityForDoctor extends AppCompatActivity implements View.O
 
     @Override
     public void onClick(View v) {
-        userDetails.setEmail(emailText.getText().toString());
-        userDetails.setPassword(passwordText.getText().toString());
+        doctor.setEmail(emailText.getText().toString());
+        doctor.setPassword(passwordText.getText().toString());
 
         if (v.getId() == R.id.signUpButtonForDoctorId) {
             Log.d(TAG, "onClick: Sign Up Button clicked");
@@ -94,7 +94,7 @@ public class SignInActivityForDoctor extends AppCompatActivity implements View.O
         if (v.getId() == R.id.signInButtonForDoctorId) {
             Log.d(TAG, "onClick: Sign In Button Clicked");
 
-            userLogin(userDetails);
+            userLogin(doctor);
         }
 
         if(v.getId() == R.id.backToMain) {
@@ -102,40 +102,40 @@ public class SignInActivityForDoctor extends AppCompatActivity implements View.O
         }
     }
 
-    private void userLogin(UserDetails userDetails) {
+    private void userLogin(Doctor doctor) {
         //Checking email validity
-        if(userDetails.getEmail().isEmpty()) {
+        if(doctor.getEmail().isEmpty()) {
             emailTextLayout.setError("Enter an Email Address");
             emailText.requestFocus();
             return;
         }
-        if(!userDetails.getEmail().isEmpty()) {
+        if(!doctor.getEmail().isEmpty()) {
             emailTextLayout.setError(null);
         }
-        if (!Patterns.EMAIL_ADDRESS.matcher(userDetails.getEmail()).matches()) {
+        if (!Patterns.EMAIL_ADDRESS.matcher(doctor.getEmail()).matches()) {
             emailTextLayout.setError("Enter a valid email address");
             emailText.requestFocus();
             return;
         }
-        if (Patterns.EMAIL_ADDRESS.matcher(userDetails.getEmail()).matches()) {
+        if (Patterns.EMAIL_ADDRESS.matcher(doctor.getEmail()).matches()) {
             emailTextLayout.setError(null);
         }
 
         //checking the validity of password
-        if (userDetails.getPassword().isEmpty()) {
+        if (doctor.getPassword().isEmpty()) {
             passwordTextLayout.setError("Enter a password");
             passwordText.requestFocus();
             return;
         }
-        if (!userDetails.getPassword().isEmpty()) {
+        if (!doctor.getPassword().isEmpty()) {
             passwordTextLayout.setError(null);
         }
-        if (userDetails.getPassword().length() < 8) {
+        if (doctor.getPassword().length() < 8) {
             passwordTextLayout.setError("Minimum length of a password should be 8");
             passwordText.requestFocus();
             return;
         }
-        if ( !(userDetails.getPassword().length() < 8) ) {
+        if ( !(doctor.getPassword().length() < 8) ) {
             passwordTextLayout.setError(null);
         }
 
@@ -143,7 +143,7 @@ public class SignInActivityForDoctor extends AppCompatActivity implements View.O
         progressBar.setVisibility(View.VISIBLE);
 
         //Sign in using Firebase
-        mAuth.signInWithEmailAndPassword(userDetails.getEmail(), userDetails.getPassword())
+        mAuth.signInWithEmailAndPassword(doctor.getEmail(), doctor.getPassword())
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {

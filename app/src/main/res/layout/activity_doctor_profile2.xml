@@ -110,13 +110,16 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
-            android:layout_marginTop="10dp"
+            android:id="@+id/firstRowOfDegree"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="center">
 
             <androidx.cardview.widget.CardView
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:id="@+id/cardMBBS"
                 android:layout_width="90dp"
                 android:layout_height="60dp"
                 android:layout_marginRight="20dp"
@@ -147,10 +150,14 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:id="@+id/cardFCPS"
                 android:layout_width="90dp"
                 android:layout_height="60dp"
                 android:layout_marginRight="20dp"
-                app:cardElevation="7dp">
+                app:cardElevation="7dp"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -177,9 +184,13 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:id="@+id/cardFRCS"
                 android:layout_width="90dp"
                 android:layout_height="60dp"
-                app:cardElevation="7dp">
+                app:cardElevation="7dp"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -208,18 +219,22 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
+            android:id="@+id/secondRowOfDegree"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:gravity="center">
+            android:gravity="center"
+            android:visibility="gone">
 
             <androidx.cardview.widget.CardView
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:id="@+id/cardMD"
                 android:layout_width="90dp"
                 android:layout_height="60dp"
                 android:layout_marginRight="20dp"
-                app:cardElevation="7dp">
+                app:cardElevation="7dp"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -246,9 +261,13 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:id="@+id/cardMPhil"
                 android:layout_width="90dp"
                 android:layout_height="60dp"
-                app:cardElevation="7dp">
+                app:cardElevation="7dp"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -295,6 +314,7 @@
                     android:layout_marginRight="5dp"
                     android:text="Associate Medical: "
                     android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    android:layout_marginTop="10dp"
                     android:textSize="17sp" />
 
                 <TextView
@@ -327,6 +347,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/doctorCallId"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -361,11 +382,13 @@
             tools:ignore="RtlSymmetry" />
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/chamberRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="14dp"
+            android:paddingStart="2dp"
+            android:paddingEnd="2dp"
             tools:ignore="RtlSymmetry"
-            android:paddingEnd="14dp"/>
+            tools:listitem="@layout/layout_chamber_info" />
 
     </LinearLayout>
 

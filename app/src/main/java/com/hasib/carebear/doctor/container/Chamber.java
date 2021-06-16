@@ -1,6 +1,5 @@
 package com.hasib.carebear.doctor.container;
 
-import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -53,8 +52,7 @@ public class Chamber implements Parcelable {
         this.chamberName = parcel.readString();
         this.chamberFees = parcel.readString();
         this.chamberAddress = parcel.readString();
-        Bundle bundle = parcel.readBundle();
-        this.chamberLatLng = bundle.getParcelable("latlng");
+        this.chamberLatLng = parcel.readParcelable(LatLong.class.getClassLoader());
         this.chamberTime = parcel.readString();
         this.chamberOpenDays = parcel.readHashMap(HashMap.class.getClassLoader());
         this.doctorUserProfileId = parcel.readString();
@@ -158,9 +156,7 @@ public class Chamber implements Parcelable {
         dest.writeString(chamberName);
         dest.writeString(chamberFees);
         dest.writeString(chamberAddress);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("latlng", chamberLatLng);
-        dest.writeBundle(bundle);
+        dest.writeParcelable(chamberLatLng, flags);
         dest.writeString(chamberTime);
         dest.writeMap(chamberOpenDays);
         dest.writeString(doctorUserProfileId);

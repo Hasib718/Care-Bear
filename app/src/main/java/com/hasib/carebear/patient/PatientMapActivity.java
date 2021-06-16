@@ -1,12 +1,5 @@
 package com.hasib.carebear.patient;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
@@ -22,12 +15,20 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
@@ -67,8 +68,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.hasib.carebear.MainActivity;
 import com.hasib.carebear.R;
-import com.hasib.carebear.doctor.authentication.SignInActivityForDoctor;
-import com.hasib.carebear.doctor.authentication.SignUpActivityForDoctor;
+import com.hasib.carebear.doctor.adapter.ChamberRecyclerViewAdapter;
 import com.hasib.carebear.doctor.container.Chamber;
 import com.hasib.carebear.patient.authentication.SignInActivityForPatient;
 import com.hasib.carebear.support.CareBear;
@@ -83,6 +83,7 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -101,7 +102,7 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
     private Marker currentLocationMarker, marker;
     private LatLng currentLocation;
 
-    private Map<Marker, String> queryMarker = new HashMap<>();
+    private final Map<Marker, String> queryMarker = new HashMap<>();
 
     private DatabaseReference databaseReference;
     private GeoFire geoFire;
@@ -127,6 +128,9 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
     private ImageView doctorImageShow;
 
     private FloatingActionButton searchButton;
+    private final List<Chamber> chambers = new ArrayList<>();
+    private RecyclerView recyclerView;
+    private ChamberRecyclerViewAdapter adapter;
 
     @Override
 
@@ -139,6 +143,8 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         getSupportActionBar().hide();
+
+        initBottomSheet();
 
         //Navigation panel control
         navigationView = findViewById(R.id.navigationId);
@@ -157,16 +163,6 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
 
         //Firebase authentication
         mAuth = FirebaseAuth.getInstance(CareBear.getPatientFirebaseApp());
-
-
-        initBottomSheet();
-
-//        searchButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//            }
-//        });
 
         Dexter.withContext(this)
                 .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -205,9 +201,7 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
             public void onClick(View v) {
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                 Intent intent = new Intent(PatientMapActivity.this, DoctorSearch.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
-                finish();
             }
         });
 
@@ -243,7 +237,7 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
         bottomSheetBehavior = BottomSheetBehavior.from(llBottomSheet);
 
         // change the state of the bottom sheet
-//        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        // bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
         llBottomSheet.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -276,6 +270,12 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
         chamberFeeShow = findViewById(R.id.chamberFeeShow);
         chamberOpenDaysShow = findViewById(R.id.chamberOpenDaysShow);
         doctorImageShow = findViewById(R.id.doctorImageShow);
+        recyclerView = findViewById(R.id.otherChambersShowRecyclerView);
+        adapter = new ChamberRecyclerViewAdapter(this)
+                .setChamberList(chambers)
+                .setComingClass(PatientMapActivity.class.getSimpleName());
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     private void gettingCurrentLocationButton() {
@@ -420,18 +420,9 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
                                 .addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        HashMap hashMap = (HashMap) dataSnapshot.getValue();
+                                        Chamber chamber = dataSnapshot.getValue(Chamber.class);
 
-                                        Log.d(TAG, "onDataChange: " + hashMap.toString());
-
-                                        HashMap latlng = (HashMap) hashMap.get("chamberLatLng");
-
-                                        LatLong latLong = new LatLong((Double) latlng.get("latitude"), (Double) latlng.get("longitude"));
-                                        Chamber chamber = new Chamber((String) hashMap.get("chamberName"), (String) hashMap.get("chamberFees"),
-                                                (String) hashMap.get("chamberAddress"), latLong,
-                                                (String) hashMap.get("chamberTime"), (HashMap) hashMap.get("chamberOpenDays"),
-                                                (String) hashMap.get("doctorUserProfileId"), (String) hashMap.get("chamberDatabaseId"),
-                                                (String) hashMap.get("chamberDatabaseIdKeyInDoctorProfile"));
+                                        Log.d(TAG, "onDataChange: " + chamber.toString());
 
                                         chamberNameShow.setText(chamber.getChamberName());
                                         chamberAddressShow.setText(chamber.getChamberAddress());
@@ -444,6 +435,7 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
                                         }
                                         chamberOpenDaysShow.setText(stringBuilder);
 
+                                        fetchingChamberDatabasekeys(chamber.getDoctorUserProfileId());
                                     }
 
                                     @Override
@@ -667,6 +659,64 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
         });
     }
 
+    private void fetchingChamberDatabasekeys(String id) {
+        DatabaseReference reference = FirebaseDatabase
+                .getInstance()
+                .getReference("doctors_profile_info")
+                .child(id)
+                .child("chamber");
+        reference.keepSynced(true);
 
+        adapter.notifyDataSetChanged();
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                HashMap<String, String> hashMap = (HashMap<String, String>) dataSnapshot.getValue();
+
+                try {
+                    Log.d(TAG, "onDataChange: " + hashMap.values().toString());
+
+                    for (Map.Entry<String, String> data : hashMap.entrySet()) {
+                        fetchingChamberData(data.getValue());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d(TAG, "onCancelled: " + databaseError.getMessage());
+            }
+        });
+    }
+
+
+    private void fetchingChamberData(String s) {
+        DatabaseReference reference = FirebaseDatabase
+                .getInstance()
+                .getReference("doctors_chamber_info")
+                .child(s);
+
+        reference.keepSynced(true);
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Chamber chamber = dataSnapshot.getValue(Chamber.class);
+
+                Log.d(TAG, "onDataChange: " + chamber.toString());
+
+                chambers.add(chamber);
+                adapter.notifyDataSetChanged();
+
+                Log.d(TAG, "onDataChange: chamber " + chamber.toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
 
 }

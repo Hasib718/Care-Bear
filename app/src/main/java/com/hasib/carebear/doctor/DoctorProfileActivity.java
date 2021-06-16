@@ -1,22 +1,20 @@
-package com.hasib.carebear.doctor.fragment;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
+package com.hasib.carebear.doctor;
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
-import android.net.Network;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -27,7 +25,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.hasib.carebear.R;
-import com.hasib.carebear.doctor.container.UserDetails;
+import com.hasib.carebear.doctor.container.Doctor;
 
 public class DoctorProfileActivity extends AppCompatActivity {
 
@@ -40,7 +38,7 @@ public class DoctorProfileActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private DatabaseReference databaseReference;
 
-    private UserDetails userDetailsForPassing;
+    private Doctor doctorForPassing;
 
     private AlertDialog builder;
 
@@ -65,7 +63,7 @@ public class DoctorProfileActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (checkConnection()) {
                     Intent intent = new Intent(DoctorProfileActivity.this, DoctorProfileEditActivity.class);
-                    intent.putExtra("user", userDetailsForPassing);
+                    intent.putExtra("user", doctorForPassing);
                     startActivity(intent);
                 } else {
                     new AlertDialog.Builder(DoctorProfileActivity.this)
@@ -154,25 +152,25 @@ public class DoctorProfileActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    UserDetails userDetails = snapshot.getValue(UserDetails.class);
+                    Doctor doctor = snapshot.getValue(Doctor.class);
 
-                    if (mAuth.getCurrentUser().getEmail().equals(userDetails.getEmail())) {
-                        userDetailsForPassing = userDetails;
+                    if (mAuth.getCurrentUser().getEmail().equals(doctor.getEmail())) {
+                        doctorForPassing = doctor;
 
                         Glide.with(DoctorProfileActivity.this)
-                                .load(userDetails.getDoctorImageUrl())
+                                .load(doctor.getDoctorImageUrl())
                                 .diskCacheStrategy(DiskCacheStrategy.DATA)
                                 .override(600, 600)
                                 .into(profileImage);
 
-                        profileName.setText(userDetails.getFullName());
-                        specialist.setText(userDetails.getSpecialist());
-                        registration.setText(userDetails.getRegistrationInfo());
-                        mobile.setText(userDetails.getMobile());
-                        email.setText(userDetails.getEmail());
-                        presentAddress.setText(userDetails.getPresentAddressInfo());
+                        profileName.setText(doctor.getFullName());
+                        specialist.setText(doctor.getSpecialist());
+                        registration.setText(doctor.getRegistrationInfo());
+                        mobile.setText(doctor.getMobile());
+                        email.setText(doctor.getEmail());
+                        presentAddress.setText(doctor.getPresentAddressInfo());
 
-                        String str = userDetails.getCheckBoxInfo();
+                        String str = doctor.getCheckBoxInfo();
                         if (str.matches("(.*)MBBS(.*)")) {
                             dMBBS.setImageDrawable(getDrawable(R.drawable.right));
                         }

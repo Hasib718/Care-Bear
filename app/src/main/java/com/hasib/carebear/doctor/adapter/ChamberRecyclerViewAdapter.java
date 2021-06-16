@@ -1,6 +1,7 @@
 package com.hasib.carebear.doctor.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,21 +14,28 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.hasib.carebear.R;
 import com.hasib.carebear.doctor.container.Chamber;
+import com.hasib.carebear.doctor.container.Doctor;
 import com.hasib.carebear.doctor.listener.ChamberEventListener;
+import com.hasib.carebear.patient.AppointmentActivity;
 import com.hasib.carebear.support.DayPicker;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ChamberViewHolder> {
-    private static final String TAG = "RecyclerViewAdapter";
+public class ChamberRecyclerViewAdapter extends RecyclerView.Adapter<ChamberRecyclerViewAdapter.ChamberViewHolder> {
+    private static final String TAG = "ChamberRecyclerViewAdapter";
 
     private List<Chamber> aChamberList = new ArrayList<>();
-    private Context aContext;
-
+    private final Context aContext;
+    private String comingClass = "";
+    private Doctor doctor;
     private ChamberEventListener listener;
 
-    public RecyclerViewAdapter(Context aContext, List<Chamber> aChamberList) {
+    public ChamberRecyclerViewAdapter(Context context) {
+        this.aContext = context;
+    }
+
+    public ChamberRecyclerViewAdapter(Context aContext, List<Chamber> aChamberList) {
         this.aChamberList = aChamberList;
         this.aContext = aContext;
     }
@@ -60,19 +68,29 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.cCamberInfoLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: "+aChamberList.get(position).getChamberName());
-
-//                Toast.makeText(aContext, aChamberList.get(position).getChamberName(), Toast.LENGTH_SHORT).show();
-
-                listener.onChamberClick(chamber, position);
+                Log.d(TAG, "onClick: " + chamber.toString());
+                if (comingClass.isEmpty()) {
+                    listener.onChamberClick(chamber, position);
+                } else {
+                    Intent intent = new Intent(v.getContext(), AppointmentActivity.class);
+                    intent.putExtra("clicked_chamber", chamber);
+                    intent.putExtra("clicked_chamber_doctor", doctor);
+                    intent.putExtra("Chamber_Name", aChamberList.get(position).getChamberName());
+                    intent.putExtra("Doctor_fees", aChamberList.get(position).getChamberFees() + " Tk");
+                    intent.putExtra("Chamber_Address", aChamberList.get(position).getChamberAddress());
+                    v.getContext().startActivity(intent);
+                }
             }
         });
 
         holder.cCamberInfoLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Log.d(TAG, "onLongClick: "+position);
-                listener.onChamberLongClick(chamber, position);
+                Log.d(TAG, "onLongClick: " + position);
+                if (comingClass.isEmpty()) {
+                    listener.onChamberLongClick(chamber, position);
+                    return true;
+                }
                 return false;
             }
         });
@@ -83,8 +101,24 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return aChamberList.size();
     }
 
-    public void setListener(ChamberEventListener listener) {
+    public ChamberRecyclerViewAdapter setListener(ChamberEventListener listener) {
         this.listener = listener;
+        return this;
+    }
+
+    public ChamberRecyclerViewAdapter setChamberList(List<Chamber> aChamberList) {
+        this.aChamberList = aChamberList;
+        return this;
+    }
+
+    public ChamberRecyclerViewAdapter setComingClass(String comingClass) {
+        this.comingClass = comingClass;
+        return this;
+    }
+
+    public ChamberRecyclerViewAdapter setDoctor(Doctor doctor) {
+        this.doctor = doctor;
+        return this;
     }
 
     public class ChamberViewHolder extends RecyclerView.ViewHolder {
