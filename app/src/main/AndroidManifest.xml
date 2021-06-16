@@ -26,6 +26,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <activity android:name=".patient.PatientAppointmentActivity" />
         <activity
             android:name=".patient.AppointmentActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
