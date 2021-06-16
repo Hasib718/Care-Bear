@@ -38,7 +38,7 @@
         android:scrollbarSize="40dp"
         app:lottie_autoPlay="true"
         app:lottie_fileName="heartbeat.json"
-        app:lottie_loop="true" />
+        app:lottie_loop="false" />
 
 
     <LinearLayout
@@ -82,7 +82,7 @@
                         android:scrollbarSize="40dp"
                         app:lottie_autoPlay="true"
                         app:lottie_fileName="doctor2.json"
-                        app:lottie_loop="true" />
+                        app:lottie_loop="false" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:layout_width="wrap_content"
