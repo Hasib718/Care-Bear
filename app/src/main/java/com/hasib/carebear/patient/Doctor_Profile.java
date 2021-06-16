@@ -1,5 +1,7 @@
 package com.hasib.carebear.patient;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -51,6 +53,14 @@ public class Doctor_Profile extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 onBackPressed();
+            }
+        });
+
+        binding.doctorCallId.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String mobileNumber = binding.doctorMobileText.getText().toString();
+                startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+mobileNumber)));
             }
         });
     }
