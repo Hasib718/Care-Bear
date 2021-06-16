@@ -13,9 +13,15 @@
             android:title="Profile"
             android:icon="@drawable/ic_person_black_24dp"/>
         <item
+            android:id="@+id/appointmentsId"
+            android:title="Appointments"
+            android:icon="@drawable/ic_menu_black_24dp"
+            />
+        <item
             android:id="@+id/signOutMenuId"
             android:title="Sign Out"
             android:icon="@drawable/ic_power_settings_new_black_24dp"/>
+
     </group>
 
     <item android:title="Communicate">

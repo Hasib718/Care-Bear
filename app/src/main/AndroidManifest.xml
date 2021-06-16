@@ -25,9 +25,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
             android:name=".patient.AppointmentActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
+
         <activity
             android:name=".patient.Doctor_Profile"
             android:theme="@style/AppTheme.NoActionBar" />

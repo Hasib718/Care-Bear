@@ -101,5 +101,6 @@
             android:background="@android:color/white"
             app:headerLayout="@layout/nav_header"
             app:menu="@menu/nav_menu_layout" />
+
     </androidx.drawerlayout.widget.DrawerLayout>
 </RelativeLayout>

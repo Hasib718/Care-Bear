@@ -39,7 +39,7 @@ public class Doctor_Profile extends AppCompatActivity {
     private final List<Chamber> chambers = new ArrayList<>();
     private Doctor doctor;
     private ChamberRecyclerViewAdapter adapter;
-
+    private String docImageUrl;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +60,8 @@ public class Doctor_Profile extends AppCompatActivity {
 
         initViews();
         fetchingChamberDatabasekeys(doctor.getId());
+
+        docImageUrl = doctor.getDoctorImageUrl();
 
         populateUi();
 
@@ -92,6 +94,12 @@ public class Doctor_Profile extends AppCompatActivity {
         binding.doctorName.setText(doctor.getFullName());
         binding.doctorSpecialist.setText(doctor.getSpecialist());
         binding.doctorBmdcRegNo.setText(doctor.getRegistrationInfo());
+
+        Glide.with(this)
+                .load(docImageUrl)
+                .placeholder(R.drawable.icon_red)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .into(binding.doctorImageInPatient);
 
         String str = doctor.getCheckBoxInfo();
         if (str.matches("(.*)FCPS(.*)")) {

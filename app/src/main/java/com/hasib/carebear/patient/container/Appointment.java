@@ -11,6 +11,8 @@ public class Appointment {
     private String timeDate;
     private long serialNumber;
 
+    public Appointment() {}
+
     public Appointment(String id, String idInChamber, Chamber chamber, Doctor doctor, String timeDate, long serialNumber) {
         this.id = id;
         this.idInChamber = idInChamber;
