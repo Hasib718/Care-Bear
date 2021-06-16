@@ -75,6 +75,9 @@ public class ChamberRecyclerViewAdapter extends RecyclerView.Adapter<ChamberRecy
                     Intent intent = new Intent(v.getContext(), AppointmentActivity.class);
                     intent.putExtra("clicked_chamber", chamber);
                     intent.putExtra("clicked_chamber_doctor", doctor);
+                    intent.putExtra("Chamber_Name", aChamberList.get(position).getChamberName());
+                    intent.putExtra("Doctor_fees", aChamberList.get(position).getChamberFees() + " Tk");
+                    intent.putExtra("Chamber_Address", aChamberList.get(position).getChamberAddress());
                     v.getContext().startActivity(intent);
                 }
             }

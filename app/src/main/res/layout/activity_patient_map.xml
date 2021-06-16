@@ -42,7 +42,8 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:contentDescription="@string/app_name"
-                    android:src="@drawable/ic_menu_black_24dp" />
+                    android:src="@drawable/ic_menu_black_24dp"
+                    android:layout_marginStart="10dp"/>
 
                 <SearchView
                     android:layout_width="match_parent"
