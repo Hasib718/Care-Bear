@@ -199,6 +199,7 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
         findViewById(R.id.chamberSearchButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                 Intent intent = new Intent(PatientMapActivity.this, DoctorSearch.class);
                 startActivity(intent);
@@ -591,6 +592,13 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
 
                 //Intenting to sign in activity for doctor
                 startActivity(new Intent(PatientMapActivity.this, SignInActivityForPatient.class));
+            }
+            break;
+
+            case R.id.appointmentsId: {
+                Log.d(TAG, "onNavigationItemSelected: user signing out");
+
+                startActivity(new Intent(PatientMapActivity.this, PatientAppointmentActivity.class));
             }
             break;
 

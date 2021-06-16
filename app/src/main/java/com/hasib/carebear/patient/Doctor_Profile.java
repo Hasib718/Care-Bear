@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,7 +35,7 @@ public class Doctor_Profile extends AppCompatActivity {
     private final List<Chamber> chambers = new ArrayList<>();
     private Doctor doctor;
     private ChamberRecyclerViewAdapter adapter;
-
+    private String docImageUrl;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +46,8 @@ public class Doctor_Profile extends AppCompatActivity {
 
         initViews();
         fetchingChamberDatabasekeys(doctor.getId());
+
+        docImageUrl = doctor.getDoctorImageUrl();
 
         populateUi();
 
@@ -68,6 +72,12 @@ public class Doctor_Profile extends AppCompatActivity {
         binding.doctorName.setText(doctor.getFullName());
         binding.doctorSpecialist.setText(doctor.getSpecialist());
         binding.doctorBmdcRegNo.setText(doctor.getRegistrationInfo());
+
+        Glide.with(this)
+                .load(docImageUrl)
+                .placeholder(R.drawable.icon_red)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .into(binding.doctorImageInPatient);
 
         String str = doctor.getCheckBoxInfo();
         if (str.matches("(.*)FCPS(.*)")) {
