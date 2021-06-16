@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -59,6 +60,7 @@ public class DoctorSearchAdapter extends RecyclerView.Adapter<DoctorSearchAdapte
             public void onClick(View view) {
                 Intent i = new Intent(view.getContext(), Doctor_Profile.class);
                 i.putExtra("doctor_clicked", doctor);
+                i.putExtra("doctor_Image_Uri", docPicUrl);
                 view.getContext().startActivity(i);
             }
         });
@@ -74,7 +76,7 @@ public class DoctorSearchAdapter extends RecyclerView.Adapter<DoctorSearchAdapte
         TextView name;
         TextView specialist;
         TextView checkboxinfo;
-        LinearLayout doc_box;
+        CardView doc_box;
         CircleImageView docPic;
 
         public viewHolder(@NonNull View itemView) {

@@ -11,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,6 +28,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Doctor_Profile extends AppCompatActivity {
 
@@ -43,6 +47,16 @@ public class Doctor_Profile extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         doctor = getIntent().getParcelableExtra("doctor_clicked");
+
+        //For Displaying Image in Doctor Profile From Patient;
+        CircleImageView doctorImage = findViewById(R.id.doctorImageInPatient);
+        Bundle bundle = getIntent().getExtras();
+        String docPicUrl1 = bundle.getString("doctor_Image_Uri");
+        Glide.with(getApplicationContext())
+                .load(docPicUrl1)
+                .placeholder(R.drawable.icon_red)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .into(doctorImage);
 
         initViews();
         fetchingChamberDatabasekeys(doctor.getId());

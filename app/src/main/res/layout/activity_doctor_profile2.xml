@@ -385,9 +385,9 @@
             android:id="@+id/chamberRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="14dp"
+            android:paddingStart="2dp"
+            android:paddingEnd="2dp"
             tools:ignore="RtlSymmetry"
-            android:paddingEnd="14dp"
             tools:listitem="@layout/layout_chamber_info" />
 
     </LinearLayout>
