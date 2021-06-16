@@ -71,16 +71,6 @@
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textColor="@color/Black" />
 
-
-                    <TextView
-                        android:id="@+id/doctorMedicalShow"
-                        android:layout_width="match_parent"
-                        android:layout_height="30dp"
-                        android:layout_marginStart="20dp"
-                        android:gravity="center_vertical"
-                        android:text="Doctor medical"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textColor="@color/Black" />
                 </LinearLayout>
             </LinearLayout>
 

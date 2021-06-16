@@ -30,6 +30,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
@@ -70,6 +72,7 @@ import com.hasib.carebear.MainActivity;
 import com.hasib.carebear.R;
 import com.hasib.carebear.doctor.adapter.ChamberRecyclerViewAdapter;
 import com.hasib.carebear.doctor.container.Chamber;
+import com.hasib.carebear.doctor.container.Doctor;
 import com.hasib.carebear.patient.authentication.SignInActivityForPatient;
 import com.hasib.carebear.support.CareBear;
 import com.hasib.carebear.support.FeedBackActivity;
@@ -81,6 +84,8 @@ import com.karumi.dexter.listener.PermissionDeniedResponse;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -124,7 +129,7 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
 
     private BottomSheetBehavior bottomSheetBehavior;
 
-    private TextView chamberNameShow, doctorNameShow, doctorDegreeShow, doctorMedicalShow, chamberAddressShow, chamberFeeShow, chamberOpenDaysShow;
+    private TextView chamberNameShow, doctorNameShow, doctorDegreeShow, chamberAddressShow, chamberFeeShow, chamberOpenDaysShow;
     private ImageView doctorImageShow;
 
     private FloatingActionButton searchButton;
@@ -266,7 +271,6 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
         chamberNameShow = findViewById(R.id.chamberNameShow);
         doctorNameShow = findViewById(R.id.doctorNameShow);
         doctorDegreeShow = findViewById(R.id.doctorDegreeShow);
-        doctorMedicalShow = findViewById(R.id.doctorMedicalShow);
         chamberAddressShow = findViewById(R.id.chamberAddressShow);
         chamberFeeShow = findViewById(R.id.chamberFeeShow);
         chamberOpenDaysShow = findViewById(R.id.chamberOpenDaysShow);
@@ -428,7 +432,9 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
                                         chamberNameShow.setText(chamber.getChamberName());
                                         chamberAddressShow.setText(chamber.getChamberAddress());
                                         chamberFeeShow.setText(chamber.getChamberFees() + " Taka");
+                                        addDoctorInfo(chamber.getDoctorUserProfileId());
                                         StringBuilder stringBuilder = new StringBuilder();
+
                                         for (Map.Entry<String, Boolean> data : chamber.getChamberOpenDays().entrySet()) {
                                             if (data.getValue().equals(Boolean.TRUE)) {
                                                 stringBuilder.append(data.getKey() + ",  " + chamber.getChamberTime() + "\n");
@@ -456,6 +462,33 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
         };
 
         geoQuery.addGeoQueryEventListener(listener);
+    }
+
+    private void addDoctorInfo(String doctorUserProfileId) {
+        FirebaseDatabase
+                .getInstance()
+                .getReference("doctors_profile_info")
+                .child(doctorUserProfileId)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull @NotNull DataSnapshot dataSnapshot) {
+                        Doctor doctor = dataSnapshot.getValue(Doctor.class);
+                        Log.d(TAG, "onDataChange: " + doctor.toString());
+                        doctorNameShow.setText(doctor.getFullName());
+                        doctorDegreeShow.setText(doctor.getCheckBoxInfo());
+
+                        Glide.with(PatientMapActivity.this)
+                                .load(doctor.getDoctorImageUrl())
+                                .placeholder(R.drawable.bear)
+                                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                .into(doctorImageShow);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull @NotNull DatabaseError databaseError) {
+
+                    }
+                });
     }
 
     private void buildLocationCallBack() {
@@ -625,6 +658,7 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
             case R.id.contactMenuId: {
                 startActivity(new Intent(PatientMapActivity.this, FeedBackActivity.class));
             }
+            break;
         }
 
         return false;

@@ -131,8 +131,7 @@
                         android:inputType="textPersonName"
                         android:singleLine="true"
                         android:hint="Name"
-                        android:id="@+id/nameText"
-                        />
+                        android:id="@+id/nameText" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
