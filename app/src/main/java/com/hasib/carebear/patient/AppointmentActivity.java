@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -34,6 +35,8 @@ public class AppointmentActivity extends AppCompatActivity implements DatePicker
 
     private static final String TAG = AppointmentActivity.class.getSimpleName();
 
+    private ImageView backButton;
+
     private ActivityAppointmentBinding binding;
     private Chamber chamber;
     private Doctor doctor;
@@ -51,9 +54,13 @@ public class AppointmentActivity extends AppCompatActivity implements DatePicker
         binding = ActivityAppointmentBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        Bundle bundle = getIntent().getExtras();
         chamber = getIntent().getParcelableExtra("clicked_chamber");
         doctor = getIntent().getParcelableExtra("clicked_chamber_doctor");
         Log.d(TAG, "onCreate: " + chamber.toString());
+        binding.doctorChamberName.setText(bundle.getString("Chamber_Name"));
+        binding.doctorChamberFee.setText(bundle.getString("Doctor_fees"));
+        binding.doctorChamberAddress.setText(bundle.getString("Chamber_Address"));
 
         calendar = Calendar.getInstance();
 
@@ -73,6 +80,13 @@ public class AppointmentActivity extends AppCompatActivity implements DatePicker
             @Override
             public void onClick(View v) {
                 addAppointment(reference.push().getKey(), chamberReference.push().getKey(), patientReference.push().getKey());
+            }
+        });
+
+        binding.backToDoctorProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
             }
         });
     }
@@ -136,6 +150,8 @@ public class AppointmentActivity extends AppCompatActivity implements DatePicker
                         Log.d(TAG, "onFailure: " + e);
                     }
                 });
+
+        binding.confirm.setEnabled(false);
 
     }
 

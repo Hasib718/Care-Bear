@@ -88,6 +88,8 @@ public class DoctorProfileActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
+        initInfo();
     }
 
     private boolean checkConnection() {
@@ -112,20 +114,20 @@ public class DoctorProfileActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        builder = new AlertDialog.Builder(this)
-                .setTitle("Please Wait")
-                .setCancelable(false)
-                .setView(R.layout.dialog_progress)
-                .create();
-
-        builder.show();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                initInfo();
-            }
-        }).start();
+//        builder = new AlertDialog.Builder(this)
+//                .setTitle("Please Wait")
+//                .setCancelable(false)
+//                .setView(R.layout.dialog_progress)
+//                .create();
+//
+//        builder.show();
+//
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                initInfo();
+//            }
+//        }).start();
 
     }
 
@@ -187,7 +189,7 @@ public class DoctorProfileActivity extends AppCompatActivity {
                             dMPhil.setImageDrawable(getDrawable(R.drawable.right));
                         }
 
-                        builder.dismiss();
+//                        builder.dismiss();
                         break;
                     }
                 }

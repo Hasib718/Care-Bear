@@ -1,5 +1,7 @@
 package com.hasib.carebear.patient;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -27,6 +29,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class Doctor_Profile extends AppCompatActivity {
 
     private static final String TAG = Doctor_Profile.class.getSimpleName();
@@ -44,6 +48,16 @@ public class Doctor_Profile extends AppCompatActivity {
 
         doctor = getIntent().getParcelableExtra("doctor_clicked");
 
+        //For Displaying Image in Doctor Profile From Patient;
+        CircleImageView doctorImage = findViewById(R.id.doctorImageInPatient);
+        Bundle bundle = getIntent().getExtras();
+        String docPicUrl1 = bundle.getString("doctor_Image_Uri");
+        Glide.with(getApplicationContext())
+                .load(docPicUrl1)
+                .placeholder(R.drawable.icon_red)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .into(doctorImage);
+
         initViews();
         fetchingChamberDatabasekeys(doctor.getId());
 
@@ -55,6 +69,14 @@ public class Doctor_Profile extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 onBackPressed();
+            }
+        });
+
+        binding.doctorCallId.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String mobileNumber = binding.doctorMobileText.getText().toString();
+                startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+mobileNumber)));
             }
         });
     }

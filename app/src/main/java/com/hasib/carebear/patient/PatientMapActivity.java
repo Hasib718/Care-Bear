@@ -238,7 +238,7 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
         bottomSheetBehavior = BottomSheetBehavior.from(llBottomSheet);
 
         // change the state of the bottom sheet
-        // bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
         llBottomSheet.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -577,6 +577,8 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
 
             case R.id.profileMenuId: {
                 Log.d(TAG, "onNavigationItemSelected: Profile Button Pressed");
+                Toast toast = Toast.makeText(getApplicationContext(), "profile", Toast.LENGTH_SHORT);
+                toast.show();
 
                 //Intenting to doctor's profile activity
 //                startActivity(new Intent(PatientMapActivity.this, DoctorProfileActivity.class));
@@ -584,6 +586,8 @@ public class PatientMapActivity extends AppCompatActivity implements OnMapReadyC
             break;
 
             case R.id.signOutMenuId: {
+                Toast toast = Toast.makeText(getApplicationContext(), "signOut", Toast.LENGTH_SHORT);
+                toast.show();
                 Log.d(TAG, "onNavigationItemSelected: user signing out");
 
                 //Signing out current user
