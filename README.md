@@ -21,5 +21,10 @@ DoctorLogIn | DoctorSignUp | PatientLogIn
 --------------|:--------------| :--------------|
 <img src="https://user-images.githubusercontent.com/49723335/122828433-7ec4f180-d307-11eb-878e-1c57eae30786.jpg" height="500" /> | <img src="https://user-images.githubusercontent.com/49723335/122828448-84bad280-d307-11eb-9eb5-450d3efdf7d1.jpg" height="500" /> | <img src="https://user-images.githubusercontent.com/49723335/122828478-897f8680-d307-11eb-83c8-5a2f76c305a8.jpg" height="500" /> ||
 
+**Doctor Profile**
+DoctorProfile | Doctor Chamber Input | Doctor chamber info
+--------------|:--------------| :--------------|
+<img src="https://user-images.githubusercontent.com/49723335/122828985-30642280-d308-11eb-8703-4fec4e19c108.jpg" height="500" /> | <img src="https://user-images.githubusercontent.com/49723335/122829000-36f29a00-d308-11eb-9e73-79994c3d46a5.jpg" height="500" /> | <img src="https://user-images.githubusercontent.com/49723335/122829012-3a862100-d308-11eb-8a20-4233c39aa403.jpg" height="500" /> ||
+
 
 
