@@ -26,5 +26,14 @@ DoctorProfile | Doctor Chamber Input | Doctor chamber info
 --------------|:--------------| :--------------|
 <img src="https://user-images.githubusercontent.com/49723335/122828985-30642280-d308-11eb-8703-4fec4e19c108.jpg" height="500" /> | <img src="https://user-images.githubusercontent.com/49723335/122829000-36f29a00-d308-11eb-9e73-79994c3d46a5.jpg" height="500" /> | <img src="https://user-images.githubusercontent.com/49723335/122829012-3a862100-d308-11eb-8a20-4233c39aa403.jpg" height="500" /> ||
 
+**Patient Profile**
+Patient Home | BottomView Expand | Fix Appointment
+--------------|:--------------| :--------------|
+<img src="https://user-images.githubusercontent.com/49723335/122951456-1cb7cb00-d39f-11eb-95c2-a2f84334b7b0.jpg" height="500" /> | <img src="https://user-images.githubusercontent.com/49723335/122951939-79b38100-d39f-11eb-85aa-c49a55f3e6d0.jpg" height="500" /> | <img src="https://user-images.githubusercontent.com/49723335/122951960-7fa96200-d39f-11eb-9080-e023a6fc97ac.jpg" height="500" /> ||
+
+
+
+
+
 
 
